@@ -101,6 +101,46 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
 /* Floating hearts/particles */
 .float-particle{position:fixed;pointer-events:none;z-index:15;font-size:18px;animation:floatUp 1.2s ease-out forwards;}
 @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1);}100%{opacity:0;transform:translateY(-60px) scale(0.5);}}
+
+/* ---- Chat UI ---- */
+#chat-toggle{position:fixed;bottom:90px;right:16px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);border:none;color:#fff;font-size:24px;cursor:pointer;z-index:25;box-shadow:0 4px 15px rgba(102,126,234,0.4);transition:all 0.3s;display:flex;align-items:center;justify-content:center;}
+#chat-toggle:hover{transform:scale(1.1);box-shadow:0 6px 20px rgba(102,126,234,0.5);}
+#chat-toggle:active{transform:scale(0.95);}
+#chat-toggle.has-unread::after{content:'';position:absolute;top:2px;right:2px;width:12px;height:12px;background:#ff6b6b;border-radius:50%;border:2px solid #0a0a1a;}
+#chat-toggle.disabled{opacity:0.4;pointer-events:none;}
+
+#chat-panel{position:fixed;bottom:150px;right:16px;width:320px;max-width:calc(100vw - 32px);height:400px;max-height:calc(100vh - 250px);background:rgba(20,20,40,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:25;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(20px) scale(0.95);transition:all 0.3s cubic-bezier(0.4,0,0.2,1);overflow:hidden;}
+#chat-panel.open{opacity:1;pointer-events:auto;transform:translateY(0) scale(1);}
+
+#chat-header{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:10px;}
+#chat-header .pet-avatar{width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;}
+#chat-header .pet-info{flex:1;}
+#chat-header .pet-name{font-size:14px;font-weight:600;color:#fff;}
+#chat-header .pet-status{font-size:11px;color:rgba(255,255,255,0.5);}
+#chat-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+#chat-close:hover{background:rgba(255,255,255,0.2);}
+
+#chat-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;}
+#chat-messages::-webkit-scrollbar{width:4px;}
+#chat-messages::-webkit-scrollbar-track{background:transparent;}
+#chat-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:2px;}
+
+.chat-msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.4;word-wrap:break-word;}
+.chat-msg.user{align-self:flex-end;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-bottom-right-radius:4px;}
+.chat-msg.pet{align-self:flex-start;background:rgba(255,255,255,0.1);color:#fff;border-bottom-left-radius:4px;}
+.chat-msg.system{align-self:center;background:transparent;color:rgba(255,255,255,0.4);font-size:11px;font-style:italic;}
+.chat-msg.pet.typing{color:rgba(255,255,255,0.5);}
+.chat-msg.pet.typing::after{content:'...';animation:dots 1.5s infinite;}
+@keyframes dots{0%,20%{content:'.';}40%{content:'..';}60%,100%{content:'...';}}
+
+#chat-input-area{padding:12px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;}
+#chat-input{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:10px 16px;color:#fff;font-size:13px;outline:none;transition:all 0.2s;}
+#chat-input::placeholder{color:rgba(255,255,255,0.3);}
+#chat-input:focus{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);}
+#chat-send{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+#chat-send:hover{transform:scale(1.05);}
+#chat-send:active{transform:scale(0.95);}
+#chat-send:disabled{opacity:0.5;pointer-events:none;}
 </style>
 </head>
 <body>
@@ -173,6 +213,26 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
   <div id="mg-hud"><div id="mg-score">Score: 0</div></div>
   <button id="mg-quit" onclick="quitMiniGame()">&times;</button>
   <canvas id="mg-canvas" width="240" height="200"></canvas>
+</div>
+
+<!-- CHAT UI -->
+<button id="chat-toggle" class="disabled" title="Chat with your pet">💬</button>
+<div id="chat-panel">
+  <div id="chat-header">
+    <div class="pet-avatar">🥚</div>
+    <div class="pet-info">
+      <div class="pet-name">Your Pet</div>
+      <div class="pet-status">Egg - Can't talk yet</div>
+    </div>
+    <button id="chat-close">&times;</button>
+  </div>
+  <div id="chat-messages">
+    <div class="chat-msg system">Your pet will be able to chat once it hatches!</div>
+  </div>
+  <div id="chat-input-area">
+    <input type="text" id="chat-input" placeholder="Say something..." disabled>
+    <button id="chat-send" disabled>➤</button>
+  </div>
 </div>
 
 <script>
@@ -948,6 +1008,9 @@ function evolve() {
   save();
   updateHUD();
   buildDressPanel();
+  // Notify chat system of evolution
+  if(typeof clearChatOnEvolve === 'function') clearChatOnEvolve();
+  if(typeof updateChatUI === 'function') updateChatUI();
 }
 
 // ============================================================
@@ -998,6 +1061,9 @@ function updateHUD() {
     sleepBtn.querySelector('.label').textContent=state.sleeping?'Wake':'Sleep';
     sleepBtn.querySelector('.icon').textContent=state.sleeping?'☀️':'💤';
   }
+  
+  // Update chat UI if function exists
+  if(typeof updateChatUI === 'function') updateChatUI();
 }
 
 function formatTime(ms){
@@ -1567,12 +1633,198 @@ function gameLoop(now){
 }
 
 // ============================================================
+// CHAT SYSTEM
+// ============================================================
+const chatToggle = document.getElementById('chat-toggle');
+const chatPanel = document.getElementById('chat-panel');
+const chatClose = document.getElementById('chat-close');
+const chatMessages = document.getElementById('chat-messages');
+const chatInput = document.getElementById('chat-input');
+const chatSend = document.getElementById('chat-send');
+let chatOpen = false;
+let conversationHistory = [];
+let isSending = false;
+
+// API base URL - uses same origin when served from the server
+const API_BASE = '';
+
+function toggleChat() {
+  if (!state || state.stage === 'EGG') {
+    notify('🥚 Your pet can\'t talk yet!');
+    sfxDeny();
+    return;
+  }
+  chatOpen = !chatOpen;
+  chatPanel.classList.toggle('open', chatOpen);
+  if (chatOpen) {
+    chatInput.focus();
+    updateChatHeader();
+  }
+}
+
+function closeChat() {
+  chatOpen = false;
+  chatPanel.classList.remove('open');
+}
+
+function updateChatHeader() {
+  if (!state) return;
+  const avatar = document.querySelector('#chat-header .pet-avatar');
+  const name = document.querySelector('#chat-header .pet-name');
+  const status = document.querySelector('#chat-header .pet-status');
+  
+  const stageEmojis = { EGG: '🥚', BABY: '👶', CHILD: '🧒', TEEN: '😎', ADULT: '⭐' };
+  const mood = getMood();
+  
+  avatar.textContent = stageEmojis[state.stage] || '🐣';
+  name.textContent = state.stage === 'ADULT' ? 'Your Pet ★' : 'Your Pet';
+  status.textContent = `${state.stage} • ${mood.charAt(0).toUpperCase() + mood.slice(1)}`;
+}
+
+function updateChatUI() {
+  if (!state) return;
+  const canChat = state.alive && state.stage !== 'EGG';
+  
+  chatToggle.classList.toggle('disabled', !canChat);
+  chatInput.disabled = !canChat || isSending;
+  chatSend.disabled = !canChat || isSending;
+  
+  if (!canChat && chatOpen) {
+    closeChat();
+  }
+  
+  updateChatHeader();
+}
+
+function addChatMessage(content, type = 'pet') {
+  const msg = document.createElement('div');
+  msg.className = `chat-msg ${type}`;
+  msg.textContent = content;
+  chatMessages.appendChild(msg);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  return msg;
+}
+
+function showTypingIndicator() {
+  const typing = document.createElement('div');
+  typing.className = 'chat-msg pet typing';
+  typing.id = 'typing-indicator';
+  typing.textContent = 'Thinking';
+  chatMessages.appendChild(typing);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function removeTypingIndicator() {
+  const typing = document.getElementById('typing-indicator');
+  if (typing) typing.remove();
+}
+
+async function sendChatMessage() {
+  const message = chatInput.value.trim();
+  if (!message || isSending || !state || state.stage === 'EGG') return;
+  
+  // Add user message to UI
+  addChatMessage(message, 'user');
+  chatInput.value = '';
+  
+  // Add to conversation history
+  conversationHistory.push({ role: 'user', content: message });
+  
+  isSending = true;
+  updateChatUI();
+  showTypingIndicator();
+  
+  try {
+    const response = await fetch(`${API_BASE}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message,
+        petState: {
+          stage: state.stage,
+          mood: getMood(),
+          hunger: state.hunger,
+          happiness: state.happiness,
+          energy: state.energy,
+          hygiene: state.hygiene,
+          health: state.health,
+          variant: state.variant,
+          accessory: state.accessory,
+          totalTime: state.totalTime,
+          sleeping: state.sleeping
+        },
+        conversationHistory: conversationHistory.slice(-10)
+      })
+    });
+    
+    removeTypingIndicator();
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to get response');
+    }
+    
+    const data = await response.json();
+    
+    // Add pet response to UI
+    addChatMessage(data.response, 'pet');
+    
+    // Add to conversation history
+    conversationHistory.push({ role: 'assistant', content: data.response });
+    
+    // Small happiness boost for chatting
+    state.happiness = Math.min(100, state.happiness + 1);
+    
+    // Play sound
+    sfxSelect();
+    
+  } catch (error) {
+    removeTypingIndicator();
+    console.error('Chat error:', error);
+    
+    // Fallback responses based on stage
+    const fallbacks = {
+      BABY: '*yawns* Me sleepy... hehe!',
+      CHILD: 'Hmm, I got confused! Can you say that again?',
+      TEEN: 'Ugh, something went wrong... whatever.',
+      ADULT: 'I apologize, I seem to be having trouble thinking clearly right now.'
+    };
+    addChatMessage(fallbacks[state.stage] || 'Hmm...', 'pet');
+  }
+  
+  isSending = false;
+  updateChatUI();
+  chatInput.focus();
+}
+
+// Chat event listeners
+chatToggle.addEventListener('click', toggleChat);
+chatClose.addEventListener('click', closeChat);
+chatSend.addEventListener('click', sendChatMessage);
+chatInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChatMessage();
+  }
+});
+
+// Clear chat history on evolution
+function clearChatOnEvolve() {
+  conversationHistory = [];
+  // Add evolution message
+  if (chatMessages.children.length > 0) {
+    addChatMessage(`Your pet has evolved to ${state.stage}!`, 'system');
+  }
+}
+
+// ============================================================
 // INIT
 // ============================================================
 function init(){
   if(!load()) state=newState();
   else applyOfflineDecay();
   updateHUD();
+  updateChatUI();
   buildFeedPanel();
   buildDressPanel();
 
