@@ -102,45 +102,47 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
 .float-particle{position:fixed;pointer-events:none;z-index:15;font-size:18px;animation:floatUp 1.2s ease-out forwards;}
 @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1);}100%{opacity:0;transform:translateY(-60px) scale(0.5);}}
 
-/* ---- Chat UI ---- */
+/* ---- Chat UI - Speech Bubble ---- */
 #chat-toggle{position:fixed;bottom:90px;right:16px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);border:none;color:#fff;font-size:24px;cursor:pointer;z-index:25;box-shadow:0 4px 15px rgba(102,126,234,0.4);transition:all 0.3s;display:flex;align-items:center;justify-content:center;}
 #chat-toggle:hover{transform:scale(1.1);box-shadow:0 6px 20px rgba(102,126,234,0.5);}
 #chat-toggle:active{transform:scale(0.95);}
 #chat-toggle.has-unread::after{content:'';position:absolute;top:2px;right:2px;width:12px;height:12px;background:#ff6b6b;border-radius:50%;border:2px solid #0a0a1a;}
 #chat-toggle.disabled{opacity:0.4;pointer-events:none;}
 
-#chat-panel{position:fixed;bottom:150px;right:16px;width:320px;max-width:calc(100vw - 32px);height:400px;max-height:calc(100vh - 250px);background:rgba(20,20,40,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:25;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(20px) scale(0.95);transition:all 0.3s cubic-bezier(0.4,0,0.2,1);overflow:hidden;}
-#chat-panel.open{opacity:1;pointer-events:auto;transform:translateY(0) scale(1);}
+/* Speech bubble container - positioned above pet */
+#speech-bubble-container{position:fixed;left:50%;transform:translateX(-50%);top:18%;z-index:25;pointer-events:none;opacity:0;transition:opacity 0.3s ease;}
+#speech-bubble-container.visible{opacity:1;pointer-events:auto;}
 
-#chat-header{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:10px;}
-#chat-header .pet-avatar{width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;}
-#chat-header .pet-info{flex:1;}
-#chat-header .pet-name{font-size:14px;font-weight:600;color:#fff;}
-#chat-header .pet-status{font-size:11px;color:rgba(255,255,255,0.5);}
-#chat-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-#chat-close:hover{background:rgba(255,255,255,0.2);}
+/* The cute speech bubble */
+#speech-bubble{position:relative;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:20px;padding:14px 18px;max-width:280px;min-width:120px;box-shadow:0 8px 32px rgba(0,0,0,0.3);animation:bubblePop 0.3s ease-out;}
+#speech-bubble::after{content:'';position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:14px solid rgba(255,255,255,0.95);}
+@keyframes bubblePop{0%{transform:scale(0.8);opacity:0;}50%{transform:scale(1.05);}100%{transform:scale(1);opacity:1;}}
 
-#chat-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;}
-#chat-messages::-webkit-scrollbar{width:4px;}
-#chat-messages::-webkit-scrollbar-track{background:transparent;}
-#chat-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:2px;}
-
-.chat-msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.4;word-wrap:break-word;}
-.chat-msg.user{align-self:flex-end;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-bottom-right-radius:4px;}
-.chat-msg.pet{align-self:flex-start;background:rgba(255,255,255,0.1);color:#fff;border-bottom-left-radius:4px;}
-.chat-msg.system{align-self:center;background:transparent;color:rgba(255,255,255,0.4);font-size:11px;font-style:italic;}
-.chat-msg.pet.typing{color:rgba(255,255,255,0.5);}
-.chat-msg.pet.typing::after{content:'...';animation:dots 1.5s infinite;}
+#speech-bubble .bubble-text{color:#1a1a2e;font-size:14px;line-height:1.5;text-align:center;word-wrap:break-word;}
+#speech-bubble .bubble-text.typing{color:#666;}
+#speech-bubble .bubble-text.typing::after{content:'...';animation:dots 1.5s infinite;}
 @keyframes dots{0%,20%{content:'.';}40%{content:'..';}60%,100%{content:'...';}}
 
-#chat-input-area{padding:12px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;}
-#chat-input{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:10px 16px;color:#fff;font-size:13px;outline:none;transition:all 0.2s;}
-#chat-input::placeholder{color:rgba(255,255,255,0.3);}
-#chat-input:focus{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);}
-#chat-send{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
-#chat-send:hover{transform:scale(1.05);}
+/* Close bubble button */
+#bubble-close{position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;background:#ff6b6b;border:2px solid #fff;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.2);transition:transform 0.2s;}
+#bubble-close:hover{transform:scale(1.1);}
+
+/* Chat input bar at bottom */
+#chat-input-bar{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);width:90%;max-width:360px;z-index:25;display:flex;gap:8px;opacity:0;pointer-events:none;transition:all 0.3s ease;}
+#chat-input-bar.visible{opacity:1;pointer-events:auto;}
+
+#chat-input{flex:1;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:none;border-radius:25px;padding:12px 20px;color:#1a1a2e;font-size:14px;outline:none;box-shadow:0 4px 20px rgba(0,0,0,0.2);transition:all 0.2s;}
+#chat-input::placeholder{color:#888;}
+#chat-input:focus{box-shadow:0 4px 25px rgba(102,126,234,0.4);}
+
+#chat-send{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(102,126,234,0.4);transition:all 0.2s;}
+#chat-send:hover{transform:scale(1.08);}
 #chat-send:active{transform:scale(0.95);}
 #chat-send:disabled{opacity:0.5;pointer-events:none;}
+
+/* Emoji reactions floating up */
+.bubble-emoji{position:absolute;font-size:20px;animation:emojiFloat 2s ease-out forwards;pointer-events:none;}
+@keyframes emojiFloat{0%{opacity:1;transform:translateY(0) scale(1);}100%{opacity:0;transform:translateY(-50px) scale(0.5);}}
 </style>
 </head>
 <body>
@@ -215,24 +217,21 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
   <canvas id="mg-canvas" width="240" height="200"></canvas>
 </div>
 
-<!-- CHAT UI -->
+<!-- CHAT UI - Speech Bubble -->
 <button id="chat-toggle" class="disabled" title="Chat with your pet">💬</button>
-<div id="chat-panel">
-  <div id="chat-header">
-    <div class="pet-avatar">🥚</div>
-    <div class="pet-info">
-      <div class="pet-name">Your Pet</div>
-      <div class="pet-status">Egg - Can't talk yet</div>
-    </div>
-    <button id="chat-close">&times;</button>
+
+<!-- Speech bubble above pet -->
+<div id="speech-bubble-container">
+  <div id="speech-bubble">
+    <button id="bubble-close">&times;</button>
+    <div class="bubble-text">Hi there! 💕</div>
   </div>
-  <div id="chat-messages">
-    <div class="chat-msg system">Your pet will be able to chat once it hatches!</div>
-  </div>
-  <div id="chat-input-area">
-    <input type="text" id="chat-input" placeholder="Say something..." disabled>
-    <button id="chat-send" disabled>➤</button>
-  </div>
+</div>
+
+<!-- Chat input bar -->
+<div id="chat-input-bar">
+  <input type="text" id="chat-input" placeholder="Say something to your pet..." disabled>
+  <button id="chat-send" disabled>💬</button>
 </div>
 
 <script>
@@ -1633,17 +1632,20 @@ function gameLoop(now){
 }
 
 // ============================================================
-// CHAT SYSTEM
+// CHAT SYSTEM - Speech Bubble
 // ============================================================
 const chatToggle = document.getElementById('chat-toggle');
-const chatPanel = document.getElementById('chat-panel');
-const chatClose = document.getElementById('chat-close');
-const chatMessages = document.getElementById('chat-messages');
+const speechBubbleContainer = document.getElementById('speech-bubble-container');
+const speechBubble = document.getElementById('speech-bubble');
+const bubbleText = document.querySelector('#speech-bubble .bubble-text');
+const bubbleClose = document.getElementById('bubble-close');
+const chatInputBar = document.getElementById('chat-input-bar');
 const chatInput = document.getElementById('chat-input');
 const chatSend = document.getElementById('chat-send');
 let chatOpen = false;
 let conversationHistory = [];
 let isSending = false;
+let bubbleTimeout = null;
 
 // API base URL - uses same origin when served from the server
 const API_BASE = '';
@@ -1655,30 +1657,91 @@ function toggleChat() {
     return;
   }
   chatOpen = !chatOpen;
-  chatPanel.classList.toggle('open', chatOpen);
+  chatInputBar.classList.toggle('visible', chatOpen);
   if (chatOpen) {
     chatInput.focus();
-    updateChatHeader();
+    // Show a greeting bubble if not already showing
+    if (!speechBubbleContainer.classList.contains('visible')) {
+      showBubble(getGreeting());
+    }
+  } else {
+    hideBubble();
   }
 }
 
 function closeChat() {
   chatOpen = false;
-  chatPanel.classList.remove('open');
+  chatInputBar.classList.remove('visible');
+  hideBubble();
 }
 
-function updateChatHeader() {
-  if (!state) return;
-  const avatar = document.querySelector('#chat-header .pet-avatar');
-  const name = document.querySelector('#chat-header .pet-name');
-  const status = document.querySelector('#chat-header .pet-status');
-  
-  const stageEmojis = { EGG: '🥚', BABY: '👶', CHILD: '🧒', TEEN: '😎', ADULT: '⭐' };
+function getGreeting() {
   const mood = getMood();
+  const greetings = {
+    BABY: {
+      happy: ['Hewwo! 💕', 'Yay! You here! 🎉', 'Me wuv you! 💖'],
+      hungry: ['Hungwy... 🍼', 'Want nummies! 😢'],
+      sleepy: ['*yawns* Sweepy... 💤', 'Me tired... 😴'],
+      default: ['Hi hi! ✨', 'Goo goo! 💕']
+    },
+    CHILD: {
+      happy: ['Hi!! What are we doing today? 🌟', 'Yay you\'re here! 🎈', 'Let\'s play!! 🎮'],
+      hungry: ['My tummy is rumbling... 🍕', 'Can we eat something? 🥺'],
+      sleepy: ['*yawns* I\'m getting sleepy... 😴', 'Maybe nap time? 💤'],
+      default: ['Hey hey! ✨', 'What\'s up? 😊']
+    },
+    TEEN: {
+      happy: ['Oh hey! 👋', 'What\'s good? ✌️', 'Finally some company 😎'],
+      hungry: ['Ugh I\'m starving... 🍔', 'Can we get food? 😤'],
+      sleepy: ['*yawns* So tired rn... 😴', 'Need sleep tbh 💤'],
+      default: ['Sup 👋', 'Hey there 😏']
+    },
+    ADULT: {
+      happy: ['Hello, dear friend! 💫', 'Wonderful to see you! ✨', 'What a lovely moment 🌸'],
+      hungry: ['I could use a nice meal... 🍽️', 'Feeling a bit peckish 😊'],
+      sleepy: ['Feeling peaceful and drowsy... 🌙', 'Perhaps some rest would be nice 💤'],
+      default: ['Hello there 💕', 'Good to see you ✨']
+    }
+  };
   
-  avatar.textContent = stageEmojis[state.stage] || '🐣';
-  name.textContent = state.stage === 'ADULT' ? 'Your Pet ★' : 'Your Pet';
-  status.textContent = `${state.stage} • ${mood.charAt(0).toUpperCase() + mood.slice(1)}`;
+  const stageGreetings = greetings[state.stage] || greetings.BABY;
+  let pool = stageGreetings.default;
+  
+  if (mood === 'hungry' && stageGreetings.hungry) pool = stageGreetings.hungry;
+  else if (mood === 'sleepy' && stageGreetings.sleepy) pool = stageGreetings.sleepy;
+  else if ((mood === 'happy' || mood === 'ecstatic') && stageGreetings.happy) pool = stageGreetings.happy;
+  
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function showBubble(text, duration = 0) {
+  clearTimeout(bubbleTimeout);
+  bubbleText.classList.remove('typing');
+  bubbleText.textContent = text;
+  speechBubbleContainer.classList.add('visible');
+  
+  // Re-trigger animation
+  speechBubble.style.animation = 'none';
+  speechBubble.offsetHeight; // Trigger reflow
+  speechBubble.style.animation = 'bubblePop 0.3s ease-out';
+  
+  // Auto-hide after duration (if set)
+  if (duration > 0) {
+    bubbleTimeout = setTimeout(() => {
+      if (!chatOpen) hideBubble();
+    }, duration);
+  }
+}
+
+function hideBubble() {
+  clearTimeout(bubbleTimeout);
+  speechBubbleContainer.classList.remove('visible');
+}
+
+function showTypingBubble() {
+  bubbleText.textContent = 'Thinking';
+  bubbleText.classList.add('typing');
+  speechBubbleContainer.classList.add('visible');
 }
 
 function updateChatUI() {
@@ -1692,39 +1755,12 @@ function updateChatUI() {
   if (!canChat && chatOpen) {
     closeChat();
   }
-  
-  updateChatHeader();
-}
-
-function addChatMessage(content, type = 'pet') {
-  const msg = document.createElement('div');
-  msg.className = `chat-msg ${type}`;
-  msg.textContent = content;
-  chatMessages.appendChild(msg);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-  return msg;
-}
-
-function showTypingIndicator() {
-  const typing = document.createElement('div');
-  typing.className = 'chat-msg pet typing';
-  typing.id = 'typing-indicator';
-  typing.textContent = 'Thinking';
-  chatMessages.appendChild(typing);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function removeTypingIndicator() {
-  const typing = document.getElementById('typing-indicator');
-  if (typing) typing.remove();
 }
 
 async function sendChatMessage() {
   const message = chatInput.value.trim();
   if (!message || isSending || !state || state.stage === 'EGG') return;
   
-  // Add user message to UI
-  addChatMessage(message, 'user');
   chatInput.value = '';
   
   // Add to conversation history
@@ -1732,7 +1768,7 @@ async function sendChatMessage() {
   
   isSending = true;
   updateChatUI();
-  showTypingIndicator();
+  showTypingBubble();
   
   try {
     const response = await fetch(`${API_BASE}/api/chat`, {
@@ -1757,8 +1793,6 @@ async function sendChatMessage() {
       })
     });
     
-    removeTypingIndicator();
-    
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.error || 'Failed to get response');
@@ -1766,8 +1800,8 @@ async function sendChatMessage() {
     
     const data = await response.json();
     
-    // Add pet response to UI
-    addChatMessage(data.response, 'pet');
+    // Show pet response in bubble
+    showBubble(data.response);
     
     // Add to conversation history
     conversationHistory.push({ role: 'assistant', content: data.response });
@@ -1775,21 +1809,23 @@ async function sendChatMessage() {
     // Small happiness boost for chatting
     state.happiness = Math.min(100, state.happiness + 1);
     
+    // Spawn heart particles
+    for(let j=0;j<2;j++) spawnParticle(petX()+(Math.random()-0.5)*40, petY()-petSize()*0.5, '💕');
+    
     // Play sound
     sfxSelect();
     
   } catch (error) {
-    removeTypingIndicator();
     console.error('Chat error:', error);
     
     // Fallback responses based on stage
     const fallbacks = {
-      BABY: '*yawns* Me sleepy... hehe!',
-      CHILD: 'Hmm, I got confused! Can you say that again?',
-      TEEN: 'Ugh, something went wrong... whatever.',
-      ADULT: 'I apologize, I seem to be having trouble thinking clearly right now.'
+      BABY: '*yawns* Me sleepy... hehe! 💤',
+      CHILD: 'Hmm, I got confused! Can you say that again? 🤔',
+      TEEN: 'Ugh, something went wrong... whatever 😤',
+      ADULT: 'I apologize, I seem to be having trouble thinking clearly right now 💫'
     };
-    addChatMessage(fallbacks[state.stage] || 'Hmm...', 'pet');
+    showBubble(fallbacks[state.stage] || 'Hmm... 🤔');
   }
   
   isSending = false;
@@ -1799,7 +1835,7 @@ async function sendChatMessage() {
 
 // Chat event listeners
 chatToggle.addEventListener('click', toggleChat);
-chatClose.addEventListener('click', closeChat);
+bubbleClose.addEventListener('click', closeChat);
 chatSend.addEventListener('click', sendChatMessage);
 chatInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
@@ -1811,9 +1847,15 @@ chatInput.addEventListener('keypress', (e) => {
 // Clear chat history on evolution
 function clearChatOnEvolve() {
   conversationHistory = [];
-  // Add evolution message
-  if (chatMessages.children.length > 0) {
-    addChatMessage(`Your pet has evolved to ${state.stage}!`, 'system');
+  // Show evolution celebration bubble
+  if (state.stage !== 'EGG') {
+    const evolveMessages = {
+      BABY: 'I hatched!! Hi hi! 🐣💕',
+      CHILD: 'Wow I grew up! Look at me! 🌟',
+      TEEN: 'Whoa... I feel different! 😎✨',
+      ADULT: 'I have reached my final form! Thank you for everything 💫🌸'
+    };
+    setTimeout(() => showBubble(evolveMessages[state.stage] || 'I evolved! ✨', 5000), 1500);
   }
 }
 
