@@ -1039,9 +1039,11 @@ function drawAcc(accId, sz, stage) {
 // ============================================================
 function drawVisitorPet(t) {
   if (!visitor) return;
-  const sz = petSize() * 0.65;
-  const px = petX() + petSize() * 1.1;
-  const py = petY() + petSize() * 0.18;
+  const mainSz = petSize();
+  const sz = mainSz * 0.55;
+  // Position to the right of main pet, but clamped to stay on screen
+  const px = Math.min(petX() + mainSz * 0.75, vw() - sz * 0.6);
+  const py = petY() + mainSz * 0.22;
   const bounce = Math.sin(t * 0.0025 + 1) * sz * 0.035;
   const breathe = 1 + Math.sin(t * 0.0018) * 0.015;
 
@@ -1055,8 +1057,16 @@ function drawVisitorPet(t) {
   ctx.ellipse(0, sz * 0.55, sz * 0.45, sz * 0.06, 0, 0, Math.PI * 2);
   ctx.fill();
 
+  // Draw visitor body (skip EGG stage drawing since it references state internals)
   if (visitor.stage === 'EGG') {
-    drawEggPet(t, sz);
+    // Simple egg drawing without state dependency
+    const grad = ctx.createRadialGradient(0, 0, sz * 0.05, 0, 0, sz * 0.5);
+    grad.addColorStop(0, '#fff5e6');
+    grad.addColorStop(1, '#f0d9b5');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, sz * 0.35, sz * 0.45, 0, 0, Math.PI * 2);
+    ctx.fill();
   } else if (visitor.stage === 'BABY') {
     drawBabyPet(t, sz, 'happy');
   } else if (visitor.stage === 'CHILD') {
@@ -1073,9 +1083,9 @@ function drawVisitorPet(t) {
 
   // "Visitor" label
   ctx.save();
-  ctx.font = Math.round(sz * 0.18) + 'px sans-serif';
+  ctx.font = Math.round(sz * 0.2) + 'px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
   ctx.fillText('Visitor', px, py - sz * 0.55);
   ctx.textAlign = 'start';
   ctx.restore();
@@ -2599,8 +2609,8 @@ function addVisitorFromCode() {
   }
   visitor = data;
   input.value = '';
+  closePanel('home');
   notify('👫 Visitor pet arrived!');
-  buildFriendsSection();
 }
 window.addVisitorFromCode = addVisitorFromCode;
 
