@@ -1,0 +1,12 @@
+{
+  "name": "tamagotchi-ai",
+  "version": "1.0.0",
+  "description": "AI-powered virtual pet with Claude chat",
+  "private": true,
+  "scripts": {
+    "dev": "cd server && npm start"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0"
+  }
+}

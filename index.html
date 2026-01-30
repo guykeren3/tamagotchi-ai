@@ -75,8 +75,32 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
 .acc-card:active{transform:scale(0.95);}
 .acc-card.active-acc{border-color:rgba(255,220,100,0.6);background:rgba(255,220,100,0.1);}
 .acc-card.locked{opacity:0.3;pointer-events:none;}
+.acc-card.math-locked{opacity:0.85;border-color:rgba(255,200,100,0.4);background:rgba(255,200,100,0.08);cursor:pointer;}
+.acc-card.math-locked:hover{background:rgba(255,200,100,0.15);transform:translateY(-2px);}
 .acc-card .acc-icon{font-size:24px;margin-bottom:4px;}
 .acc-card .acc-name{font-size:10px;color:rgba(255,255,255,0.7);}
+.acc-card .acc-level{font-size:8px;color:rgba(255,200,100,0.7);margin-top:2px;}
+
+/* Math riddle modal */
+#math-modal{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,26,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity 0.3s;}
+#math-modal.open{opacity:1;pointer-events:auto;}
+#math-modal .modal-content{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:30px;text-align:center;max-width:340px;width:90%;}
+#math-modal .prize-emoji{font-size:48px;margin-bottom:10px;}
+#math-modal .prize-name{font-size:18px;font-weight:700;color:#fff;margin-bottom:4px;}
+#math-modal .difficulty-label{font-size:11px;color:rgba(255,200,100,0.8);text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;}
+#math-modal .question{font-size:28px;font-weight:700;color:#fff;margin-bottom:24px;font-family:monospace;}
+#math-modal .choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+#math-modal .choice-btn{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px;font-size:20px;font-weight:600;color:#fff;cursor:pointer;transition:all 0.2s;}
+#math-modal .choice-btn:hover{background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3);transform:scale(1.03);}
+#math-modal .choice-btn:active{transform:scale(0.97);}
+#math-modal .choice-btn.correct{background:rgba(85,239,196,0.3);border-color:#55efc4;color:#55efc4;}
+#math-modal .choice-btn.wrong{background:rgba(255,107,107,0.3);border-color:#ff6b6b;color:#ff6b6b;}
+#math-modal .choice-btn:disabled{pointer-events:none;}
+#math-modal .feedback{font-size:14px;color:rgba(255,255,255,0.6);min-height:20px;margin-bottom:12px;}
+#math-modal .feedback.success{color:#55efc4;}
+#math-modal .feedback.error{color:#ff6b6b;}
+#math-modal .modal-close{background:rgba(255,255,255,0.1);border:none;border-radius:20px;padding:10px 24px;color:#fff;font-size:13px;cursor:pointer;transition:all 0.2s;}
+#math-modal .modal-close:hover{background:rgba(255,255,255,0.2);}
 
 /* Stats panel */
 #stats-panel .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px;width:320px;max-width:90vw;}
@@ -210,6 +234,19 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
   <div class="stats-grid" id="stats-grid"></div>
 </div>
 
+<!-- MATH RIDDLE MODAL -->
+<div id="math-modal">
+  <div class="modal-content">
+    <div class="prize-emoji" id="math-prize-emoji">🎁</div>
+    <div class="prize-name" id="math-prize-name">Prize</div>
+    <div class="difficulty-label" id="math-difficulty">Level 1</div>
+    <div class="question" id="math-question">5 + 3 = ?</div>
+    <div class="choices" id="math-choices"></div>
+    <div class="feedback" id="math-feedback"></div>
+    <button class="modal-close" onclick="closeMathModal()">Close</button>
+  </div>
+</div>
+
 <!-- MINIGAME OVERLAY -->
 <div id="minigame-overlay">
   <div id="mg-hud"><div id="mg-score">Score: 0</div></div>
@@ -264,6 +301,7 @@ const FOODS = [
 ];
 
 const ACCESSORIES = [
+  // Stage-locked accessories
   { name:'None',    emoji:'❌', stage:0, id:0 },
   { name:'Bow',     emoji:'🎀', stage:1, id:1 },
   { name:'Flower',  emoji:'🌸', stage:1, id:5 },
@@ -271,7 +309,20 @@ const ACCESSORIES = [
   { name:'Bandana', emoji:'🧣', stage:2, id:4 },
   { name:'Crown',   emoji:'👑', stage:3, id:3 },
   { name:'Goggles', emoji:'🥽', stage:3, id:6 },
-  { name:'Halo',    emoji:'😇', stage:4, id:7 }
+  { name:'Halo',    emoji:'😇', stage:4, id:7 },
+  // Math-locked accessories (K-4 grade levels)
+  { name:'Sunglasses', emoji:'😎', mathLevel:1, id:8 },
+  { name:'Party Hat',  emoji:'🥳', mathLevel:1, id:9 },
+  { name:'Headphones', emoji:'🎧', mathLevel:1, id:10 },
+  { name:'Star',       emoji:'⭐', mathLevel:2, id:11 },
+  { name:'Rainbow',    emoji:'🌈', mathLevel:2, id:12 },
+  { name:'Rocket',     emoji:'🚀', mathLevel:2, id:13 },
+  { name:'Diamond',    emoji:'💎', mathLevel:3, id:14 },
+  { name:'Fire',       emoji:'🔥', mathLevel:3, id:15 },
+  { name:'Lightning',  emoji:'⚡', mathLevel:3, id:16 },
+  { name:'Unicorn',    emoji:'🦄', mathLevel:4, id:17 },
+  { name:'Dragon',     emoji:'🐉', mathLevel:4, id:18 },
+  { name:'Alien',      emoji:'👽', mathLevel:4, id:19 }
 ];
 
 // Color themes per mood
@@ -852,14 +903,13 @@ function drawFace(t, spread, mood, sz) {
 
 function drawAcc(accId, sz, stage) {
   if (accId === 0) return;
+  const acc = ACCESSORIES.find(a => a.id === accId);
+  if (!acc || !acc.emoji) return;
   const s = sz * 0.3;
-  const accEmojis = { 1:'🎀', 2:'🎩', 3:'👑', 4:'🧣', 5:'🌸', 6:'🥽', 7:'😇' };
-  const emoji = accEmojis[accId];
-  if (!emoji) return;
   ctx.font = Math.round(s) + 'px sans-serif';
   ctx.textAlign = 'center';
   const oy = stage === 'ADULT' || stage === 'TEEN' ? -sz*0.55 : -sz*0.4;
-  ctx.fillText(emoji, 0, oy);
+  ctx.fillText(acc.emoji, 0, oy);
   ctx.textAlign = 'start';
 }
 
@@ -940,12 +990,24 @@ function newState() {
     happinessSum:0, happinessSamples:0,
     poopCount:0, poopTimer:0,
     sleeping:false, alive:true, accessory:0,
+    unlockedAccessories:[],
     lastUpdate:Date.now(), created:Date.now()
   };
 }
 
 function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch(e){} }
-function load() { try { const d=localStorage.getItem(SAVE_KEY); if(d){state=JSON.parse(d);return true;} } catch(e){} return false; }
+function load() { 
+  try { 
+    const d=localStorage.getItem(SAVE_KEY); 
+    if(d){
+      state=JSON.parse(d);
+      // Migration: add unlockedAccessories if missing
+      if(!state.unlockedAccessories) state.unlockedAccessories=[];
+      return true;
+    } 
+  } catch(e){} 
+  return false; 
+}
 
 function applyOfflineDecay() {
   if (!state||!state.alive||state.stage==='EGG') return;
@@ -1207,13 +1269,195 @@ function buildDressPanel(){
   const si=getStageIndex(state.stage);
   ACCESSORIES.forEach(a=>{
     const card=document.createElement('div');
-    const locked=a.stage>si;
-    card.className='acc-card'+(locked?' locked':'')+(state.accessory===a.id?' active-acc':'');
-    card.innerHTML=`<div class="acc-icon">${locked?'🔒':a.emoji}</div><div class="acc-name">${locked?'Locked':a.name}</div>`;
-    if(!locked) card.onclick=()=>{state.accessory=a.id;notify('Wearing: '+a.name);sfxConfirm();closePanel('dress');save();buildDressPanel();};
+    
+    // Check lock type
+    const isStageLocked = a.stage !== undefined && a.stage > si;
+    const isMathLocked = a.mathLevel !== undefined && !state.unlockedAccessories.includes(a.id);
+    const isUnlocked = !isStageLocked && !isMathLocked;
+    
+    // Set classes
+    let className = 'acc-card';
+    if (isStageLocked) className += ' locked';
+    else if (isMathLocked) className += ' math-locked';
+    if (state.accessory === a.id) className += ' active-acc';
+    card.className = className;
+    
+    // Set content
+    if (isStageLocked) {
+      card.innerHTML = `<div class="acc-icon">🔒</div><div class="acc-name">Locked</div>`;
+    } else if (isMathLocked) {
+      const levelNames = ['', 'Easy', 'Medium', 'Tricky', 'Challenge'];
+      card.innerHTML = `<div class="acc-icon">🧩</div><div class="acc-name">${a.name}</div><div class="acc-level">Lv${a.mathLevel} ${levelNames[a.mathLevel]}</div>`;
+      card.onclick = () => openMathRiddle(a);
+    } else {
+      card.innerHTML = `<div class="acc-icon">${a.emoji}</div><div class="acc-name">${a.name}</div>`;
+      card.onclick = () => {
+        state.accessory = a.id;
+        notify('Wearing: ' + a.name);
+        sfxConfirm();
+        closePanel('dress');
+        save();
+        buildDressPanel();
+      };
+    }
+    
     grid.appendChild(card);
   });
 }
+
+// ============================================================
+// MATH RIDDLE SYSTEM
+// ============================================================
+const MATH_DIFFICULTY = {
+  1: { ops: ['+', '-'], max: 10, name: 'Easy' },
+  2: { ops: ['+', '-'], max: 20, name: 'Medium' },
+  3: { ops: ['+', '-', '×'], max: 12, name: 'Tricky' },
+  4: { ops: ['+', '-', '×', '÷'], max: 12, name: 'Challenge' }
+};
+
+let currentMathAcc = null;
+let currentMathProblem = null;
+
+function generateMathProblem(level) {
+  const config = MATH_DIFFICULTY[level];
+  const op = config.ops[Math.floor(Math.random() * config.ops.length)];
+  let a, b, answer;
+  
+  if (op === '+') {
+    a = Math.floor(Math.random() * config.max) + 1;
+    b = Math.floor(Math.random() * (config.max - a)) + 1;
+    answer = a + b;
+  } else if (op === '-') {
+    a = Math.floor(Math.random() * config.max) + 1;
+    b = Math.floor(Math.random() * a) + 1;
+    answer = a - b;
+  } else if (op === '×') {
+    a = Math.floor(Math.random() * config.max) + 1;
+    b = Math.floor(Math.random() * config.max) + 1;
+    answer = a * b;
+  } else if (op === '÷') {
+    // Ensure clean division
+    b = Math.floor(Math.random() * (config.max - 1)) + 2;
+    answer = Math.floor(Math.random() * config.max) + 1;
+    a = b * answer;
+  }
+  
+  const question = `${a} ${op} ${b} = ?`;
+  
+  // Generate 4 choices including the correct answer
+  const choices = new Set([answer]);
+  while (choices.size < 4) {
+    let wrong = answer + Math.floor(Math.random() * 11) - 5;
+    if (wrong !== answer && wrong >= 0) choices.add(wrong);
+  }
+  
+  // Shuffle choices
+  const shuffled = Array.from(choices).sort(() => Math.random() - 0.5);
+  
+  return { question, answer, choices: shuffled };
+}
+
+function openMathRiddle(acc) {
+  currentMathAcc = acc;
+  currentMathProblem = generateMathProblem(acc.mathLevel);
+  
+  document.getElementById('math-prize-emoji').textContent = acc.emoji;
+  document.getElementById('math-prize-name').textContent = acc.name;
+  document.getElementById('math-difficulty').textContent = `Level ${acc.mathLevel} - ${MATH_DIFFICULTY[acc.mathLevel].name}`;
+  document.getElementById('math-question').textContent = currentMathProblem.question;
+  document.getElementById('math-feedback').textContent = '';
+  document.getElementById('math-feedback').className = 'feedback';
+  
+  const choicesDiv = document.getElementById('math-choices');
+  choicesDiv.innerHTML = '';
+  currentMathProblem.choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = choice;
+    btn.onclick = () => handleMathAnswer(btn, choice);
+    choicesDiv.appendChild(btn);
+  });
+  
+  document.getElementById('math-modal').classList.add('open');
+  closePanel('dress');
+  sfxSelect();
+}
+
+function handleMathAnswer(btn, chosen) {
+  const correct = currentMathProblem.answer;
+  const allBtns = document.querySelectorAll('#math-choices .choice-btn');
+  const feedback = document.getElementById('math-feedback');
+  
+  // Disable all buttons
+  allBtns.forEach(b => b.disabled = true);
+  
+  if (chosen === correct) {
+    // Correct answer!
+    btn.classList.add('correct');
+    feedback.textContent = '🎉 Correct! Accessory unlocked!';
+    feedback.className = 'feedback success';
+    
+    // Unlock accessory
+    state.unlockedAccessories.push(currentMathAcc.id);
+    state.accessory = currentMathAcc.id;
+    save();
+    
+    // Celebration
+    sfxEvolve();
+    for (let i = 0; i < 8; i++) {
+      setTimeout(() => {
+        spawnParticle(
+          vw()/2 + (Math.random()-0.5)*150, 
+          vh()/2 + (Math.random()-0.5)*100, 
+          ['✨','🎉','⭐','💫'][Math.floor(Math.random()*4)]
+        );
+      }, i * 80);
+    }
+    
+    // Close after delay
+    setTimeout(() => {
+      closeMathModal();
+      notify('🎉 Unlocked: ' + currentMathAcc.name + '!');
+    }, 1500);
+    
+  } else {
+    // Wrong answer
+    btn.classList.add('wrong');
+    // Highlight correct answer
+    allBtns.forEach(b => {
+      if (parseInt(b.textContent) === correct) b.classList.add('correct');
+    });
+    feedback.textContent = `The answer was ${correct}. Try again!`;
+    feedback.className = 'feedback error';
+    sfxDeny();
+    
+    // Generate new problem after delay
+    setTimeout(() => {
+      currentMathProblem = generateMathProblem(currentMathAcc.mathLevel);
+      document.getElementById('math-question').textContent = currentMathProblem.question;
+      feedback.textContent = '';
+      feedback.className = 'feedback';
+      
+      const choicesDiv = document.getElementById('math-choices');
+      choicesDiv.innerHTML = '';
+      currentMathProblem.choices.forEach(choice => {
+        const newBtn = document.createElement('button');
+        newBtn.className = 'choice-btn';
+        newBtn.textContent = choice;
+        newBtn.onclick = () => handleMathAnswer(newBtn, choice);
+        choicesDiv.appendChild(newBtn);
+      });
+    }, 2000);
+  }
+}
+
+function closeMathModal() {
+  document.getElementById('math-modal').classList.remove('open');
+  currentMathAcc = null;
+  currentMathProblem = null;
+  buildDressPanel();
+}
+window.closeMathModal = closeMathModal;
 
 function buildStatsPanel(){
   const grid=document.getElementById('stats-grid');
