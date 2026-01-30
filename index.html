@@ -308,7 +308,7 @@ const ACCESSORIES = [
   { name:'Top Hat', emoji:'🎩', stage:2, id:2 },
   { name:'Bandana', emoji:'🧣', stage:2, id:4 },
   { name:'Crown',   emoji:'👑', stage:3, id:3 },
-  { name:'Goggles', emoji:'🥽', stage:3, id:6 },
+  { name:'Glasses', emoji:'👓', stage:3, id:6 },
   { name:'Halo',    emoji:'😇', stage:4, id:7 },
   // Math-locked accessories (K-4 grade levels)
   { name:'Sunglasses', emoji:'😎', mathLevel:1, id:8 },
@@ -906,6 +906,27 @@ function drawAcc(accId, sz, stage) {
   const acc = ACCESSORIES.find(a => a.id === accId);
   if (!acc || !acc.emoji) return;
   const s = sz * 0.3;
+
+  // Glasses drawn with canvas instead of emoji
+  if (accId === 6) {
+    const oy = stage === 'ADULT' || stage === 'TEEN' ? -sz*0.12 : -sz*0.05;
+    const lensR = sz * 0.09;
+    const gap = sz * 0.04;
+    const lensX = lensR + gap * 0.5;
+    ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+    ctx.lineWidth = Math.max(2, sz * 0.025);
+    // Left lens
+    ctx.beginPath(); ctx.arc(-lensX, oy, lensR, 0, Math.PI*2); ctx.stroke();
+    // Right lens
+    ctx.beginPath(); ctx.arc(lensX, oy, lensR, 0, Math.PI*2); ctx.stroke();
+    // Bridge
+    ctx.beginPath(); ctx.moveTo(-lensX + lensR, oy); ctx.lineTo(lensX - lensR, oy); ctx.stroke();
+    // Arms
+    ctx.beginPath(); ctx.moveTo(-lensX - lensR, oy); ctx.lineTo(-lensX - lensR - sz*0.08, oy - sz*0.02); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(lensX + lensR, oy); ctx.lineTo(lensX + lensR + sz*0.08, oy - sz*0.02); ctx.stroke();
+    return;
+  }
+
   ctx.font = Math.round(s) + 'px sans-serif';
   ctx.textAlign = 'center';
   const oy = stage === 'ADULT' || stage === 'TEEN' ? -sz*0.55 : -sz*0.4;
