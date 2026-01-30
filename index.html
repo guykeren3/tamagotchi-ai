@@ -283,10 +283,10 @@ const AUTO_SAVE_MS = 30000;
 const MAX_OFFLINE_MS = 8 * 3600 * 1000;
 
 const STAGES = {
-  EGG:   { dur: 10000 },  // 10 seconds for testing
-  BABY:  { dur: 1800000 },
-  CHILD: { dur: 3600000 },
-  TEEN:  { dur: 5400000 },
+  EGG:   { dur: 5 },  // 5 seconds for testing
+  BABY:  { dur: 1800 },  // 30 minutes
+  CHILD: { dur: 3600 },  // 60 minutes
+  TEEN:  { dur: 5400 },  // 90 minutes
   ADULT: { dur: Infinity }
 };
 
@@ -518,7 +518,7 @@ function drawPet(t, mood, stage, variant, sleeping, accessory) {
 }
 
 function drawEggPet(t, sz) {
-  const wobble = Math.sin(t * 0.005) * 0.05 * (state.stageTime > STAGES.EGG.dur * 0.5 ? 2 : 1);
+  const wobble = Math.sin(t * 0.005) * 0.05 * (state.stageTime > STAGES.EGG.dur * 1000 * 0.5 ? 2 : 1);
   ctx.rotate(wobble);
 
   // Egg body
@@ -538,7 +538,7 @@ function drawEggPet(t, sz) {
   ctx.beginPath(); ctx.arc(-sz*0.05, sz*0.2, sz*0.04, 0, Math.PI*2); ctx.fill();
 
   // Crack near hatching
-  if (state.stageTime > STAGES.EGG.dur * 0.7) {
+  if (state.stageTime > STAGES.EGG.dur * 1000 * 0.7) {
     ctx.strokeStyle = 'rgba(0,0,0,0.4)';
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -1053,7 +1053,7 @@ function updateCareScore() {
 
 function checkEvolution() {
   if(!state.alive||state.stage==='ADULT') return;
-  if(state.stageTime>=STAGES[state.stage].dur) evolve();
+  if(state.stageTime>=STAGES[state.stage].dur*1000) evolve();
 }
 
 function evolve() {
