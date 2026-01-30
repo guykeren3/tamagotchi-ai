@@ -29,7 +29,7 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
 
 /* ---- Bottom action bar ---- */
 #actions{position:fixed;bottom:0;left:0;right:0;padding:12px 8px;padding-bottom:max(12px,env(safe-area-inset-bottom));display:flex;justify-content:center;gap:6px;z-index:10;}
-.action-btn{display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(255,255,255,0.1);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:10px 12px 8px;cursor:pointer;transition:all 0.2s;min-width:56px;-webkit-tap-highlight-color:transparent;}
+.action-btn{display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(255,255,255,0.1);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:10px 10px 8px;cursor:pointer;transition:all 0.2s;min-width:46px;-webkit-tap-highlight-color:transparent;}
 .action-btn:hover{background:rgba(255,255,255,0.18);transform:translateY(-2px);}
 .action-btn:active{transform:scale(0.92);background:rgba(255,255,255,0.25);}
 .action-btn .icon{font-size:22px;line-height:1;}
@@ -80,6 +80,24 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
 .acc-card .acc-icon{font-size:24px;margin-bottom:4px;}
 .acc-card .acc-name{font-size:10px;color:rgba(255,255,255,0.7);}
 .acc-card .acc-level{font-size:8px;color:rgba(255,200,100,0.7);margin-top:2px;}
+
+/* House panel */
+#home-panel .home-tabs{display:flex;gap:0;margin-bottom:16px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);}
+.home-tab{flex:1;padding:10px 16px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5);border:none;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:center;}
+.home-tab.active{background:rgba(255,255,255,0.15);color:#fff;}
+.home-tab:hover{background:rgba(255,255,255,0.1);}
+#home-panel .home-section{display:none;width:100%;}
+#home-panel .home-section.active{display:block;}
+#home-panel .house-grid,#home-panel .land-grid{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:0 20px;max-width:380px;}
+.house-card,.land-card{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px 14px;cursor:pointer;transition:all 0.2s;text-align:center;min-width:70px;width:80px;}
+.house-card:hover,.land-card:hover{background:rgba(255,255,255,0.15);transform:translateY(-2px);}
+.house-card:active,.land-card:active{transform:scale(0.95);}
+.house-card.active-house,.land-card.active-land{border-color:rgba(100,200,255,0.6);background:rgba(100,200,255,0.1);}
+.house-card.math-locked{opacity:0.85;border-color:rgba(255,200,100,0.4);background:rgba(255,200,100,0.08);cursor:pointer;}
+.house-card.math-locked:hover{background:rgba(255,200,100,0.15);transform:translateY(-2px);}
+.house-card .house-icon,.land-card .land-icon{font-size:24px;margin-bottom:4px;}
+.house-card .house-name,.land-card .land-name{font-size:10px;color:rgba(255,255,255,0.7);}
+.house-card .house-level{font-size:8px;color:rgba(255,200,100,0.7);margin-top:2px;}
 
 /* Math riddle modal */
 #math-modal{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,26,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity 0.3s;}
@@ -197,6 +215,7 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
   <div class="action-btn" data-action="play"><span class="icon">🎮</span><span class="label">Play</span></div>
   <div class="action-btn" data-action="clean"><span class="icon">🧹</span><span class="label">Clean</span></div>
   <div class="action-btn" data-action="dress"><span class="icon">👒</span><span class="label">Dress</span></div>
+  <div class="action-btn" data-action="home"><span class="icon">🏠</span><span class="label">Home</span></div>
   <div class="action-btn" data-action="sleep"><span class="icon">💤</span><span class="label">Sleep</span></div>
   <div class="action-btn" data-action="stats"><span class="icon">📊</span><span class="label">Stats</span></div>
 </div>
@@ -230,6 +249,22 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
   <button class="panel-close" onclick="closePanel('dress')">&times;</button>
   <div class="panel-title">Accessories</div>
   <div class="acc-grid" id="acc-grid"></div>
+</div>
+
+<!-- HOME PANEL -->
+<div class="panel" id="home-panel">
+  <button class="panel-close" onclick="closePanel('home')">&times;</button>
+  <div class="panel-title">My Home</div>
+  <div class="home-tabs">
+    <button class="home-tab active" onclick="switchHomeTab('houses')">🏠 Houses</button>
+    <button class="home-tab" onclick="switchHomeTab('landscape')">🌄 Landscape</button>
+  </div>
+  <div class="home-section active" id="houses-section">
+    <div class="house-grid" id="house-grid"></div>
+  </div>
+  <div class="home-section" id="landscape-section">
+    <div class="land-grid" id="land-grid"></div>
+  </div>
 </div>
 
 <!-- STATS PANEL -->
@@ -329,6 +364,31 @@ const ACCESSORIES = [
   { name:'Unicorn',    emoji:'🦄', mathLevel:4, id:17 },
   { name:'Dragon',     emoji:'🐉', mathLevel:4, id:18 },
   { name:'Alien',      emoji:'👽', mathLevel:4, id:19 }
+];
+
+const HOUSES = [
+  { name:'None',         emoji:'❌', id:0 },
+  { name:'Tent',         emoji:'⛺', mathLevel:1, id:1 },
+  { name:'Cottage',      emoji:'🏡', mathLevel:1, id:2 },
+  { name:'Cabin',        emoji:'🛖', mathLevel:1, id:3 },
+  { name:'Treehouse',    emoji:'🌳', mathLevel:2, id:4 },
+  { name:'Castle',       emoji:'🏰', mathLevel:2, id:5 },
+  { name:'Igloo',        emoji:'🧊', mathLevel:2, id:6 },
+  { name:'Spaceship',    emoji:'🛸', mathLevel:3, id:7 },
+  { name:'Mushroom',     emoji:'🍄', mathLevel:3, id:8 },
+  { name:'Cloud Palace', emoji:'☁️', mathLevel:4, id:9 },
+  { name:'Crystal',      emoji:'💎', mathLevel:4, id:10 }
+];
+
+const LANDSCAPES = [
+  { name:'Night Sky',    emoji:'🌙', id:0 },
+  { name:'Green Meadow', emoji:'🌿', id:1 },
+  { name:'Desert',       emoji:'🏜️', id:2 },
+  { name:'Clouds',       emoji:'☁️', id:3 },
+  { name:'Snow',         emoji:'❄️', id:4 },
+  { name:'Beach',        emoji:'🏖️', id:5 },
+  { name:'Forest',       emoji:'🌲', id:6 },
+  { name:'Space',        emoji:'🚀', id:7 }
 ];
 
 // Color themes per mood
@@ -940,6 +1000,785 @@ function drawAcc(accId, sz, stage) {
   ctx.textAlign = 'start';
 }
 
+// ============================================================
+// HOUSE DRAWING
+// ============================================================
+function drawHouse(t) {
+  if (!state || state.house === 0) return;
+  const hx = petX();
+  const hy = petY();
+  const sz = petSize();
+  const hs = sz * 1.6; // house scale
+
+  ctx.save();
+  ctx.translate(hx, hy + sz * 0.15);
+
+  switch(state.house) {
+    case 1: // Tent
+      ctx.fillStyle = '#e17055';
+      ctx.beginPath();
+      ctx.moveTo(0, -hs*0.7);
+      ctx.lineTo(-hs*0.6, hs*0.3);
+      ctx.lineTo(hs*0.6, hs*0.3);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#d63031';
+      ctx.beginPath();
+      ctx.moveTo(0, -hs*0.7);
+      ctx.lineTo(0, hs*0.3);
+      ctx.lineTo(-hs*0.6, hs*0.3);
+      ctx.closePath();
+      ctx.fill();
+      // Door
+      ctx.fillStyle = '#2d3436';
+      ctx.beginPath();
+      ctx.moveTo(0, hs*0.3);
+      ctx.lineTo(-hs*0.15, hs*0.3);
+      ctx.lineTo(-hs*0.08, hs*0.05);
+      ctx.lineTo(hs*0.08, hs*0.05);
+      ctx.lineTo(hs*0.15, hs*0.3);
+      ctx.closePath();
+      ctx.fill();
+      // Flag
+      ctx.strokeStyle = '#636e72';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, -hs*0.7); ctx.lineTo(0, -hs*0.9); ctx.stroke();
+      ctx.fillStyle = '#ffd93d';
+      ctx.beginPath();
+      ctx.moveTo(0, -hs*0.9);
+      ctx.lineTo(hs*0.12, -hs*0.82);
+      ctx.lineTo(0, -hs*0.74);
+      ctx.closePath();
+      ctx.fill();
+      break;
+
+    case 2: // Cottage
+      // Walls
+      ctx.fillStyle = '#ffeaa7';
+      ctx.fillRect(-hs*0.45, -hs*0.2, hs*0.9, hs*0.5);
+      // Roof
+      ctx.fillStyle = '#e17055';
+      ctx.beginPath();
+      ctx.moveTo(-hs*0.55, -hs*0.2);
+      ctx.lineTo(0, -hs*0.65);
+      ctx.lineTo(hs*0.55, -hs*0.2);
+      ctx.closePath();
+      ctx.fill();
+      // Door
+      ctx.fillStyle = '#6c5ce7';
+      roundRectAt(-hs*0.08, hs*0.0, hs*0.16, hs*0.3, hs*0.03);
+      // Windows
+      ctx.fillStyle = '#74b9ff';
+      ctx.fillRect(-hs*0.35, -hs*0.1, hs*0.15, hs*0.12);
+      ctx.fillRect(hs*0.2, -hs*0.1, hs*0.15, hs*0.12);
+      ctx.strokeStyle = '#dfe6e9';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(-hs*0.35, -hs*0.1, hs*0.15, hs*0.12);
+      ctx.strokeRect(hs*0.2, -hs*0.1, hs*0.15, hs*0.12);
+      // Chimney
+      ctx.fillStyle = '#b2bec3';
+      ctx.fillRect(hs*0.2, -hs*0.6, hs*0.12, hs*0.25);
+      // Smoke
+      ctx.globalAlpha = 0.3;
+      ctx.fillStyle = '#dfe6e9';
+      const smokeY = Math.sin(t*0.002)*hs*0.05;
+      ctx.beginPath(); ctx.arc(hs*0.26, -hs*0.7+smokeY, hs*0.06, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(hs*0.3, -hs*0.82+smokeY, hs*0.04, 0, Math.PI*2); ctx.fill();
+      ctx.globalAlpha = 1;
+      break;
+
+    case 3: // Cabin
+      // Log walls
+      ctx.fillStyle = '#8B6914';
+      ctx.fillRect(-hs*0.45, -hs*0.25, hs*0.9, hs*0.55);
+      // Log lines
+      ctx.strokeStyle = '#6B4F12';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 5; i++) {
+        const ly = -hs*0.2 + i * hs*0.1;
+        ctx.beginPath(); ctx.moveTo(-hs*0.45, ly); ctx.lineTo(hs*0.45, ly); ctx.stroke();
+      }
+      // Roof
+      ctx.fillStyle = '#636e72';
+      ctx.beginPath();
+      ctx.moveTo(-hs*0.55, -hs*0.25);
+      ctx.lineTo(0, -hs*0.6);
+      ctx.lineTo(hs*0.55, -hs*0.25);
+      ctx.closePath();
+      ctx.fill();
+      // Door
+      ctx.fillStyle = '#4a3510';
+      roundRectAt(-hs*0.1, hs*0.0, hs*0.2, hs*0.3, hs*0.02);
+      // Window
+      ctx.fillStyle = '#ffeaa7';
+      ctx.fillRect(hs*0.15, -hs*0.12, hs*0.15, hs*0.12);
+      break;
+
+    case 4: // Treehouse
+      // Tree trunk
+      ctx.fillStyle = '#6B4F12';
+      ctx.fillRect(-hs*0.08, -hs*0.1, hs*0.16, hs*0.55);
+      // Branches
+      ctx.strokeStyle = '#6B4F12';
+      ctx.lineWidth = hs*0.04;
+      ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(-hs*0.02, -hs*0.3); ctx.lineTo(-hs*0.4, -hs*0.5); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(hs*0.02, -hs*0.25); ctx.lineTo(hs*0.35, -hs*0.45); ctx.stroke();
+      // Platform
+      ctx.fillStyle = '#8B6914';
+      ctx.fillRect(-hs*0.35, -hs*0.45, hs*0.7, hs*0.06);
+      // House on platform
+      ctx.fillStyle = '#e17055';
+      ctx.fillRect(-hs*0.28, -hs*0.75, hs*0.56, hs*0.3);
+      // Roof
+      ctx.fillStyle = '#55efc4';
+      ctx.beginPath();
+      ctx.moveTo(-hs*0.35, -hs*0.75);
+      ctx.lineTo(0, -hs*1.0);
+      ctx.lineTo(hs*0.35, -hs*0.75);
+      ctx.closePath();
+      ctx.fill();
+      // Window
+      ctx.fillStyle = '#ffeaa7';
+      ctx.beginPath(); ctx.arc(0, -hs*0.62, hs*0.08, 0, Math.PI*2); ctx.fill();
+      // Leaves
+      ctx.fillStyle = '#00b894';
+      ctx.globalAlpha = 0.6;
+      ctx.beginPath(); ctx.arc(-hs*0.4, -hs*0.55, hs*0.2, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(hs*0.35, -hs*0.5, hs*0.18, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(0, -hs*1.05, hs*0.15, 0, Math.PI*2); ctx.fill();
+      ctx.globalAlpha = 1;
+      break;
+
+    case 5: // Castle
+      // Main wall
+      ctx.fillStyle = '#b2bec3';
+      ctx.fillRect(-hs*0.35, -hs*0.3, hs*0.7, hs*0.6);
+      // Towers
+      ctx.fillStyle = '#636e72';
+      ctx.fillRect(-hs*0.45, -hs*0.55, hs*0.18, hs*0.85);
+      ctx.fillRect(hs*0.27, -hs*0.55, hs*0.18, hs*0.85);
+      // Tower tops
+      ctx.fillStyle = '#6c5ce7';
+      ctx.beginPath();
+      ctx.moveTo(-hs*0.48, -hs*0.55);
+      ctx.lineTo(-hs*0.36, -hs*0.78);
+      ctx.lineTo(-hs*0.24, -hs*0.55);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(hs*0.24, -hs*0.55);
+      ctx.lineTo(hs*0.36, -hs*0.78);
+      ctx.lineTo(hs*0.48, -hs*0.55);
+      ctx.closePath();
+      ctx.fill();
+      // Battlement
+      for (let i = 0; i < 5; i++) {
+        ctx.fillStyle = '#b2bec3';
+        ctx.fillRect(-hs*0.28 + i*hs*0.14, -hs*0.36, hs*0.08, hs*0.06);
+      }
+      // Gate
+      ctx.fillStyle = '#2d3436';
+      ctx.beginPath();
+      ctx.moveTo(-hs*0.1, hs*0.3);
+      ctx.lineTo(-hs*0.1, -hs*0.05);
+      ctx.arc(0, -hs*0.05, hs*0.1, Math.PI, 0);
+      ctx.lineTo(hs*0.1, hs*0.3);
+      ctx.closePath();
+      ctx.fill();
+      // Flags
+      ctx.fillStyle = '#ff6b6b';
+      const fw = Math.sin(t*0.004)*hs*0.02;
+      ctx.strokeStyle = '#636e72'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(-hs*0.36, -hs*0.78); ctx.lineTo(-hs*0.36, -hs*0.95); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(hs*0.36, -hs*0.78); ctx.lineTo(hs*0.36, -hs*0.95); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-hs*0.36, -hs*0.95);
+      ctx.lineTo(-hs*0.22+fw, -hs*0.88);
+      ctx.lineTo(-hs*0.36, -hs*0.81);
+      ctx.closePath();
+      ctx.fill();
+      break;
+
+    case 6: // Igloo
+      // Dome
+      ctx.fillStyle = '#dfe6e9';
+      ctx.beginPath();
+      ctx.arc(0, hs*0.15, hs*0.5, Math.PI, 0);
+      ctx.closePath();
+      ctx.fill();
+      // Ice block lines
+      ctx.strokeStyle = 'rgba(178,190,195,0.5)';
+      ctx.lineWidth = 1;
+      for (let i = 1; i < 4; i++) {
+        const ay = hs*0.15 - i*hs*0.12;
+        ctx.beginPath();
+        ctx.arc(0, hs*0.15, hs*0.5, Math.PI + i*0.25, -i*0.25);
+        ctx.stroke();
+      }
+      // Entrance
+      ctx.fillStyle = '#74b9ff';
+      ctx.beginPath();
+      ctx.arc(0, hs*0.15, hs*0.15, Math.PI, 0);
+      ctx.closePath();
+      ctx.fill();
+      // Snow on top
+      ctx.fillStyle = '#fff';
+      ctx.globalAlpha = 0.6;
+      ctx.beginPath(); ctx.arc(0, -hs*0.35, hs*0.1, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(-hs*0.15, -hs*0.3, hs*0.07, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(hs*0.12, -hs*0.32, hs*0.06, 0, Math.PI*2); ctx.fill();
+      ctx.globalAlpha = 1;
+      break;
+
+    case 7: // Spaceship
+      // Body
+      const grd = ctx.createRadialGradient(0, -hs*0.15, hs*0.05, 0, -hs*0.15, hs*0.45);
+      grd.addColorStop(0, '#b2bec3');
+      grd.addColorStop(1, '#636e72');
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.ellipse(0, -hs*0.15, hs*0.55, hs*0.18, 0, 0, Math.PI*2);
+      ctx.fill();
+      // Dome
+      ctx.fillStyle = 'rgba(116,185,255,0.5)';
+      ctx.beginPath();
+      ctx.arc(0, -hs*0.25, hs*0.2, Math.PI, 0);
+      ctx.closePath();
+      ctx.fill();
+      // Lights
+      const colors = ['#ff6b6b','#ffd93d','#55efc4','#74b9ff'];
+      for (let i = 0; i < 4; i++) {
+        const lx = -hs*0.35 + i*hs*0.23;
+        const blink = Math.sin(t*0.005 + i*1.5) > 0 ? 1 : 0.3;
+        ctx.globalAlpha = blink;
+        ctx.fillStyle = colors[i];
+        ctx.beginPath(); ctx.arc(lx, -hs*0.05, hs*0.04, 0, Math.PI*2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      // Landing legs
+      ctx.strokeStyle = '#636e72';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(-hs*0.3, hs*0.02); ctx.lineTo(-hs*0.4, hs*0.25); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(hs*0.3, hs*0.02); ctx.lineTo(hs*0.4, hs*0.25); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, hs*0.03); ctx.lineTo(0, hs*0.25); ctx.stroke();
+      break;
+
+    case 8: // Mushroom
+      // Stem
+      ctx.fillStyle = '#ffeaa7';
+      ctx.fillRect(-hs*0.12, -hs*0.15, hs*0.24, hs*0.5);
+      // Cap
+      ctx.fillStyle = '#ff6b6b';
+      ctx.beginPath();
+      ctx.arc(0, -hs*0.15, hs*0.45, Math.PI, 0);
+      ctx.closePath();
+      ctx.fill();
+      // Spots
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(-hs*0.2, -hs*0.35, hs*0.08, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(hs*0.15, -hs*0.4, hs*0.06, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(hs*0.0, -hs*0.5, hs*0.07, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(-hs*0.3, -hs*0.22, hs*0.05, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(hs*0.28, -hs*0.25, hs*0.05, 0, Math.PI*2); ctx.fill();
+      // Door
+      ctx.fillStyle = '#6c5ce7';
+      ctx.beginPath();
+      ctx.arc(0, hs*0.15, hs*0.08, Math.PI, 0);
+      ctx.closePath();
+      ctx.fill();
+      // Window
+      ctx.fillStyle = '#74b9ff';
+      ctx.beginPath(); ctx.arc(hs*0.0, hs*0.0, hs*0.05, 0, Math.PI*2); ctx.fill();
+      break;
+
+    case 9: // Cloud Palace
+      // Cloud base
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.beginPath(); ctx.arc(-hs*0.2, hs*0.2, hs*0.25, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(hs*0.15, hs*0.22, hs*0.22, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(0, hs*0.15, hs*0.3, 0, Math.PI*2); ctx.fill();
+      // Pillars
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.fillRect(-hs*0.3, -hs*0.5, hs*0.06, hs*0.55);
+      ctx.fillRect(hs*0.24, -hs*0.5, hs*0.06, hs*0.55);
+      // Roof
+      ctx.fillStyle = '#ffd93d';
+      ctx.beginPath();
+      ctx.moveTo(-hs*0.38, -hs*0.5);
+      ctx.lineTo(0, -hs*0.8);
+      ctx.lineTo(hs*0.38, -hs*0.5);
+      ctx.closePath();
+      ctx.fill();
+      // Arch
+      ctx.fillStyle = 'rgba(116,185,255,0.4)';
+      ctx.beginPath();
+      ctx.arc(0, -hs*0.05, hs*0.18, Math.PI, 0);
+      ctx.closePath();
+      ctx.fill();
+      // Sparkles
+      ctx.globalAlpha = 0.5 + Math.sin(t*0.003)*0.3;
+      ctx.fillStyle = '#ffd93d';
+      ctx.font = Math.round(hs*0.1) + 'px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('✨', -hs*0.15, -hs*0.65);
+      ctx.fillText('✨', hs*0.2, -hs*0.7);
+      ctx.textAlign = 'start';
+      ctx.globalAlpha = 1;
+      break;
+
+    case 10: // Crystal
+      // Main crystal
+      ctx.fillStyle = 'rgba(162,155,254,0.6)';
+      ctx.beginPath();
+      ctx.moveTo(0, -hs*0.85);
+      ctx.lineTo(-hs*0.2, -hs*0.15);
+      ctx.lineTo(hs*0.2, -hs*0.15);
+      ctx.closePath();
+      ctx.fill();
+      // Side crystals
+      ctx.fillStyle = 'rgba(108,92,231,0.5)';
+      ctx.beginPath();
+      ctx.moveTo(-hs*0.25, -hs*0.55);
+      ctx.lineTo(-hs*0.4, hs*0.05);
+      ctx.lineTo(-hs*0.15, hs*0.05);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(hs*0.3, -hs*0.5);
+      ctx.lineTo(hs*0.15, hs*0.05);
+      ctx.lineTo(hs*0.42, hs*0.05);
+      ctx.closePath();
+      ctx.fill();
+      // Small crystal
+      ctx.fillStyle = 'rgba(253,121,168,0.5)';
+      ctx.beginPath();
+      ctx.moveTo(-hs*0.42, -hs*0.25);
+      ctx.lineTo(-hs*0.5, hs*0.1);
+      ctx.lineTo(-hs*0.35, hs*0.1);
+      ctx.closePath();
+      ctx.fill();
+      // Glow
+      ctx.globalAlpha = 0.15 + Math.sin(t*0.003)*0.1;
+      const cGlow = ctx.createRadialGradient(0, -hs*0.3, 0, 0, -hs*0.3, hs*0.6);
+      cGlow.addColorStop(0, 'rgba(162,155,254,0.4)');
+      cGlow.addColorStop(1, 'rgba(162,155,254,0)');
+      ctx.fillStyle = cGlow;
+      ctx.beginPath(); ctx.arc(0, -hs*0.3, hs*0.6, 0, Math.PI*2); ctx.fill();
+      ctx.globalAlpha = 1;
+      // Shine lines
+      ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(-hs*0.05, -hs*0.7); ctx.lineTo(-hs*0.12, -hs*0.4); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(hs*0.08, -hs*0.6); ctx.lineTo(hs*0.1, -hs*0.35); ctx.stroke();
+      break;
+  }
+  ctx.restore();
+}
+
+function roundRectAt(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y);
+  ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+  ctx.lineTo(x+w, y+h-r);
+  ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  ctx.lineTo(x+r, y+h);
+  ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+  ctx.lineTo(x, y+r);
+  ctx.quadraticCurveTo(x, y, x+r, y);
+  ctx.closePath();
+  ctx.fill();
+}
+
+// ============================================================
+// LANDSCAPE BACKGROUNDS
+// ============================================================
+function drawLandscapeBackground(t, mood) {
+  const w = vw(), h = vh();
+  const landscapeId = (state && state.landscape) || 0;
+
+  if (landscapeId === 0) {
+    // Default Night Sky - use original mood-based background
+    drawBackground(t, mood);
+    return;
+  }
+
+  switch(landscapeId) {
+    case 1: // Green Meadow
+      {
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#87CEEB');
+        grad.addColorStop(0.5, '#B0E0E6');
+        grad.addColorStop(0.7, '#90EE90');
+        grad.addColorStop(1, '#228B22');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+        // Sun
+        ctx.fillStyle = 'rgba(255,255,100,0.3)';
+        ctx.beginPath(); ctx.arc(w*0.85, h*0.1, 50, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,150,0.6)';
+        ctx.beginPath(); ctx.arc(w*0.85, h*0.1, 35, 0, Math.PI*2); ctx.fill();
+        // Clouds
+        ctx.fillStyle = 'rgba(255,255,255,0.6)';
+        drawCloud(w*0.2 + Math.sin(t*0.0003)*20, h*0.12, 40);
+        drawCloud(w*0.6 + Math.sin(t*0.0002+1)*15, h*0.08, 30);
+        drawCloud(w*0.85 + Math.sin(t*0.00025+2)*18, h*0.2, 25);
+        // Ground
+        const gy = h*0.68;
+        ctx.fillStyle = '#3CB371';
+        ctx.fillRect(0, gy, w, h-gy);
+        // Grass tufts
+        ctx.strokeStyle = '#2E8B57';
+        ctx.lineWidth = 1.5;
+        for (let gx = 0; gx < w; gx += 25) {
+          const gh = 8 + Math.sin(gx*0.5)*3 + Math.sin(t*0.003+gx*0.1)*2;
+          ctx.beginPath();
+          ctx.moveTo(gx, gy);
+          ctx.quadraticCurveTo(gx-3, gy-gh, gx+2, gy-gh-3);
+          ctx.stroke();
+        }
+        // Flowers
+        const flowerColors = ['#ff6b6b','#ffd93d','#fd79a8','#a29bfe','#fff'];
+        for (let i = 0; i < 12; i++) {
+          const fx = (i*w/12 + Math.sin(i*3)*20) % w;
+          const fy = gy + 10 + Math.sin(i*7)*5;
+          ctx.fillStyle = flowerColors[i%5];
+          ctx.beginPath(); ctx.arc(fx, fy, 3, 0, Math.PI*2); ctx.fill();
+        }
+      }
+      break;
+
+    case 2: // Desert
+      {
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#FF8C00');
+        grad.addColorStop(0.3, '#FFA500');
+        grad.addColorStop(0.6, '#F4A460');
+        grad.addColorStop(1, '#DEB887');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+        // Sun (big and hot)
+        ctx.fillStyle = 'rgba(255,200,0,0.2)';
+        ctx.beginPath(); ctx.arc(w*0.5, h*0.08, 70, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = 'rgba(255,220,50,0.5)';
+        ctx.beginPath(); ctx.arc(w*0.5, h*0.08, 40, 0, Math.PI*2); ctx.fill();
+        // Dunes
+        const gy = h*0.68;
+        ctx.fillStyle = '#D2B48C';
+        ctx.beginPath();
+        ctx.moveTo(0, gy);
+        for (let x = 0; x <= w; x += 10) {
+          ctx.lineTo(x, gy + Math.sin(x*0.01)*20 + Math.sin(x*0.025)*8);
+        }
+        ctx.lineTo(w, h); ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+        // Cactus
+        ctx.fillStyle = '#2E8B57';
+        drawCactus(w*0.15, gy-5, 30);
+        drawCactus(w*0.78, gy-10, 22);
+        // Heat shimmer
+        ctx.globalAlpha = 0.05;
+        ctx.fillStyle = '#fff';
+        for (let i = 0; i < 8; i++) {
+          const sx = (i*w/8 + Math.sin(t*0.002+i)*30) % w;
+          ctx.fillRect(sx, h*0.4, 2, h*0.15);
+        }
+        ctx.globalAlpha = 1;
+      }
+      break;
+
+    case 3: // Clouds
+      {
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#4FC3F7');
+        grad.addColorStop(0.5, '#81D4FA');
+        grad.addColorStop(1, '#B3E5FC');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+        // Many clouds
+        ctx.fillStyle = 'rgba(255,255,255,0.7)';
+        for (let i = 0; i < 8; i++) {
+          const cx = (i*w/5 + Math.sin(t*0.0002+i*2)*40 + t*0.01*(i%3+1)*0.3) % (w+200) - 100;
+          const cy = h*0.1 + i*h*0.1 + Math.sin(i*5)*h*0.05;
+          drawCloud(cx, cy, 25+i*5);
+        }
+        // Ground clouds
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        const gy = h*0.72;
+        for (let x = -50; x < w+50; x += 40) {
+          const cr = 25 + Math.sin(x*0.05)*10;
+          ctx.beginPath(); ctx.arc(x, gy+10, cr, 0, Math.PI*2); ctx.fill();
+        }
+      }
+      break;
+
+    case 4: // Snow
+      {
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#708090');
+        grad.addColorStop(0.4, '#B0C4DE');
+        grad.addColorStop(0.7, '#E8E8E8');
+        grad.addColorStop(1, '#FFFFFF');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+        // Snow ground
+        const gy = h*0.68;
+        ctx.fillStyle = '#F0F8FF';
+        ctx.beginPath();
+        ctx.moveTo(0, gy);
+        for (let x = 0; x <= w; x += 15) {
+          ctx.lineTo(x, gy + Math.sin(x*0.02)*5 + Math.sin(x*0.05)*2);
+        }
+        ctx.lineTo(w, h); ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+        // Pine trees (background)
+        ctx.fillStyle = '#2F4F4F';
+        drawPineTree(w*0.1, gy, 35);
+        drawPineTree(w*0.25, gy+3, 25);
+        drawPineTree(w*0.8, gy-2, 30);
+        drawPineTree(w*0.92, gy+5, 20);
+        // Snowflakes
+        ctx.fillStyle = '#fff';
+        for (let i = 0; i < 30; i++) {
+          const sx = (i*w/15 + t*0.02*(i%3+1)*0.3) % w;
+          const sy = (i*h/12 + t*0.03*(i%4+1)*0.2) % h;
+          const ss = 1 + (i%3);
+          ctx.globalAlpha = 0.4 + Math.sin(t*0.003+i)*0.2;
+          ctx.beginPath(); ctx.arc(sx, sy, ss, 0, Math.PI*2); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
+      break;
+
+    case 5: // Beach
+      {
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#00BFFF');
+        grad.addColorStop(0.45, '#1E90FF');
+        grad.addColorStop(0.55, '#4169E1');
+        grad.addColorStop(0.62, '#F5DEB3');
+        grad.addColorStop(1, '#DEB887');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+        // Sun
+        ctx.fillStyle = 'rgba(255,255,100,0.3)';
+        ctx.beginPath(); ctx.arc(w*0.8, h*0.08, 50, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,150,0.6)';
+        ctx.beginPath(); ctx.arc(w*0.8, h*0.08, 32, 0, Math.PI*2); ctx.fill();
+        // Waves
+        const waveY = h*0.55;
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.lineWidth = 2;
+        for (let wl = 0; wl < 3; wl++) {
+          ctx.beginPath();
+          ctx.moveTo(0, waveY + wl*8);
+          for (let x = 0; x <= w; x += 5) {
+            ctx.lineTo(x, waveY + wl*8 + Math.sin(x*0.03 + t*0.003 + wl)*4);
+          }
+          ctx.stroke();
+        }
+        // Sand
+        const sy = h*0.62;
+        ctx.fillStyle = '#F5DEB3';
+        ctx.fillRect(0, sy, w, h-sy);
+        // Palm tree
+        drawPalmTree(w*0.12, sy, 60);
+        // Shells
+        ctx.font = '10px sans-serif';
+        ctx.fillText('🐚', w*0.4, sy+15);
+        ctx.fillText('🐚', w*0.7, sy+20);
+        ctx.fillText('⭐', w*0.55, sy+12);
+      }
+      break;
+
+    case 6: // Forest
+      {
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#1B3A1B');
+        grad.addColorStop(0.3, '#2D5A2D');
+        grad.addColorStop(0.6, '#1B4A1B');
+        grad.addColorStop(1, '#0D2B0D');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+        // Filtered light
+        ctx.globalAlpha = 0.05;
+        ctx.fillStyle = '#FFD700';
+        for (let i = 0; i < 5; i++) {
+          const lx = w*0.2 + i*w*0.15;
+          ctx.beginPath();
+          ctx.moveTo(lx, 0);
+          ctx.lineTo(lx-30, h*0.7);
+          ctx.lineTo(lx+30, h*0.7);
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        // Ground
+        const gy = h*0.7;
+        ctx.fillStyle = '#1a3a0a';
+        ctx.fillRect(0, gy, w, h-gy);
+        // Background trees
+        ctx.fillStyle = '#0D3B0D';
+        for (let i = 0; i < 6; i++) {
+          const tx = i*w/5;
+          drawForestTree(tx, gy, 50+Math.sin(i*3)*15, '#0D3B0D');
+        }
+        // Foreground trees
+        for (let i = 0; i < 3; i++) {
+          const tx = w*0.1 + i*w*0.35;
+          drawForestTree(tx, gy, 40, '#1B5A1B');
+        }
+        // Fireflies
+        for (let i = 0; i < 6; i++) {
+          const fx = (w*0.15+i*w/6 + Math.sin(t*0.001+i*2)*20);
+          const fy = h*0.3 + Math.sin(t*0.002+i*3)*h*0.15;
+          ctx.globalAlpha = 0.3 + Math.sin(t*0.005+i)*0.3;
+          ctx.fillStyle = '#ADFF2F';
+          ctx.beginPath(); ctx.arc(fx, fy, 2, 0, Math.PI*2); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
+      break;
+
+    case 7: // Space
+      {
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#0a001a');
+        grad.addColorStop(0.5, '#120025');
+        grad.addColorStop(1, '#0a001a');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+        // Nebula
+        ctx.globalAlpha = 0.08;
+        const nGrad = ctx.createRadialGradient(w*0.3, h*0.4, 0, w*0.3, h*0.4, w*0.4);
+        nGrad.addColorStop(0, '#8B00FF');
+        nGrad.addColorStop(0.5, '#FF1493');
+        nGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = nGrad;
+        ctx.fillRect(0, 0, w, h);
+        ctx.globalAlpha = 1;
+        // Stars
+        drawStars(t);
+        // Planet
+        ctx.fillStyle = '#E17055';
+        ctx.beginPath(); ctx.arc(w*0.82, h*0.25, 25, 0, Math.PI*2); ctx.fill();
+        // Ring
+        ctx.strokeStyle = 'rgba(255,200,150,0.4)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(w*0.82, h*0.25, 40, 8, -0.3, 0, Math.PI*2);
+        ctx.stroke();
+        // Small planet
+        ctx.fillStyle = '#74b9ff';
+        ctx.beginPath(); ctx.arc(w*0.15, h*0.15, 12, 0, Math.PI*2); ctx.fill();
+        // Ground (space platform)
+        const gy = h*0.72;
+        ctx.fillStyle = '#1a1a3e';
+        ctx.fillRect(0, gy, w, h-gy);
+        ctx.strokeStyle = 'rgba(100,100,200,0.2)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < w; x += 30) {
+          ctx.beginPath(); ctx.moveTo(x, gy); ctx.lineTo(x, h); ctx.stroke();
+        }
+        for (let y = gy; y < h; y += 15) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+        }
+      }
+      break;
+  }
+}
+
+// Landscape helper functions
+function drawCloud(x, y, size) {
+  ctx.beginPath();
+  ctx.arc(x, y, size, 0, Math.PI*2);
+  ctx.arc(x+size*0.8, y-size*0.2, size*0.7, 0, Math.PI*2);
+  ctx.arc(x+size*1.4, y, size*0.6, 0, Math.PI*2);
+  ctx.arc(x-size*0.6, y+size*0.1, size*0.5, 0, Math.PI*2);
+  ctx.fill();
+}
+
+function drawCactus(x, y, size) {
+  ctx.fillRect(x-size*0.1, y-size, size*0.2, size);
+  // Arms
+  ctx.fillRect(x-size*0.35, y-size*0.7, size*0.25, size*0.1);
+  ctx.fillRect(x-size*0.35, y-size*0.7, size*0.1, size*0.35);
+  ctx.fillRect(x+size*0.1, y-size*0.5, size*0.25, size*0.1);
+  ctx.fillRect(x+size*0.25, y-size*0.5, size*0.1, size*0.3);
+}
+
+function drawPineTree(x, y, size) {
+  ctx.save();
+  // Trunk
+  ctx.fillStyle = '#5D4037';
+  ctx.fillRect(x-size*0.06, y-size*0.2, size*0.12, size*0.25);
+  // Layers
+  ctx.fillStyle = '#2E7D32';
+  for (let i = 0; i < 3; i++) {
+    const ly = y - size*0.2 - i*size*0.3;
+    const lw = size*0.4 - i*size*0.08;
+    ctx.beginPath();
+    ctx.moveTo(x-lw, ly);
+    ctx.lineTo(x, ly-size*0.35);
+    ctx.lineTo(x+lw, ly);
+    ctx.closePath();
+    ctx.fill();
+  }
+  // Snow caps
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  for (let i = 0; i < 3; i++) {
+    const ly = y - size*0.2 - i*size*0.3;
+    ctx.beginPath();
+    ctx.moveTo(x-size*0.1, ly-size*0.25);
+    ctx.lineTo(x, ly-size*0.35);
+    ctx.lineTo(x+size*0.1, ly-size*0.25);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawPalmTree(x, y, size) {
+  // Trunk
+  ctx.fillStyle = '#8B6914';
+  ctx.lineWidth = size*0.08;
+  ctx.strokeStyle = '#6B4F12';
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.quadraticCurveTo(x+size*0.15, y-size*0.5, x+size*0.05, y-size*0.8);
+  ctx.lineWidth = size*0.1;
+  ctx.stroke();
+  // Leaves
+  ctx.fillStyle = '#228B22';
+  const lx = x+size*0.05, ly = y-size*0.8;
+  for (let i = 0; i < 5; i++) {
+    const angle = -Math.PI/2 + (i-2)*0.5;
+    ctx.save();
+    ctx.translate(lx, ly);
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.ellipse(0, -size*0.25, size*0.06, size*0.3, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+  // Coconuts
+  ctx.fillStyle = '#8B4513';
+  ctx.beginPath(); ctx.arc(lx+3, ly+5, 4, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(lx-4, ly+6, 4, 0, Math.PI*2); ctx.fill();
+}
+
+function drawForestTree(x, y, size, color) {
+  ctx.fillStyle = '#3E2723';
+  ctx.fillRect(x-size*0.06, y-size*0.3, size*0.12, size*0.35);
+  ctx.fillStyle = color;
+  ctx.beginPath(); ctx.arc(x, y-size*0.45, size*0.35, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x-size*0.2, y-size*0.3, size*0.2, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x+size*0.2, y-size*0.35, size*0.22, 0, Math.PI*2); ctx.fill();
+}
+
 // Draw poop on screen
 function drawPoops(t) {
   if (!state || state.poopCount <= 0 || state.stage === 'EGG') return;
@@ -1018,6 +1857,7 @@ function newState() {
     poopCount:0, poopTimer:0,
     sleeping:false, alive:true, accessory:0,
     unlockedAccessories:[],
+    house:0, landscape:0, unlockedHouses:[],
     lastUpdate:Date.now(), created:Date.now()
   };
 }
@@ -1028,8 +1868,11 @@ function load() {
     const d=localStorage.getItem(SAVE_KEY); 
     if(d){
       state=JSON.parse(d);
-      // Migration: add unlockedAccessories if missing
+      // Migration: add missing fields
       if(!state.unlockedAccessories) state.unlockedAccessories=[];
+      if(!state.unlockedHouses) state.unlockedHouses=[];
+      if(state.house===undefined) state.house=0;
+      if(state.landscape===undefined) state.landscape=0;
       return true;
     } 
   } catch(e){} 
@@ -1336,7 +2179,7 @@ function updateHUD() {
   const isEgg=state.stage==='EGG';
   document.querySelectorAll('.action-btn').forEach(b=>{
     const a=b.dataset.action;
-    if(a==='stats') b.classList.toggle('disabled',false);
+    if(a==='stats'||a==='home') b.classList.toggle('disabled',false);
     else b.classList.toggle('disabled',isEgg||(!state.alive));
   });
 
@@ -1408,7 +2251,7 @@ function buildDressPanel(){
     } else if (isMathLocked) {
       const levelNames = ['', 'Easy', 'Medium', 'Tricky', 'Challenge'];
       card.innerHTML = `<div class="acc-icon">🧩</div><div class="acc-name">${a.name}</div><div class="acc-level">Lv${a.mathLevel} ${levelNames[a.mathLevel]}</div>`;
-      card.onclick = () => openMathRiddle(a);
+      card.onclick = () => openMathRiddle(a, 'acc');
     } else {
       card.innerHTML = `<div class="acc-icon">${a.emoji}</div><div class="acc-name">${a.name}</div>`;
       card.onclick = () => {
@@ -1436,6 +2279,7 @@ const MATH_DIFFICULTY = {
 };
 
 let currentMathAcc = null;
+let currentMathType = 'acc'; // 'acc' or 'house'
 let currentMathProblem = null;
 
 function generateMathProblem(level) {
@@ -1477,17 +2321,18 @@ function generateMathProblem(level) {
   return { question, answer, choices: shuffled };
 }
 
-function openMathRiddle(acc) {
+function openMathRiddle(acc, type) {
   currentMathAcc = acc;
+  currentMathType = type || 'acc';
   currentMathProblem = generateMathProblem(acc.mathLevel);
-  
+
   document.getElementById('math-prize-emoji').textContent = acc.emoji;
   document.getElementById('math-prize-name').textContent = acc.name;
   document.getElementById('math-difficulty').textContent = `Level ${acc.mathLevel} - ${MATH_DIFFICULTY[acc.mathLevel].name}`;
   document.getElementById('math-question').textContent = currentMathProblem.question;
   document.getElementById('math-feedback').textContent = '';
   document.getElementById('math-feedback').className = 'feedback';
-  
+
   const choicesDiv = document.getElementById('math-choices');
   choicesDiv.innerHTML = '';
   currentMathProblem.choices.forEach(choice => {
@@ -1497,9 +2342,10 @@ function openMathRiddle(acc) {
     btn.onclick = () => handleMathAnswer(btn, choice);
     choicesDiv.appendChild(btn);
   });
-  
+
   document.getElementById('math-modal').classList.add('open');
-  closePanel('dress');
+  if (currentMathType === 'house') closePanel('home');
+  else closePanel('dress');
   sfxSelect();
 }
 
@@ -1517,9 +2363,14 @@ function handleMathAnswer(btn, chosen) {
     feedback.textContent = '🎉 Correct! Accessory unlocked!';
     feedback.className = 'feedback success';
     
-    // Unlock accessory
-    state.unlockedAccessories.push(currentMathAcc.id);
-    state.accessory = currentMathAcc.id;
+    // Unlock item
+    if (currentMathType === 'house') {
+      state.unlockedHouses.push(currentMathAcc.id);
+      state.house = currentMathAcc.id;
+    } else {
+      state.unlockedAccessories.push(currentMathAcc.id);
+      state.accessory = currentMathAcc.id;
+    }
     save();
     
     // Celebration
@@ -1573,11 +2424,73 @@ function handleMathAnswer(btn, chosen) {
 
 function closeMathModal() {
   document.getElementById('math-modal').classList.remove('open');
+  const wasHouse = currentMathType === 'house';
   currentMathAcc = null;
   currentMathProblem = null;
-  buildDressPanel();
+  if (wasHouse) buildHousePanel();
+  else buildDressPanel();
 }
 window.closeMathModal = closeMathModal;
+
+function switchHomeTab(tab) {
+  document.querySelectorAll('.home-tab').forEach((t,i) => {
+    t.classList.toggle('active', (tab==='houses' && i===0) || (tab==='landscape' && i===1));
+  });
+  document.getElementById('houses-section').classList.toggle('active', tab==='houses');
+  document.getElementById('landscape-section').classList.toggle('active', tab==='landscape');
+}
+window.switchHomeTab = switchHomeTab;
+
+function buildHousePanel() {
+  // Build houses grid
+  const grid = document.getElementById('house-grid');
+  grid.innerHTML = '';
+  HOUSES.forEach(h => {
+    const card = document.createElement('div');
+    const isMathLocked = h.mathLevel !== undefined && !state.unlockedHouses.includes(h.id);
+    const isUnlocked = !isMathLocked;
+
+    let className = 'house-card';
+    if (isMathLocked) className += ' math-locked';
+    if (state.house === h.id) className += ' active-house';
+    card.className = className;
+
+    if (isMathLocked) {
+      const levelNames = ['', 'Easy', 'Medium', 'Tricky', 'Challenge'];
+      card.innerHTML = `<div class="house-icon">🧩</div><div class="house-name">${h.name}</div><div class="house-level">Lv${h.mathLevel} ${levelNames[h.mathLevel]}</div>`;
+      card.onclick = () => openMathRiddle(h, 'house');
+    } else {
+      card.innerHTML = `<div class="house-icon">${h.emoji}</div><div class="house-name">${h.name}</div>`;
+      card.onclick = () => {
+        state.house = h.id;
+        notify(h.id === 0 ? 'House removed' : 'Living in: ' + h.name);
+        sfxConfirm();
+        save();
+        buildHousePanel();
+      };
+    }
+    grid.appendChild(card);
+  });
+
+  // Build landscape grid
+  const landGrid = document.getElementById('land-grid');
+  landGrid.innerHTML = '';
+  LANDSCAPES.forEach(l => {
+    const card = document.createElement('div');
+    let className = 'land-card';
+    if (state.landscape === l.id) className += ' active-land';
+    card.className = className;
+    card.innerHTML = `<div class="land-icon">${l.emoji}</div><div class="land-name">${l.name}</div>`;
+    card.onclick = () => {
+      state.landscape = l.id;
+      notify('Landscape: ' + l.name);
+      sfxConfirm();
+      save();
+      buildHousePanel();
+    };
+    landGrid.appendChild(card);
+  });
+}
 
 function buildStatsPanel(){
   const grid=document.getElementById('stats-grid');
@@ -1654,8 +2567,8 @@ document.querySelectorAll('.action-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     const a=btn.dataset.action;
     if(!state||!state.alive) return;
-    if(state.stage==='EGG'&&a!=='stats'){notify('Egg is not ready yet!');sfxDeny();return;}
-    if(state.sleeping&&a!=='sleep'&&a!=='stats'){notify('Pet is sleeping!');sfxDeny();return;}
+    if(state.stage==='EGG'&&a!=='stats'&&a!=='home'){notify('Egg is not ready yet!');sfxDeny();return;}
+    if(state.sleeping&&a!=='sleep'&&a!=='stats'&&a!=='home'){notify('Pet is sleeping!');sfxDeny();return;}
     sfxSelect();
     if(a==='feed'){buildFeedPanel();openPanel('feed');}
     else if(a==='play'){
@@ -1664,6 +2577,7 @@ document.querySelectorAll('.action-btn').forEach(btn=>{
     }
     else if(a==='clean') doClean();
     else if(a==='dress'){buildDressPanel();openPanel('dress');}
+    else if(a==='home'){buildHousePanel();openPanel('home');}
     else if(a==='sleep') toggleSleep();
     else if(a==='stats'){buildStatsPanel();openPanel('stats');}
   });
@@ -2081,9 +2995,15 @@ function gameLoop(now){
   ctx.setTransform(1,0,0,1,0,0);
   ctx.scale(devicePixelRatio,devicePixelRatio);
   const mood=getMood();
-  drawBackground(now, mood);
+  // Use landscape background if set, otherwise default
+  if (state && state.landscape && state.landscape > 0) {
+    drawLandscapeBackground(now, mood);
+  } else {
+    drawBackground(now, mood);
+  }
 
   if(state&&state.alive){
+    drawHouse(now);
     drawPet(now, mood, state.stage, state.variant, state.sleeping, state.accessory);
     drawPoops(now);
   } else if(state){
