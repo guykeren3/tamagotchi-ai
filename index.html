@@ -99,6 +99,26 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
 .house-card .house-name,.land-card .land-name{font-size:10px;color:rgba(255,255,255,0.7);}
 .house-card .house-level{font-size:8px;color:rgba(255,200,100,0.7);margin-top:2px;}
 
+/* Friends section */
+#friends-section{padding:0 20px;max-width:380px;width:100%;}
+.friend-code-box{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+.friend-code-box .code-display{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:10px 14px;font-size:18px;font-weight:700;color:#fff;font-family:monospace;letter-spacing:2px;text-align:center;}
+.friend-code-box .copy-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:10px 14px;color:#fff;font-size:13px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.friend-code-box .copy-btn:hover{background:rgba(255,255,255,0.2);}
+.friend-code-box .copy-btn:active{transform:scale(0.95);}
+.friend-invite{display:flex;gap:8px;margin-bottom:16px;}
+.friend-invite input{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:10px 14px;color:#fff;font-size:14px;font-family:monospace;outline:none;}
+.friend-invite input::placeholder{color:rgba(255,255,255,0.3);}
+.friend-invite .add-btn{background:rgba(100,200,255,0.15);border:1px solid rgba(100,200,255,0.3);border-radius:10px;padding:10px 14px;color:#fff;font-size:13px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.friend-invite .add-btn:hover{background:rgba(100,200,255,0.25);}
+.friend-invite .add-btn:active{transform:scale(0.95);}
+.visitor-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;}
+.visitor-card .visitor-info{flex:1;color:rgba(255,255,255,0.7);font-size:13px;}
+.visitor-card .visitor-info strong{color:#fff;font-size:14px;}
+.visitor-card .dismiss-btn{background:rgba(255,107,107,0.15);border:1px solid rgba(255,107,107,0.3);border-radius:10px;padding:8px 12px;color:#ff6b6b;font-size:12px;cursor:pointer;transition:all 0.2s;}
+.visitor-card .dismiss-btn:hover{background:rgba(255,107,107,0.25);}
+.friend-label{font-size:12px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+
 /* Math riddle modal */
 #math-modal{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,26,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity 0.3s;}
 #math-modal.open{opacity:1;pointer-events:auto;}
@@ -258,12 +278,26 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
   <div class="home-tabs">
     <button class="home-tab active" onclick="switchHomeTab('houses')">🏠 Houses</button>
     <button class="home-tab" onclick="switchHomeTab('landscape')">🌄 Landscape</button>
+    <button class="home-tab" onclick="switchHomeTab('friends')">👫 Friends</button>
   </div>
   <div class="home-section active" id="houses-section">
     <div class="house-grid" id="house-grid"></div>
   </div>
   <div class="home-section" id="landscape-section">
     <div class="land-grid" id="land-grid"></div>
+  </div>
+  <div class="home-section" id="friends-section">
+    <div class="friend-label">Your Code</div>
+    <div class="friend-code-box">
+      <div class="code-display" id="my-pet-code">---</div>
+      <button class="copy-btn" onclick="copyPetCode()">📋 Copy</button>
+    </div>
+    <div class="friend-label">Invite Friend</div>
+    <div class="friend-invite">
+      <input type="text" id="friend-code-input" placeholder="PET-XXXX" maxlength="8">
+      <button class="add-btn" onclick="addVisitorFromCode()">Add</button>
+    </div>
+    <div id="visitor-card-container"></div>
   </div>
 </div>
 
@@ -998,6 +1032,53 @@ function drawAcc(accId, sz, stage) {
   const oy = stage === 'ADULT' || stage === 'TEEN' ? -sz*0.55 : -sz*0.4;
   ctx.fillText(acc.emoji, 0, oy);
   ctx.textAlign = 'start';
+}
+
+// ============================================================
+// VISITOR PET DRAWING
+// ============================================================
+function drawVisitorPet(t) {
+  if (!visitor) return;
+  const sz = petSize() * 0.65;
+  const px = petX() + petSize() * 1.1;
+  const py = petY() + petSize() * 0.18;
+  const bounce = Math.sin(t * 0.0025 + 1) * sz * 0.035;
+  const breathe = 1 + Math.sin(t * 0.0018) * 0.015;
+
+  ctx.save();
+  ctx.translate(px, py + bounce);
+  ctx.scale(breathe, breathe);
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  ctx.beginPath();
+  ctx.ellipse(0, sz * 0.55, sz * 0.45, sz * 0.06, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  if (visitor.stage === 'EGG') {
+    drawEggPet(t, sz);
+  } else if (visitor.stage === 'BABY') {
+    drawBabyPet(t, sz, 'happy');
+  } else if (visitor.stage === 'CHILD') {
+    drawChildPet(t, sz, 'happy', visitor.variant);
+  } else if (visitor.stage === 'TEEN') {
+    drawTeenPet(t, sz, 'happy', visitor.variant);
+  } else if (visitor.stage === 'ADULT') {
+    drawAdultPet(t, sz, 'happy', visitor.variant);
+  }
+
+  drawAcc(visitor.accessory, sz, visitor.stage);
+
+  ctx.restore();
+
+  // "Visitor" label
+  ctx.save();
+  ctx.font = Math.round(sz * 0.18) + 'px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.fillText('Visitor', px, py - sz * 0.55);
+  ctx.textAlign = 'start';
+  ctx.restore();
 }
 
 // ============================================================
@@ -2433,13 +2514,102 @@ function closeMathModal() {
 window.closeMathModal = closeMathModal;
 
 function switchHomeTab(tab) {
+  const tabs = ['houses','landscape','friends'];
   document.querySelectorAll('.home-tab').forEach((t,i) => {
-    t.classList.toggle('active', (tab==='houses' && i===0) || (tab==='landscape' && i===1));
+    t.classList.toggle('active', tab===tabs[i]);
   });
-  document.getElementById('houses-section').classList.toggle('active', tab==='houses');
-  document.getElementById('landscape-section').classList.toggle('active', tab==='landscape');
+  tabs.forEach(id => {
+    document.getElementById(id+'-section').classList.toggle('active', tab===id);
+  });
+  if (tab === 'friends') buildFriendsSection();
 }
 window.switchHomeTab = switchHomeTab;
+
+// ============================================================
+// FRIEND PET VISITS - Share Code System
+// ============================================================
+let visitor = null; // {stage, variant, accessory, house, landscape}
+
+const STAGE_NAMES = ['EGG','BABY','CHILD','TEEN','ADULT'];
+
+function encodePetCode() {
+  if (!state) return 'PET-0000';
+  const si = getStageIndex(state.stage);
+  const v = state.variant || 0;
+  const a = state.accessory || 0;
+  const h = state.house || 0;
+  const l = state.landscape || 0;
+  // stage:0-4, variant:0-5, accessory:0-19, house:0-10, landscape:0-7
+  const value = si * (6*20*11*8) + v * (20*11*8) + a * (11*8) + h * 8 + l;
+  const code = value.toString(36).toUpperCase().padStart(4, '0');
+  return 'PET-' + code;
+}
+
+function decodePetCode(code) {
+  if (!code || !code.startsWith('PET-') || code.length !== 8) return null;
+  const hex = code.slice(4);
+  const value = parseInt(hex, 36);
+  if (isNaN(value) || value < 0) return null;
+  const l = value % 8;
+  const rem1 = Math.floor(value / 8);
+  const h = rem1 % 11;
+  const rem2 = Math.floor(rem1 / 11);
+  const a = rem2 % 20;
+  const rem3 = Math.floor(rem2 / 20);
+  const v = rem3 % 6;
+  const si = Math.floor(rem3 / 6);
+  if (si < 0 || si > 4) return null;
+  return { stage: STAGE_NAMES[si], variant: v, accessory: a, house: h, landscape: l };
+}
+
+function buildFriendsSection() {
+  document.getElementById('my-pet-code').textContent = encodePetCode();
+  const container = document.getElementById('visitor-card-container');
+  if (visitor) {
+    const stageName = visitor.stage;
+    const acc = ACCESSORIES.find(a => a.id === visitor.accessory);
+    const accName = acc ? acc.name : 'None';
+    container.innerHTML = '<div class="friend-label" style="margin-top:16px">Current Visitor</div>' +
+      '<div class="visitor-card">' +
+      '<div class="visitor-info"><strong>' + stageName + ' Pet</strong><br>Accessory: ' + accName + '</div>' +
+      '<button class="dismiss-btn" onclick="dismissVisitor()">Dismiss</button>' +
+      '</div>';
+  } else {
+    container.innerHTML = '';
+  }
+}
+
+function copyPetCode() {
+  const code = encodePetCode();
+  navigator.clipboard.writeText(code).then(() => {
+    notify('📋 Code copied: ' + code);
+  }).catch(() => {
+    notify('Code: ' + code);
+  });
+}
+window.copyPetCode = copyPetCode;
+
+function addVisitorFromCode() {
+  const input = document.getElementById('friend-code-input');
+  const code = (input.value || '').trim().toUpperCase();
+  const data = decodePetCode(code);
+  if (!data) {
+    notify('❌ Invalid code! Use format PET-XXXX');
+    return;
+  }
+  visitor = data;
+  input.value = '';
+  notify('👫 Visitor pet arrived!');
+  buildFriendsSection();
+}
+window.addVisitorFromCode = addVisitorFromCode;
+
+function dismissVisitor() {
+  visitor = null;
+  notify('👋 Visitor dismissed');
+  buildFriendsSection();
+}
+window.dismissVisitor = dismissVisitor;
 
 function buildHousePanel() {
   // Build houses grid
@@ -3005,6 +3175,7 @@ function gameLoop(now){
   if(state&&state.alive){
     drawHouse(now);
     drawPet(now, mood, state.stage, state.variant, state.sleeping, state.accessory);
+    if (visitor) drawVisitorPet(now);
     drawPoops(now);
   } else if(state){
     drawDeadPet();
