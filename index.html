@@ -3340,9 +3340,14 @@ async function sendChatMessage() {
   showTypingBubble();
   
   try {
+    // Add timeout for fetch request (30 seconds)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    
     const response = await fetch(`${API_BASE}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
       body: JSON.stringify({
         message,
         petState: {
@@ -3362,9 +3367,18 @@ async function sendChatMessage() {
       })
     });
     
+    clearTimeout(timeoutId);
+    
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to get response');
+      let errorMsg = `Server error: ${response.status}`;
+      try {
+        const error = await response.json();
+        errorMsg = error.error || error.details || errorMsg;
+      } catch (e) {
+        // Response wasn't JSON, use status text
+        errorMsg = response.statusText || errorMsg;
+      }
+      throw new Error(errorMsg);
     }
     
     const data = await response.json();
@@ -3389,8 +3403,21 @@ async function sendChatMessage() {
     
   } catch (error) {
     console.error('Chat error:', error);
+    console.error('Chat error details:', {
+      message: error.message,
+      name: error.name,
+      stack: error.stack
+    });
     
-    // Fallback responses based on stage
+    // Determine user-friendly error message
+    let errorDescription = error.message;
+    if (error.name === 'AbortError') {
+      errorDescription = 'Request timed out - server may be slow';
+    } else if (error.message === 'Failed to fetch' || error.message.includes('NetworkError')) {
+      errorDescription = 'Cannot reach server - is it running?';
+    }
+    
+    // Fallback responses based on stage with error hint in dev
     const fallbacks = {
       BABY: 'Me sleepy... hehe!',
       CHILD: 'Hmm, I got confused! Can you say that again?',
@@ -3400,6 +3427,11 @@ async function sendChatMessage() {
     const fallbackMsg = fallbacks[state.stage] || 'Hmm...';
     showBubble(fallbackMsg);
     speakText(fallbackMsg, state.stage);
+    
+    // Show notification with actual error in development
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      notify(`Chat error: ${errorDescription}`, 5000);
+    }
   }
   
   isSending = false;

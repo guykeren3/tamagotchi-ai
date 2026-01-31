@@ -97,6 +97,15 @@ export default async function handler(req, res) {
       });
     }
 
+    // Check for API key
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.error('ANTHROPIC_API_KEY is not set');
+      return res.status(500).json({ 
+        error: 'Server configuration error',
+        details: 'API key not configured'
+      });
+    }
+
     // Initialize Anthropic client
     const anthropic = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
