@@ -425,6 +425,58 @@ const LANDSCAPES = [
   { name:'Space',        emoji:'🚀', id:7 }
 ];
 
+// Garden elements per landscape
+const GARDEN_ELEMENTS = {
+  0: [ // Night Sky - Moonlit garden
+    { x:0.15, emoji:'🍄', label:'mushroom', glow:'#7B68EE' },
+    { x:0.30, emoji:'🌸', label:'moon flower', glow:'#DDA0DD' },
+    { x:0.70, emoji:'🍄', label:'mushroom', glow:'#9370DB' },
+    { x:0.85, emoji:'🌺', label:'moon flower', glow:'#DA70D6' },
+  ],
+  1: [ // Green Meadow - Classic garden
+    { x:0.12, emoji:'🌻', label:'flower bed' },
+    { x:0.28, emoji:'🚿', label:'watering can' },
+    { x:0.72, emoji:'🥕', label:'veggie patch' },
+    { x:0.88, emoji:'🌷', label:'flower bed' },
+  ],
+  2: [ // Desert - Succulent garden
+    { x:0.14, emoji:'🪴', label:'succulent' },
+    { x:0.32, emoji:'🪨', label:'rock garden' },
+    { x:0.70, emoji:'💧', label:'small oasis' },
+    { x:0.86, emoji:'🪴', label:'succulent' },
+  ],
+  3: [ // Clouds - Sky garden
+    { x:0.15, emoji:'🌈', label:'rainbow plant' },
+    { x:0.35, emoji:'💮', label:'cloud flower' },
+    { x:0.65, emoji:'💮', label:'cloud flower' },
+    { x:0.85, emoji:'🌈', label:'rainbow plant' },
+  ],
+  4: [ // Snow - Ice garden
+    { x:0.13, emoji:'❄️', label:'crystal flower' },
+    { x:0.30, emoji:'💎', label:'ice sculpture' },
+    { x:0.70, emoji:'💎', label:'ice sculpture' },
+    { x:0.87, emoji:'❄️', label:'crystal flower' },
+  ],
+  5: [ // Beach - Tropical garden
+    { x:0.14, emoji:'🐚', label:'shell planter' },
+    { x:0.32, emoji:'🪸', label:'coral garden' },
+    { x:0.68, emoji:'🫧', label:'tide pool' },
+    { x:0.86, emoji:'🐚', label:'shell planter' },
+  ],
+  6: [ // Forest - Fairy garden
+    { x:0.12, emoji:'🍄', label:'mushroom ring' },
+    { x:0.30, emoji:'🌿', label:'moss patch' },
+    { x:0.70, emoji:'🌿', label:'fern bed' },
+    { x:0.88, emoji:'🍄', label:'mushroom ring' },
+  ],
+  7: [ // Space - Alien garden
+    { x:0.13, emoji:'👾', label:'alien plant', glow:'#00FF88' },
+    { x:0.32, emoji:'🔮', label:'crystal pod', glow:'#FF00FF' },
+    { x:0.68, emoji:'🌀', label:'space vine', glow:'#00BFFF' },
+    { x:0.87, emoji:'👾', label:'alien plant', glow:'#00FF88' },
+  ]
+};
+
 // Color themes per mood
 const THEMES = {
   ecstatic: { bg1:'#0f0c29', bg2:'#302b63', bg3:'#24243e', ground:'#1a1a3e', stars:true },
@@ -564,7 +616,8 @@ function drawBackground(t, mood) {
 // PET DRAWING (on main canvas, not pixel art)
 // ============================================================
 const petSize = () => Math.min(vw(), vh()) * 0.22;
-const petX = () => vw() / 2;
+let gardenPetOffsetX = 0; // offset from center for garden wandering
+const petX = () => vw() / 2 + gardenPetOffsetX;
 const petY = () => vh() * 0.55;
 
 function drawPet(t, mood, stage, variant, sleeping, accessory) {
@@ -2054,6 +2107,202 @@ function drawForestTree(x, y, size, color) {
   ctx.beginPath(); ctx.arc(x+size*0.2, y-size*0.35, size*0.22, 0, Math.PI*2); ctx.fill();
 }
 
+// ============================================================
+// GARDEN DRAWING
+// ============================================================
+function drawGarden(t, landscapeId) {
+  const w = vw(), h = vh();
+  const gy = h * 0.72; // ground line
+  const elements = GARDEN_ELEMENTS[landscapeId] || GARDEN_ELEMENTS[0];
+  const emojiSize = Math.round(Math.min(w, h) * 0.04);
+
+  for (let i = 0; i < elements.length; i++) {
+    const el = elements[i];
+    const ex = el.x * w;
+    const ey = gy + 10 + Math.sin(ex * 0.01) * 4; // slight variation on ground
+
+    // Glow effect for bioluminescent/moonlit items
+    if (el.glow) {
+      const pulse = 0.3 + 0.2 * Math.sin(t * 0.003 + i * 1.5);
+      ctx.globalAlpha = pulse;
+      ctx.fillStyle = el.glow;
+      ctx.beginPath();
+      ctx.arc(ex, ey - emojiSize * 0.3, emojiSize * 0.8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    // Small bob animation
+    const bob = Math.sin(t * 0.002 + i * 2) * 2;
+
+    // Draw emoji
+    ctx.font = emojiSize + 'px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(el.emoji, ex, ey + bob);
+
+    // Small soil/pot base
+    ctx.fillStyle = 'rgba(80,60,40,0.3)';
+    ctx.beginPath();
+    ctx.ellipse(ex, ey + 5, emojiSize * 0.5, emojiSize * 0.15, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.textAlign = 'start';
+}
+
+// ============================================================
+// GARDEN ENHANCED DRAWING (Balloon, Plants, Companion)
+// ============================================================
+
+// Draw floating balloon
+function drawBalloon(t) {
+  if (!gardenBalloon.active) return;
+  
+  const w = vw(), h = vh();
+  const bx = gardenBalloon.x;
+  const by = gardenBalloon.y;
+  const bobOffset = Math.sin(t * 0.003) * 3;
+  
+  // Shadow on ground
+  ctx.globalAlpha = 0.2;
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.ellipse(bx, h * 0.73, 12, 4, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  
+  // String
+  ctx.strokeStyle = '#666';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(bx, by + 20 + bobOffset);
+  // Wavy string
+  const stringLen = h * 0.73 - (by + 20);
+  for (let i = 0; i <= 10; i++) {
+    const sy = by + 20 + bobOffset + (stringLen * i / 10);
+    const sx = bx + Math.sin(i * 0.8 + t * 0.002) * 3;
+    ctx.lineTo(sx, sy);
+  }
+  ctx.stroke();
+  
+  // Balloon body (oval)
+  const balloonW = 18;
+  const balloonH = 22;
+  
+  // Glow effect
+  ctx.globalAlpha = 0.3;
+  ctx.fillStyle = gardenBalloon.color;
+  ctx.beginPath();
+  ctx.ellipse(bx, by + bobOffset, balloonW + 5, balloonH + 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  
+  // Main balloon
+  ctx.fillStyle = gardenBalloon.color;
+  ctx.beginPath();
+  ctx.ellipse(bx, by + bobOffset, balloonW, balloonH, 0, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Highlight
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.beginPath();
+  ctx.ellipse(bx - 5, by - 5 + bobOffset, 5, 7, -0.4, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Knot
+  ctx.fillStyle = gardenBalloon.color;
+  ctx.beginPath();
+  ctx.moveTo(bx - 4, by + balloonH + bobOffset);
+  ctx.lineTo(bx + 4, by + balloonH + bobOffset);
+  ctx.lineTo(bx, by + balloonH + 6 + bobOffset);
+  ctx.closePath();
+  ctx.fill();
+}
+
+// Draw planted garden plants
+function drawGardenPlants(t) {
+  if (!state || !state.gardenPlants || state.gardenPlants.length === 0) return;
+  
+  const w = vw(), h = vh();
+  const gy = h * 0.70; // slightly above main garden elements
+  const emojiSize = Math.round(Math.min(w, h) * 0.035);
+  
+  ctx.font = emojiSize + 'px sans-serif';
+  ctx.textAlign = 'center';
+  
+  for (let i = 0; i < state.gardenPlants.length; i++) {
+    const plant = state.gardenPlants[i];
+    const px = plant.x * w;
+    const py = gy + (plant.stage * -3); // taller plants grow upward
+    
+    // Growth-based size
+    const sizeMultiplier = 0.7 + (plant.stage * 0.15);
+    ctx.font = Math.round(emojiSize * sizeMultiplier) + 'px sans-serif';
+    
+    // Gentle sway animation
+    const sway = Math.sin(t * 0.0015 + i * 2) * (2 + plant.stage);
+    
+    // Glow for fully grown plants
+    if (plant.stage >= 3) {
+      ctx.globalAlpha = 0.3 + Math.sin(t * 0.003 + i) * 0.15;
+      ctx.fillStyle = '#FFD700';
+      ctx.beginPath();
+      ctx.arc(px, py, emojiSize * 0.6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    
+    // Draw plant emoji based on stage
+    const emoji = PLANT_STAGES[Math.min(plant.stage, PLANT_STAGES.length - 1)];
+    ctx.fillText(emoji, px + sway, py);
+    
+    // Small dirt mound
+    ctx.fillStyle = 'rgba(101,67,33,0.4)';
+    ctx.beginPath();
+    ctx.ellipse(px, gy + 8, emojiSize * 0.4, emojiSize * 0.12, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  
+  ctx.textAlign = 'start';
+}
+
+// Draw companion pet
+function drawCompanion(t) {
+  if (!state || !state.companion) return;
+  
+  const companion = COMPANION_TYPES[state.companion.type];
+  if (!companion) return;
+  
+  const h = vh();
+  const baseY = h * 0.62;
+  const y = baseY + companionBounce;
+  
+  // Calculate size (40% of pet size)
+  const size = petSize() * 0.4;
+  
+  // Shadow
+  ctx.globalAlpha = 0.2;
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.ellipse(companionX, baseY + size * 0.4, size * 0.4, size * 0.12, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  
+  // Bounce animation
+  const bounce = Math.sin(t * 0.006) * 3;
+  
+  // Draw companion emoji
+  ctx.font = Math.round(size) + 'px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(companion.emoji, companionX, y + bounce);
+  
+  // Heart particle during play
+  if (gardenActivity === 'playingWithFriend' && Math.random() < 0.01) {
+    spawnParticle(companionX + (Math.random() - 0.5) * 20, y - 10, '💕');
+  }
+  
+  ctx.textAlign = 'start';
+}
+
 // Draw poop on screen
 function drawPoops(t) {
   if (!state || state.poopCount <= 0 || state.stage === 'EGG') return;
@@ -2119,6 +2368,424 @@ function drawEvolveAnim(t) {
 }
 
 // ============================================================
+// GARDEN AUTONOMOUS BEHAVIOR
+// ============================================================
+let gardenMode = false;
+let gardenActivity = 'idle'; // 'idle','walking','watering','planting','picking','digging','sniffing'
+let gardenTargetX = 0; // target X position (absolute)
+let gardenTargetIdx = -1; // index into GARDEN_ELEMENTS for current target
+let gardenActivityTimer = 0; // ms remaining on current activity
+let gardenWalkSpeed = 0; // pixels per ms
+let lastInteraction = Date.now();
+const IDLE_THRESHOLD = 8000; // ms before pet starts gardening
+const GARDEN_WALK_SPEED = 0.12; // pixels per ms
+const GARDEN_ACTIVITY_DURATION = 3500; // ms per activity
+const GARDEN_ACTIVITIES = ['watering','planting','picking','digging','sniffing'];
+const GARDEN_ACTIVITY_EMOJIS = { watering:'💧', planting:'🌱', picking:'✂️', digging:'🕳️', sniffing:'👃', chasingBalloon:'🎈', playingWithFriend:'💕' };
+
+// Balloon constants
+const BALLOON_SPAWN_CHANCE = 0.10; // 10% chance per activity completion
+const BALLOON_COLORS = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3', '#f38181', '#aa96da'];
+const BALLOON_SPEED = 0.04; // pixels per ms horizontal drift
+
+// Companion constants
+const COMPANION_TYPES = [
+  { emoji: '🐦', name: 'bird' },
+  { emoji: '🦋', name: 'butterfly' },
+  { emoji: '🐰', name: 'bunny' },
+  { emoji: '🐿️', name: 'squirrel' },
+  { emoji: '🐸', name: 'frog' }
+];
+const COMPANION_UNLOCK_CARE_SCORE = 70;
+const COMPANION_UNLOCK_TIME_MS = 60 * 60 * 1000; // 1 hour
+
+// Plant growth stages
+const PLANT_STAGES = ['🌱', '🌿', '🌸', '🌺'];
+const PLANT_GROWTH_TIME = 120000; // 2 minutes per stage
+const MAX_GARDEN_PLANTS = 6;
+
+// Weighted garden activities
+const GARDEN_ACTIVITIES_WEIGHTED = [
+  { activity: 'watering', weight: 2 },
+  { activity: 'planting', weight: 2 },
+  { activity: 'picking', weight: 1 },
+  { activity: 'digging', weight: 1 },
+  { activity: 'sniffing', weight: 1 },
+  { activity: 'playingWithFriend', weight: 3, requiresCompanion: true },
+  { activity: 'chasingBalloon', weight: 0, triggeredByBalloon: true }
+];
+
+// Balloon state
+let gardenBalloon = { x: 0, y: 0, vx: 0, vy: 0, active: false, color: '#ff6b6b', baseY: 0, time: 0 };
+
+// Companion state (runtime)
+let companionX = 0;
+let companionTargetX = 0;
+let companionBounce = 0;
+
+function resetGardenMode() {
+  gardenMode = false;
+  gardenActivity = 'idle';
+  gardenTargetIdx = -1;
+  gardenActivityTimer = 0;
+  gardenBalloon.active = false;
+}
+
+function pickGardenTarget() {
+  const landscapeId = (state && state.landscape) || 0;
+  const elements = GARDEN_ELEMENTS[landscapeId] || GARDEN_ELEMENTS[0];
+  let idx;
+  do { idx = Math.floor(Math.random() * elements.length); } while (idx === gardenTargetIdx && elements.length > 1);
+  gardenTargetIdx = idx;
+  gardenTargetX = elements[idx].x * vw() - vw() / 2; // offset from center
+  gardenActivity = 'walking';
+}
+
+// ---- BALLOON SYSTEM ----
+function spawnBalloon() {
+  const w = vw(), h = vh();
+  gardenBalloon.x = Math.random() * w * 0.6 + w * 0.2; // spawn in middle 60%
+  gardenBalloon.baseY = h * 0.35; // float above pet
+  gardenBalloon.y = gardenBalloon.baseY;
+  gardenBalloon.vx = (Math.random() - 0.5) * BALLOON_SPEED * 2;
+  gardenBalloon.vy = 0;
+  gardenBalloon.color = BALLOON_COLORS[Math.floor(Math.random() * BALLOON_COLORS.length)];
+  gardenBalloon.active = true;
+  gardenBalloon.time = 0;
+}
+
+function updateBalloon(dt) {
+  if (!gardenBalloon.active) return;
+  
+  const w = vw();
+  gardenBalloon.time += dt;
+  
+  // Gentle sine-wave bobbing
+  gardenBalloon.y = gardenBalloon.baseY + Math.sin(gardenBalloon.time * 0.002) * 15;
+  
+  // Horizontal drift with random direction changes
+  gardenBalloon.x += gardenBalloon.vx * dt;
+  if (Math.random() < dt * 0.0005) {
+    gardenBalloon.vx = (Math.random() - 0.5) * BALLOON_SPEED * 2;
+  }
+  
+  // Bounce off screen edges
+  if (gardenBalloon.x < w * 0.1) {
+    gardenBalloon.x = w * 0.1;
+    gardenBalloon.vx = Math.abs(gardenBalloon.vx);
+  } else if (gardenBalloon.x > w * 0.9) {
+    gardenBalloon.x = w * 0.9;
+    gardenBalloon.vx = -Math.abs(gardenBalloon.vx);
+  }
+}
+
+function catchBalloon() {
+  if (!gardenBalloon.active) return;
+  
+  // Celebration particles
+  for (let i = 0; i < 5; i++) {
+    spawnParticle(gardenBalloon.x + (Math.random() - 0.5) * 30, gardenBalloon.y + (Math.random() - 0.5) * 30, '🎈');
+  }
+  spawnParticle(gardenBalloon.x, gardenBalloon.y, '💥');
+  
+  // Small happiness boost
+  if (state) {
+    state.happiness = Math.min(100, state.happiness + 2);
+    save();
+  }
+  
+  gardenBalloon.active = false;
+}
+
+// ---- PLANTING SYSTEM ----
+function updateGardenPlants(dt) {
+  if (!state || !state.gardenPlants) return;
+  
+  const now = Date.now();
+  for (let plant of state.gardenPlants) {
+    const age = now - plant.plantedAt;
+    const newStage = Math.min(3, Math.floor(age / PLANT_GROWTH_TIME));
+    if (newStage !== plant.stage) {
+      plant.stage = newStage;
+      save();
+    }
+  }
+}
+
+function addGardenPlant() {
+  if (!state || !state.gardenPlants) return;
+  if (state.gardenPlants.length >= MAX_GARDEN_PLANTS) return;
+  
+  // Find a spot that isn't too close to existing plants
+  const w = vw();
+  let x, attempts = 0;
+  do {
+    x = 0.15 + Math.random() * 0.7; // 15% to 85% of screen
+    attempts++;
+  } while (attempts < 20 && state.gardenPlants.some(p => Math.abs(p.x - x) < 0.1));
+  
+  const plant = {
+    x: x,
+    type: Math.floor(Math.random() * 4),
+    plantedAt: Date.now(),
+    stage: 0
+  };
+  
+  state.gardenPlants.push(plant);
+  spawnParticle(x * w, vh() * 0.7, '🌱');
+  save();
+}
+
+function harvestPlant() {
+  if (!state || !state.gardenPlants) return false;
+  
+  // Find a fully grown plant
+  const idx = state.gardenPlants.findIndex(p => p.stage >= 3);
+  if (idx === -1) return false;
+  
+  const plant = state.gardenPlants[idx];
+  const w = vw();
+  
+  // Remove and give reward
+  state.gardenPlants.splice(idx, 1);
+  state.happiness = Math.min(100, state.happiness + 3);
+  
+  // Celebration
+  spawnParticle(plant.x * w, vh() * 0.68, '🌺');
+  spawnParticle(plant.x * w, vh() * 0.68, '✨');
+  save();
+  
+  return true;
+}
+
+// ---- COMPANION SYSTEM ----
+function checkCompanionUnlock() {
+  if (!state || state.companion) return; // Already unlocked
+  
+  if (state.careScore >= COMPANION_UNLOCK_CARE_SCORE && state.totalTime >= COMPANION_UNLOCK_TIME_MS) {
+    // Unlock companion!
+    state.companion = {
+      type: Math.floor(Math.random() * COMPANION_TYPES.length),
+      unlockedAt: Date.now()
+    };
+    
+    // Initialize companion position
+    companionX = petX() - 60;
+    companionTargetX = companionX;
+    
+    // Notification and celebration
+    const companion = COMPANION_TYPES[state.companion.type];
+    notify(`${companion.emoji} Your pet made a friend!`);
+    for (let i = 0; i < 3; i++) {
+      spawnParticle(petX() - 40 + Math.random() * 20, petY() - 20 + Math.random() * 20, '💕');
+    }
+    sfxConfirm();
+    save();
+  }
+}
+
+function updateCompanion(dt) {
+  if (!state || !state.companion) return;
+  
+  // Companion follows pet at a distance
+  const targetOffset = gardenMode ? -50 : -40;
+  companionTargetX = petX() + targetOffset;
+  
+  // Smooth follow
+  companionX += (companionTargetX - companionX) * Math.min(1, dt * 0.004);
+  
+  // Bounce animation during play
+  if (gardenActivity === 'playingWithFriend') {
+    companionBounce = Math.sin(Date.now() * 0.008) * 8;
+  } else {
+    companionBounce *= 0.95;
+  }
+}
+
+// ---- WEIGHTED ACTIVITY SELECTION ----
+function pickWeightedActivity() {
+  const hasCompanion = state && state.companion;
+  
+  // Filter activities by requirements
+  const available = GARDEN_ACTIVITIES_WEIGHTED.filter(a => {
+    if (a.requiresCompanion && !hasCompanion) return false;
+    if (a.triggeredByBalloon) return false; // Balloon chasing is triggered separately
+    return true;
+  });
+  
+  // Calculate total weight
+  const totalWeight = available.reduce((sum, a) => sum + a.weight, 0);
+  let random = Math.random() * totalWeight;
+  
+  for (const a of available) {
+    random -= a.weight;
+    if (random <= 0) return a.activity;
+  }
+  
+  return 'sniffing'; // Fallback
+}
+
+function updateGarden(dt) {
+  if (!state || !state.alive || state.stage === 'EGG' || state.sleeping) {
+    if (gardenMode) resetGardenMode();
+    gardenPetOffsetX += (0 - gardenPetOffsetX) * Math.min(1, dt * 0.008);
+    if (Math.abs(gardenPetOffsetX) < 0.5) gardenPetOffsetX = 0;
+    return;
+  }
+
+  const now = Date.now();
+  
+  // Update subsystems
+  updateBalloon(dt);
+  updateGardenPlants(dt);
+  updateCompanion(dt);
+  checkCompanionUnlock();
+
+  if (!gardenMode) {
+    // Check if idle long enough OR tab is hidden
+    if (now - lastInteraction > IDLE_THRESHOLD || document.hidden) {
+      gardenMode = true;
+      pickGardenTarget();
+    } else {
+      // Smoothly return to center
+      gardenPetOffsetX += (0 - gardenPetOffsetX) * Math.min(1, dt * 0.008);
+      if (Math.abs(gardenPetOffsetX) < 0.5) gardenPetOffsetX = 0;
+    }
+    return;
+  }
+
+  // Garden mode active
+  if (gardenActivity === 'walking') {
+    const diff = gardenTargetX - gardenPetOffsetX;
+    if (Math.abs(diff) < 3) {
+      gardenPetOffsetX = gardenTargetX;
+      
+      // If balloon is active, chase it instead
+      if (gardenBalloon.active) {
+        gardenActivity = 'chasingBalloon';
+        gardenActivityTimer = GARDEN_ACTIVITY_DURATION;
+      } else {
+        // Pick weighted activity
+        gardenActivity = pickWeightedActivity();
+        gardenActivityTimer = GARDEN_ACTIVITY_DURATION;
+      }
+    } else {
+      gardenPetOffsetX += Math.sign(diff) * Math.min(Math.abs(diff), GARDEN_WALK_SPEED * dt);
+    }
+  } else if (gardenActivity === 'chasingBalloon') {
+    // Chase the balloon
+    if (!gardenBalloon.active) {
+      pickGardenTarget();
+      return;
+    }
+    
+    const balloonOffsetX = gardenBalloon.x - vw() / 2;
+    const diff = balloonOffsetX - gardenPetOffsetX;
+    
+    if (Math.abs(diff) < 25) {
+      // Caught it!
+      catchBalloon();
+      pickGardenTarget();
+    } else {
+      gardenPetOffsetX += Math.sign(diff) * Math.min(Math.abs(diff), GARDEN_WALK_SPEED * 1.3 * dt);
+      
+      // Spawn excited particles
+      if (Math.random() < dt * 0.002) {
+        spawnParticle(petX() + (Math.random() - 0.5) * 20, petY() - petSize() * 0.3, '✨');
+      }
+    }
+    
+    gardenActivityTimer -= dt;
+    if (gardenActivityTimer <= 0) {
+      // Balloon escaped, move on
+      gardenBalloon.active = false;
+      pickGardenTarget();
+    }
+  } else if (gardenActivity === 'playingWithFriend') {
+    // Playing with companion
+    gardenActivityTimer -= dt;
+    
+    // Spawn heart particles
+    if (Math.random() < dt * 0.004) {
+      spawnParticle(petX() - 25 + Math.random() * 50, petY() - petSize() * 0.5, '💕');
+    }
+    
+    if (gardenActivityTimer <= 0) {
+      // Chance to spawn balloon after activity
+      if (Math.random() < BALLOON_SPAWN_CHANCE && !gardenBalloon.active) {
+        spawnBalloon();
+      }
+      pickGardenTarget();
+    }
+  } else if (gardenActivity === 'planting') {
+    // Planting activity - may add a plant
+    gardenActivityTimer -= dt;
+    
+    if (Math.random() < dt * 0.003) {
+      const emoji = GARDEN_ACTIVITY_EMOJIS[gardenActivity] || '✨';
+      spawnParticle(petX() + (Math.random() - 0.5) * 30, petY() - petSize() * 0.5, emoji);
+    }
+    
+    if (gardenActivityTimer <= 0) {
+      // 40% chance to actually plant something
+      if (Math.random() < 0.4 && state.gardenPlants.length < MAX_GARDEN_PLANTS) {
+        addGardenPlant();
+      }
+      
+      // Chance to spawn balloon after activity
+      if (Math.random() < BALLOON_SPAWN_CHANCE && !gardenBalloon.active) {
+        spawnBalloon();
+      }
+      pickGardenTarget();
+    }
+  } else if (gardenActivity === 'picking') {
+    // Picking activity - may harvest a plant
+    gardenActivityTimer -= dt;
+    
+    if (Math.random() < dt * 0.003) {
+      const emoji = GARDEN_ACTIVITY_EMOJIS[gardenActivity] || '✨';
+      spawnParticle(petX() + (Math.random() - 0.5) * 30, petY() - petSize() * 0.5, emoji);
+    }
+    
+    if (gardenActivityTimer <= 0) {
+      // Try to harvest a fully grown plant
+      harvestPlant();
+      
+      // Chance to spawn balloon after activity
+      if (Math.random() < BALLOON_SPAWN_CHANCE && !gardenBalloon.active) {
+        spawnBalloon();
+      }
+      pickGardenTarget();
+    }
+  } else if (gardenActivity !== 'idle') {
+    // Other activities (watering, digging, sniffing)
+    gardenActivityTimer -= dt;
+    
+    // Spawn activity particles occasionally
+    if (Math.random() < dt * 0.003) {
+      const emoji = GARDEN_ACTIVITY_EMOJIS[gardenActivity] || '✨';
+      spawnParticle(petX() + (Math.random() - 0.5) * 30, petY() - petSize() * 0.5, emoji);
+    }
+    
+    if (gardenActivityTimer <= 0) {
+      // Chance to spawn balloon after activity
+      if (Math.random() < BALLOON_SPAWN_CHANCE && !gardenBalloon.active) {
+        spawnBalloon();
+      }
+      pickGardenTarget();
+    }
+  }
+}
+
+function onUserInteraction() {
+  lastInteraction = Date.now();
+  if (gardenMode) {
+    resetGardenMode();
+    // gardenPetOffsetX will lerp back to 0 in updateGarden
+  }
+}
+
+// ============================================================
 // GAME STATE
 // ============================================================
 let state = null;
@@ -2133,6 +2800,8 @@ function newState() {
     sleeping:false, alive:true, accessory:0,
     unlockedAccessories:[],
     house:0, landscape:0, unlockedHouses:[],
+    gardenPlants:[], // {x, type, plantedAt, stage: 0-3}
+    companion:null, // {type: 0-4, unlockedAt: timestamp}
     lastUpdate:Date.now(), created:Date.now()
   };
 }
@@ -2148,6 +2817,22 @@ function load() {
       if(!state.unlockedHouses) state.unlockedHouses=[];
       if(state.house===undefined) state.house=0;
       if(state.landscape===undefined) state.landscape=0;
+      // Garden autonomous life migrations
+      if(!state.gardenPlants) state.gardenPlants=[];
+      if(state.companion===undefined) state.companion=null;
+      // Validate gardenPlants array structure
+      if(Array.isArray(state.gardenPlants)) {
+        state.gardenPlants = state.gardenPlants.filter(p => 
+          p && typeof p.x === 'number' && typeof p.plantedAt === 'number'
+        );
+        // Update plant stages based on elapsed time
+        const now = Date.now();
+        for(let plant of state.gardenPlants) {
+          if(plant.stage === undefined) plant.stage = 0;
+          const age = now - plant.plantedAt;
+          plant.stage = Math.min(3, Math.floor(age / PLANT_GROWTH_TIME));
+        }
+      }
       return true;
     } 
   } catch(e){} 
@@ -3015,6 +3700,24 @@ canvas.addEventListener('click', e=>{
 });
 
 // ============================================================
+// GARDEN INTERACTION LISTENERS
+// ============================================================
+document.addEventListener('mousedown', onUserInteraction);
+document.addEventListener('touchstart', onUserInteraction);
+document.querySelectorAll('.action-btn').forEach(btn => btn.addEventListener('click', onUserInteraction));
+
+// Visibility change - activate garden mode when tab is hidden
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    // Activate garden mode immediately when tab is hidden
+    if (state && state.alive && state.stage !== 'EGG' && !state.sleeping) {
+      gardenMode = true;
+      pickGardenTarget();
+    }
+  }
+});
+
+// ============================================================
 // MINI-GAMES (rendered on mg-canvas)
 // ============================================================
 const mgCanvas=document.getElementById('mg-canvas');
@@ -3392,6 +4095,9 @@ function gameLoop(now){
   // Mini-game
   if(miniGame) updateMiniGame();
 
+  // Garden autonomous behavior
+  updateGarden(dt);
+
   // ---- DRAW ----
   ctx.setTransform(1,0,0,1,0,0);
   ctx.scale(devicePixelRatio,devicePixelRatio);
@@ -3403,8 +4109,23 @@ function gameLoop(now){
     drawBackground(now, mood);
   }
 
+  // Draw garden elements (after background, before pet)
+  if (state && state.alive && state.stage !== 'EGG') {
+    drawGarden(now, (state && state.landscape) || 0);
+    drawGardenPlants(now); // Draw planted garden plants
+  }
+
+  // Draw floating balloon (behind pet)
+  if (state && state.alive && gardenMode) {
+    drawBalloon(now);
+  }
+
   if(state&&state.alive){
     drawHouse(now);
+    // Draw companion pet (before main pet for layering)
+    if (state.companion) {
+      drawCompanion(now);
+    }
     drawPet(now, mood, state.stage, state.variant, state.sleeping, state.accessory);
     if (visitor) drawVisitorPet(now);
     drawPoops(now);
@@ -3670,6 +4391,7 @@ chatInput.addEventListener('keypress', (e) => {
     sendChatMessage();
   }
 });
+chatInput.addEventListener('focus', onUserInteraction);
 
 // Clear chat history on evolution
 function clearChatOnEvolve() {
