@@ -2110,41 +2110,263 @@ function drawForestTree(x, y, size, color) {
 // ============================================================
 // GARDEN DRAWING
 // ============================================================
+
+// Garden bed themes per landscape
+const GARDEN_BED_THEMES = {
+  0: { // Night Sky - Moonlit garden
+    bedColor: '#2a1f4e', bedBorder: '#4a3a7e', soilColor: '#1a1535',
+    fenceColor: '#3d2d6d', fenceTop: '#5a4a8d', pathColor: '#251a40',
+    accent: '#7B68EE', glowColor: 'rgba(123,104,238,0.3)'
+  },
+  1: { // Green Meadow - Classic garden
+    bedColor: '#3d5c3d', bedBorder: '#5a7a5a', soilColor: '#4a3528',
+    fenceColor: '#8B6914', fenceTop: '#a88932', pathColor: '#6b5a48',
+    accent: '#7cb342', glowColor: 'rgba(124,179,66,0.2)'
+  },
+  2: { // Desert - Succulent garden
+    bedColor: '#c4a574', bedBorder: '#d4b584', soilColor: '#a08060',
+    fenceColor: '#8B7355', fenceTop: '#a89070', pathColor: '#b89868',
+    accent: '#66bb6a', glowColor: 'rgba(102,187,106,0.2)'
+  },
+  3: { // Clouds - Sky garden
+    bedColor: '#b8d4e8', bedBorder: '#d0e8f8', soilColor: '#a0c4d8',
+    fenceColor: '#ffffff', fenceTop: '#f0f8ff', pathColor: '#c8e0f0',
+    accent: '#81d4fa', glowColor: 'rgba(129,212,250,0.3)'
+  },
+  4: { // Snow - Ice garden
+    bedColor: '#d8e8f0', bedBorder: '#e8f4fa', soilColor: '#c0d8e8',
+    fenceColor: '#a8c8d8', fenceTop: '#c8e0f0', pathColor: '#e0f0f8',
+    accent: '#80deea', glowColor: 'rgba(128,222,234,0.3)'
+  },
+  5: { // Beach - Tropical garden
+    bedColor: '#f5deb3', bedBorder: '#ffe4b5', soilColor: '#deb887',
+    fenceColor: '#8B4513', fenceTop: '#a0522d', pathColor: '#d2b48c',
+    accent: '#4dd0e1', glowColor: 'rgba(77,208,225,0.2)'
+  },
+  6: { // Forest - Fairy garden
+    bedColor: '#2d4a2d', bedBorder: '#3d5a3d', soilColor: '#3a2818',
+    fenceColor: '#5d4037', fenceTop: '#795548', pathColor: '#4a3a28',
+    accent: '#aed581', glowColor: 'rgba(174,213,129,0.2)'
+  },
+  7: { // Space - Alien garden
+    bedColor: '#1a1a3e', bedBorder: '#2a2a5e', soilColor: '#0f0f2a',
+    fenceColor: '#4a4a8e', fenceTop: '#6a6aae', pathColor: '#151535',
+    accent: '#00ff88', glowColor: 'rgba(0,255,136,0.3)'
+  }
+};
+
+// Draw the main garden bed area
+function drawGardenBed(t, landscapeId) {
+  const w = vw(), h = vh();
+  const theme = GARDEN_BED_THEMES[landscapeId] || GARDEN_BED_THEMES[0];
+  
+  // Garden bed dimensions - positioned on the right side
+  const bedX = w * 0.55;
+  const bedY = h * 0.65;
+  const bedW = w * 0.38;
+  const bedH = h * 0.18;
+  
+  // Draw garden path leading to bed
+  ctx.fillStyle = theme.pathColor;
+  ctx.globalAlpha = 0.6;
+  ctx.beginPath();
+  ctx.moveTo(w * 0.5, h * 0.75);
+  ctx.quadraticCurveTo(w * 0.6, h * 0.73, bedX + bedW * 0.3, bedY + bedH);
+  ctx.lineTo(bedX + bedW * 0.5, bedY + bedH);
+  ctx.quadraticCurveTo(w * 0.58, h * 0.73, w * 0.5, h * 0.78);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  
+  // Draw fence posts behind the garden bed
+  const fenceY = bedY - 8;
+  const postCount = 7;
+  const postSpacing = bedW / (postCount - 1);
+  
+  for (let i = 0; i < postCount; i++) {
+    const px = bedX + i * postSpacing;
+    const postHeight = 20 + Math.sin(t * 0.001 + i) * 2;
+    
+    // Fence post
+    ctx.fillStyle = theme.fenceColor;
+    ctx.fillRect(px - 3, fenceY - postHeight, 6, postHeight + 5);
+    
+    // Post top
+    ctx.fillStyle = theme.fenceTop;
+    ctx.beginPath();
+    ctx.arc(px, fenceY - postHeight, 5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  
+  // Horizontal fence rails
+  ctx.fillStyle = theme.fenceColor;
+  ctx.fillRect(bedX - 3, fenceY - 15, bedW + 6, 4);
+  ctx.fillRect(bedX - 3, fenceY - 8, bedW + 6, 3);
+  
+  // Garden bed shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.2)';
+  ctx.beginPath();
+  ctx.ellipse(bedX + bedW/2, bedY + bedH + 5, bedW/2 + 5, 8, 0, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Garden bed main area (raised bed look)
+  ctx.fillStyle = theme.bedBorder;
+  ctx.beginPath();
+  ctx.roundRect(bedX - 4, bedY - 4, bedW + 8, bedH + 12, 8);
+  ctx.fill();
+  
+  ctx.fillStyle = theme.bedColor;
+  ctx.beginPath();
+  ctx.roundRect(bedX, bedY, bedW, bedH, 6);
+  ctx.fill();
+  
+  // Soil texture
+  ctx.fillStyle = theme.soilColor;
+  const rowCount = 4;
+  const rowHeight = bedH / rowCount;
+  for (let r = 0; r < rowCount; r++) {
+    const ry = bedY + r * rowHeight + rowHeight * 0.5;
+    ctx.beginPath();
+    ctx.moveTo(bedX + 10, ry);
+    // Wavy soil row
+    for (let sx = 0; sx < bedW - 20; sx += 15) {
+      const waveY = ry + Math.sin(sx * 0.1 + r * 2) * 3;
+      ctx.lineTo(bedX + 10 + sx, waveY);
+    }
+    ctx.lineTo(bedX + bedW - 10, ry);
+    ctx.lineTo(bedX + bedW - 10, ry + 6);
+    ctx.lineTo(bedX + 10, ry + 6);
+    ctx.closePath();
+    ctx.fill();
+  }
+  
+  // Ambient glow effect
+  const glowPulse = 0.5 + 0.3 * Math.sin(t * 0.002);
+  ctx.globalAlpha = glowPulse * 0.4;
+  ctx.fillStyle = theme.glowColor;
+  ctx.beginPath();
+  ctx.ellipse(bedX + bedW/2, bedY + bedH/2, bedW/2, bedH/2, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  
+  return { x: bedX, y: bedY, w: bedW, h: bedH };
+}
+
+// Draw a secondary garden area on the left
+function drawSecondaryGarden(t, landscapeId) {
+  const w = vw(), h = vh();
+  const theme = GARDEN_BED_THEMES[landscapeId] || GARDEN_BED_THEMES[0];
+  
+  // Smaller garden on the left
+  const bedX = w * 0.05;
+  const bedY = h * 0.68;
+  const bedW = w * 0.25;
+  const bedH = h * 0.12;
+  
+  // Small decorative pots/planters
+  const potCount = 3;
+  const potSpacing = bedW / (potCount + 1);
+  
+  for (let i = 0; i < potCount; i++) {
+    const px = bedX + (i + 1) * potSpacing;
+    const py = bedY + bedH * 0.3;
+    const potSize = 18 + Math.sin(i * 1.5) * 4;
+    
+    // Pot shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+    ctx.beginPath();
+    ctx.ellipse(px, py + potSize * 0.8, potSize * 0.7, potSize * 0.2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Pot body
+    ctx.fillStyle = theme.bedBorder;
+    ctx.beginPath();
+    ctx.moveTo(px - potSize * 0.5, py);
+    ctx.lineTo(px - potSize * 0.35, py + potSize * 0.7);
+    ctx.lineTo(px + potSize * 0.35, py + potSize * 0.7);
+    ctx.lineTo(px + potSize * 0.5, py);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Pot rim
+    ctx.fillStyle = theme.bedColor;
+    ctx.beginPath();
+    ctx.ellipse(px, py, potSize * 0.5, potSize * 0.15, 0, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Soil in pot
+    ctx.fillStyle = theme.soilColor;
+    ctx.beginPath();
+    ctx.ellipse(px, py + 2, potSize * 0.4, potSize * 0.12, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  
+  // Small garden patch
+  ctx.fillStyle = theme.soilColor;
+  ctx.globalAlpha = 0.7;
+  ctx.beginPath();
+  ctx.ellipse(bedX + bedW * 0.5, bedY + bedH, bedW * 0.4, bedH * 0.3, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  
+  // Decorative stones/border
+  ctx.fillStyle = theme.fenceColor;
+  const stoneCount = 8;
+  for (let i = 0; i < stoneCount; i++) {
+    const angle = (i / stoneCount) * Math.PI;
+    const sx = bedX + bedW * 0.5 + Math.cos(angle) * bedW * 0.45;
+    const sy = bedY + bedH + Math.sin(angle) * bedH * 0.35;
+    const stoneSize = 5 + Math.sin(i * 2) * 2;
+    ctx.beginPath();
+    ctx.ellipse(sx, sy, stoneSize, stoneSize * 0.6, angle * 0.3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
 function drawGarden(t, landscapeId) {
   const w = vw(), h = vh();
+  
+  // Draw the main garden beds first (background)
+  drawSecondaryGarden(t, landscapeId);
+  const mainBed = drawGardenBed(t, landscapeId);
+  
+  // Now draw the garden elements on top
   const gy = h * 0.72; // ground line
   const elements = GARDEN_ELEMENTS[landscapeId] || GARDEN_ELEMENTS[0];
-  const emojiSize = Math.round(Math.min(w, h) * 0.04);
+  const emojiSize = Math.round(Math.min(w, h) * 0.045);
 
   for (let i = 0; i < elements.length; i++) {
     const el = elements[i];
     const ex = el.x * w;
-    const ey = gy + 10 + Math.sin(ex * 0.01) * 4; // slight variation on ground
+    // Position elements in the garden bed area
+    const inMainBed = ex > mainBed.x && ex < mainBed.x + mainBed.w;
+    const ey = inMainBed ? mainBed.y + mainBed.h * 0.4 : gy + 10 + Math.sin(ex * 0.01) * 4;
 
     // Glow effect for bioluminescent/moonlit items
     if (el.glow) {
-      const pulse = 0.3 + 0.2 * Math.sin(t * 0.003 + i * 1.5);
+      const pulse = 0.4 + 0.3 * Math.sin(t * 0.003 + i * 1.5);
       ctx.globalAlpha = pulse;
       ctx.fillStyle = el.glow;
       ctx.beginPath();
-      ctx.arc(ex, ey - emojiSize * 0.3, emojiSize * 0.8, 0, Math.PI * 2);
+      ctx.arc(ex, ey - emojiSize * 0.2, emojiSize * 1.2, 0, Math.PI * 2);
       ctx.fill();
       ctx.globalAlpha = 1;
     }
 
     // Small bob animation
-    const bob = Math.sin(t * 0.002 + i * 2) * 2;
+    const bob = Math.sin(t * 0.002 + i * 2) * 3;
 
-    // Draw emoji
+    // Draw emoji (larger now)
     ctx.font = emojiSize + 'px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(el.emoji, ex, ey + bob);
 
-    // Small soil/pot base
-    ctx.fillStyle = 'rgba(80,60,40,0.3)';
-    ctx.beginPath();
-    ctx.ellipse(ex, ey + 5, emojiSize * 0.5, emojiSize * 0.15, 0, 0, Math.PI * 2);
-    ctx.fill();
+    // Small soil/pot base for items not in main bed
+    if (!inMainBed) {
+      ctx.fillStyle = 'rgba(80,60,40,0.4)';
+      ctx.beginPath();
+      ctx.ellipse(ex, ey + 8, emojiSize * 0.5, emojiSize * 0.15, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
   ctx.textAlign = 'start';
 }
