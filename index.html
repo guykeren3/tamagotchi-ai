@@ -2153,9 +2153,9 @@ function sfxPetSpeak(stage, mood) {
 // TEXT-TO-SPEECH
 // ============================================================
 let ttsEnabled = true;
-let ttsVoice = null;
+let ttsVoices = {}; // Stage-specific voices
 
-// Initialize TTS voice (prefer female English voice)
+// Initialize TTS voices (different voices for different stages)
 function initTTS() {
   if (!('speechSynthesis' in window)) {
     console.log('Text-to-speech not supported');
@@ -2165,16 +2165,49 @@ function initTTS() {
   
   const loadVoices = () => {
     const voices = speechSynthesis.getVoices();
-    // Prefer female English voices
-    const preferred = ['Samantha', 'Victoria', 'Karen', 'Moira', 'Fiona', 'Google US English Female'];
-    for (const name of preferred) {
-      const found = voices.find(v => v.name.includes(name));
-      if (found) { ttsVoice = found; return; }
-    }
-    // Fallback to any English female voice
-    ttsVoice = voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) 
-            || voices.find(v => v.lang.startsWith('en'))
-            || voices[0];
+    if (voices.length === 0) return;
+    
+    // Helper to find voice by name
+    const findVoice = (names) => {
+      for (const name of names) {
+        const found = voices.find(v => v.name.toLowerCase().includes(name.toLowerCase()));
+        if (found) return found;
+      }
+      return null;
+    };
+    
+    // Child-like voices for BABY and CHILD stages (cute, high-pitched)
+    // These are actual child voices or voices that sound young
+    const childVoices = [
+      'Junior',           // macOS - young boy voice, very cute
+      'Bubbles',          // macOS - playful bubbly voice  
+      'Whisper',          // macOS - soft whispery voice
+      'Princess',         // Some systems
+      'Zarvox',           // macOS - unique, can sound cute with high pitch
+      'Bells',            // macOS - bell-like, childish
+      'Trinoids',         // macOS - unique character voice
+      'Good News',        // macOS - cheerful
+      'Kathy',            // macOS - can sound younger
+      'Sandy',            // Some systems - young female
+    ];
+    
+    // Teen/young adult voices
+    const teenVoices = ['Samantha', 'Nicky', 'Tessa', 'Ava', 'Allison', 'Kate'];
+    
+    // Adult voices 
+    const adultVoices = ['Samantha', 'Victoria', 'Karen', 'Moira', 'Fiona', 'Daniel', 'Alex'];
+    
+    // Fallback English voice
+    const fallback = voices.find(v => v.lang.startsWith('en')) || voices[0];
+    
+    // Assign voices by stage
+    ttsVoices.BABY = findVoice(childVoices) || fallback;
+    ttsVoices.CHILD = findVoice(childVoices) || findVoice(teenVoices) || fallback;
+    ttsVoices.TEEN = findVoice(teenVoices) || fallback;
+    ttsVoices.ADULT = findVoice(adultVoices) || fallback;
+    ttsVoices.EGG = findVoice(childVoices) || fallback;
+    
+    console.log('TTS Voices loaded:', Object.keys(ttsVoices).map(k => `${k}: ${ttsVoices[k]?.name}`));
   };
   
   loadVoices();
@@ -2196,22 +2229,25 @@ function speakText(text, stage) {
   
   const utterance = new SpeechSynthesisUtterance(cleanText);
   
-  // Set voice
-  if (ttsVoice) utterance.voice = ttsVoice;
+  // Set stage-appropriate voice
+  const voice = ttsVoices[stage] || ttsVoices.BABY;
+  if (voice) utterance.voice = voice;
   utterance.lang = 'en-US';
   
-  // Adjust pitch and rate based on stage
+  // Adjust pitch and rate based on stage for maximum cuteness
   switch(stage) {
     case 'BABY':
-      utterance.pitch = 1.8;  // High pitch for baby
-      utterance.rate = 0.85;  // Slower
+      // Maximum cuteness for baby - very high pitch, slightly faster for energetic feel
+      utterance.pitch = 2.0;  // Maximum pitch for super cute baby voice
+      utterance.rate = 1.1;   // Slightly faster - energetic toddler
       break;
     case 'CHILD':
-      utterance.pitch = 1.5;  // Higher pitch
-      utterance.rate = 1.0;   // Normal speed
+      // Cute child voice - still high pitch
+      utterance.pitch = 1.8;  // High pitch for child
+      utterance.rate = 1.15;  // Energetic child pace
       break;
     case 'TEEN':
-      utterance.pitch = 1.2;  // Slightly higher
+      utterance.pitch = 1.3;  // Slightly higher
       utterance.rate = 1.05;  // Slightly faster
       break;
     case 'ADULT':
@@ -2219,8 +2255,9 @@ function speakText(text, stage) {
       utterance.rate = 0.95;  // Calm pace
       break;
     default:
-      utterance.pitch = 1.3;
-      utterance.rate = 1.0;
+      // Default to cute baby settings
+      utterance.pitch = 2.0;
+      utterance.rate = 1.1;
   }
   
   utterance.volume = 0.9;
