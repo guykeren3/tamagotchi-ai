@@ -378,26 +378,26 @@ const FOODS = [
 const ACCESSORIES = [
   // Stage-locked accessories
   { name:'None',    emoji:'❌', stage:0, id:0 },
-  { name:'Bow',     emoji:'🎀', stage:1, id:1 },
-  { name:'Flower',  emoji:'🌸', stage:1, id:5 },
-  { name:'Top Hat', emoji:'🎩', stage:2, id:2 },
-  { name:'Bandana', emoji:'🧣', stage:2, id:4 },
-  { name:'Crown',   emoji:'👑', stage:3, id:3 },
-  { name:'Glasses', emoji:'👓', stage:3, id:6 },
-  { name:'Halo',    emoji:'😇', stage:4, id:7 },
+  { name:'Bow',     emoji:'🎀', stage:1, id:1, type:'head' },
+  { name:'Flower',  emoji:'🌸', stage:1, id:5, type:'head' },
+  { name:'Top Hat', emoji:'🎩', stage:2, id:2, type:'head' },
+  { name:'Bandana', emoji:'🧣', stage:2, id:4, type:'scarf' },
+  { name:'Crown',   emoji:'👑', stage:3, id:3, type:'head' },
+  { name:'Glasses', emoji:'👓', stage:3, id:6, type:'glasses' },
+  { name:'Halo',    emoji:'😇', stage:4, id:7, type:'floating' },
   // Math-locked accessories (K-4 grade levels)
-  { name:'Sunglasses', emoji:'😎', mathLevel:1, id:8 },
-  { name:'Party Hat',  emoji:'🥳', mathLevel:1, id:9 },
-  { name:'Headphones', emoji:'🎧', mathLevel:1, id:10 },
-  { name:'Star',       emoji:'⭐', mathLevel:2, id:11 },
-  { name:'Rainbow',    emoji:'🌈', mathLevel:2, id:12 },
-  { name:'Rocket',     emoji:'🚀', mathLevel:2, id:13 },
-  { name:'Diamond',    emoji:'💎', mathLevel:3, id:14 },
-  { name:'Fire',       emoji:'🔥', mathLevel:3, id:15 },
-  { name:'Lightning',  emoji:'⚡', mathLevel:3, id:16 },
-  { name:'Unicorn',    emoji:'🦄', mathLevel:4, id:17 },
-  { name:'Dragon',     emoji:'🐉', mathLevel:4, id:18 },
-  { name:'Alien',      emoji:'👽', mathLevel:4, id:19 }
+  { name:'Sunglasses', emoji:'😎', mathLevel:1, id:8, type:'sunglasses' },
+  { name:'Party Hat',  emoji:'🥳', mathLevel:1, id:9, type:'head' },
+  { name:'Headphones', emoji:'🎧', mathLevel:1, id:10, type:'headphones' },
+  { name:'Star',       emoji:'⭐', mathLevel:2, id:11, type:'floating' },
+  { name:'Rainbow',    emoji:'🌈', mathLevel:2, id:12, type:'floating' },
+  { name:'Rocket',     emoji:'🚀', mathLevel:2, id:13, type:'floating' },
+  { name:'Diamond',    emoji:'💎', mathLevel:3, id:14, type:'floating' },
+  { name:'Fire',       emoji:'🔥', mathLevel:3, id:15, type:'floating' },
+  { name:'Lightning',  emoji:'⚡', mathLevel:3, id:16, type:'floating' },
+  { name:'Unicorn',    emoji:'🦄', mathLevel:4, id:17, type:'floating' },
+  { name:'Dragon',     emoji:'🐉', mathLevel:4, id:18, type:'floating' },
+  { name:'Alien',      emoji:'👽', mathLevel:4, id:19, type:'floating' }
 ];
 
 const HOUSES = [
@@ -1004,32 +1004,216 @@ function drawFace(t, spread, mood, sz) {
 function drawAcc(accId, sz, stage) {
   if (accId === 0) return;
   const acc = ACCESSORIES.find(a => a.id === accId);
-  if (!acc || !acc.emoji) return;
-  const s = sz * 0.3;
+  if (!acc) return;
 
-  // Glasses drawn with canvas instead of emoji
-  if (accId === 6) {
-    const oy = stage === 'ADULT' || stage === 'TEEN' ? -sz*0.12 : -sz*0.05;
-    const lensR = sz * 0.09;
-    const gap = sz * 0.04;
-    const lensX = lensR + gap * 0.5;
-    ctx.strokeStyle = 'rgba(255,255,255,0.85)';
-    ctx.lineWidth = Math.max(2, sz * 0.025);
-    // Left lens
-    ctx.beginPath(); ctx.arc(-lensX, oy, lensR, 0, Math.PI*2); ctx.stroke();
-    // Right lens
-    ctx.beginPath(); ctx.arc(lensX, oy, lensR, 0, Math.PI*2); ctx.stroke();
-    // Bridge
-    ctx.beginPath(); ctx.moveTo(-lensX + lensR, oy); ctx.lineTo(lensX - lensR, oy); ctx.stroke();
-    // Arms
-    ctx.beginPath(); ctx.moveTo(-lensX - lensR, oy); ctx.lineTo(-lensX - lensR - sz*0.08, oy - sz*0.02); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(lensX + lensR, oy); ctx.lineTo(lensX + lensR + sz*0.08, oy - sz*0.02); ctx.stroke();
-    return;
+  const type = acc.type || 'floating';
+  
+  switch(type) {
+    case 'glasses': drawGlasses(sz, stage); break;
+    case 'sunglasses': drawSunglasses(sz, stage); break;
+    case 'scarf': drawScarf(sz, stage); break;
+    case 'headphones': drawHeadphones(sz, stage); break;
+    case 'head': drawHeadAccessory(acc, sz, stage); break;
+    default: drawFloatingAccessory(acc, sz, stage);
   }
+}
 
+// Draw regular glasses at eye level
+function drawGlasses(sz, stage) {
+  const oy = stage === 'ADULT' || stage === 'TEEN' ? -sz*0.12 : -sz*0.05;
+  const lensR = sz * 0.09;
+  const gap = sz * 0.04;
+  const lensX = lensR + gap * 0.5;
+  ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+  ctx.lineWidth = Math.max(2, sz * 0.025);
+  // Left lens
+  ctx.beginPath(); ctx.arc(-lensX, oy, lensR, 0, Math.PI*2); ctx.stroke();
+  // Right lens
+  ctx.beginPath(); ctx.arc(lensX, oy, lensR, 0, Math.PI*2); ctx.stroke();
+  // Bridge
+  ctx.beginPath(); ctx.moveTo(-lensX + lensR, oy); ctx.lineTo(lensX - lensR, oy); ctx.stroke();
+  // Arms
+  ctx.beginPath(); ctx.moveTo(-lensX - lensR, oy); ctx.lineTo(-lensX - lensR - sz*0.08, oy - sz*0.02); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(lensX + lensR, oy); ctx.lineTo(lensX + lensR + sz*0.08, oy - sz*0.02); ctx.stroke();
+}
+
+// Draw sunglasses with dark filled lenses
+function drawSunglasses(sz, stage) {
+  const oy = stage === 'ADULT' || stage === 'TEEN' ? -sz*0.12 : -sz*0.05;
+  const lensR = sz * 0.10;
+  const gap = sz * 0.03;
+  const lensX = lensR + gap * 0.5;
+  
+  // Dark filled lenses
+  ctx.fillStyle = 'rgba(30, 30, 30, 0.85)';
+  ctx.beginPath(); ctx.arc(-lensX, oy, lensR, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(lensX, oy, lensR, 0, Math.PI*2); ctx.fill();
+  
+  // Frame
+  ctx.strokeStyle = 'rgba(50, 50, 50, 0.9)';
+  ctx.lineWidth = Math.max(2, sz * 0.03);
+  ctx.beginPath(); ctx.arc(-lensX, oy, lensR, 0, Math.PI*2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(lensX, oy, lensR, 0, Math.PI*2); ctx.stroke();
+  
+  // Bridge
+  ctx.beginPath(); ctx.moveTo(-lensX + lensR, oy); ctx.lineTo(lensX - lensR, oy); ctx.stroke();
+  
+  // Arms
+  ctx.beginPath(); ctx.moveTo(-lensX - lensR, oy); ctx.lineTo(-lensX - lensR - sz*0.1, oy - sz*0.02); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(lensX + lensR, oy); ctx.lineTo(lensX + lensR + sz*0.1, oy - sz*0.02); ctx.stroke();
+  
+  // Lens shine
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.beginPath(); ctx.arc(-lensX - lensR*0.3, oy - lensR*0.3, lensR*0.25, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(lensX - lensR*0.3, oy - lensR*0.3, lensR*0.25, 0, Math.PI*2); ctx.fill();
+}
+
+// Draw scarf wrapped around neck/body
+function drawScarf(sz, stage) {
+  // Get body radius based on stage
+  let bodyR;
+  if (stage === 'BABY') bodyR = sz * 0.4;
+  else if (stage === 'TEEN') bodyR = sz * 0.38;
+  else bodyR = sz * 0.42; // CHILD, ADULT
+  
+  const scarfY = bodyR * 0.25; // Position at lower part of body (neck area)
+  const scarfWidth = sz * 0.12;
+  
+  // Main scarf color (burgundy/red)
+  const scarfColor = '#c0392b';
+  const scarfDark = '#922b21';
+  
+  // Draw the wrapped part of scarf (curved band around body)
+  ctx.fillStyle = scarfColor;
+  ctx.beginPath();
+  // Draw arc for the front of scarf
+  ctx.ellipse(0, scarfY, bodyR * 0.95, scarfWidth * 0.8, 0, 0.15 * Math.PI, 0.85 * Math.PI);
+  ctx.ellipse(0, scarfY, bodyR * 0.95, scarfWidth * 1.6, 0, 0.85 * Math.PI, 0.15 * Math.PI);
+  ctx.closePath();
+  ctx.fill();
+  
+  // Knot in front
+  ctx.fillStyle = scarfDark;
+  ctx.beginPath();
+  ctx.ellipse(0, scarfY + scarfWidth * 0.3, scarfWidth * 0.6, scarfWidth * 0.5, 0, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Hanging end 1 (left)
+  ctx.fillStyle = scarfColor;
+  ctx.beginPath();
+  ctx.moveTo(-scarfWidth * 0.5, scarfY + scarfWidth * 0.5);
+  ctx.quadraticCurveTo(-scarfWidth * 0.8, scarfY + sz * 0.25, -scarfWidth * 0.3, scarfY + sz * 0.35);
+  ctx.lineTo(scarfWidth * 0.1, scarfY + sz * 0.32);
+  ctx.quadraticCurveTo(-scarfWidth * 0.3, scarfY + sz * 0.2, scarfWidth * 0.2, scarfY + scarfWidth * 0.5);
+  ctx.closePath();
+  ctx.fill();
+  
+  // Hanging end 2 (right, slightly behind)
+  ctx.fillStyle = scarfDark;
+  ctx.beginPath();
+  ctx.moveTo(scarfWidth * 0.3, scarfY + scarfWidth * 0.4);
+  ctx.quadraticCurveTo(scarfWidth * 0.7, scarfY + sz * 0.2, scarfWidth * 0.5, scarfY + sz * 0.3);
+  ctx.lineTo(scarfWidth * 0.9, scarfY + sz * 0.28);
+  ctx.quadraticCurveTo(scarfWidth * 1.0, scarfY + sz * 0.15, scarfWidth * 0.6, scarfY + scarfWidth * 0.4);
+  ctx.closePath();
+  ctx.fill();
+  
+  // Fringe on ends
+  ctx.strokeStyle = scarfColor;
+  ctx.lineWidth = 2;
+  for (let i = 0; i < 4; i++) {
+    const fx = -scarfWidth * 0.2 + i * scarfWidth * 0.15;
+    ctx.beginPath();
+    ctx.moveTo(fx, scarfY + sz * 0.32);
+    ctx.lineTo(fx - 2, scarfY + sz * 0.38);
+    ctx.stroke();
+  }
+}
+
+// Draw headphones over ears
+function drawHeadphones(sz, stage) {
+  // Get body radius based on stage
+  let bodyR;
+  if (stage === 'BABY') bodyR = sz * 0.4;
+  else if (stage === 'TEEN') bodyR = sz * 0.38;
+  else bodyR = sz * 0.42;
+  
+  const headY = stage === 'ADULT' || stage === 'TEEN' ? -sz * 0.05 : 0;
+  const bandY = headY - bodyR * 0.7;
+  const earX = bodyR * 0.85;
+  const earY = headY - bodyR * 0.1;
+  const cupR = sz * 0.1;
+  
+  // Headband
+  ctx.strokeStyle = '#2c3e50';
+  ctx.lineWidth = sz * 0.04;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.arc(0, headY, bodyR * 0.75, Math.PI * 1.15, Math.PI * 1.85);
+  ctx.stroke();
+  
+  // Left ear cup
+  ctx.fillStyle = '#34495e';
+  ctx.beginPath();
+  ctx.ellipse(-earX, earY, cupR, cupR * 1.2, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#2c3e50';
+  ctx.beginPath();
+  ctx.ellipse(-earX, earY, cupR * 0.7, cupR * 0.9, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // Cushion
+  ctx.fillStyle = '#1a1a1a';
+  ctx.beginPath();
+  ctx.ellipse(-earX, earY, cupR * 0.5, cupR * 0.65, 0, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Right ear cup
+  ctx.fillStyle = '#34495e';
+  ctx.beginPath();
+  ctx.ellipse(earX, earY, cupR, cupR * 1.2, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#2c3e50';
+  ctx.beginPath();
+  ctx.ellipse(earX, earY, cupR * 0.7, cupR * 0.9, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // Cushion
+  ctx.fillStyle = '#1a1a1a';
+  ctx.beginPath();
+  ctx.ellipse(earX, earY, cupR * 0.5, cupR * 0.65, 0, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+// Draw head accessories (hats, crowns, bows) positioned on top of head
+function drawHeadAccessory(acc, sz, stage) {
+  if (!acc.emoji) return;
+  
+  // Get body radius based on stage for proper positioning
+  let bodyR;
+  if (stage === 'BABY') bodyR = sz * 0.4;
+  else if (stage === 'TEEN') bodyR = sz * 0.38;
+  else bodyR = sz * 0.42;
+  
+  const s = sz * 0.28;
+  // Position on top of head (accounting for body shape)
+  const oy = -bodyR * 1.0;
+  
   ctx.font = Math.round(s) + 'px sans-serif';
   ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(acc.emoji, 0, oy);
+  ctx.textAlign = 'start';
+  ctx.textBaseline = 'alphabetic';
+}
+
+// Draw floating/aura accessories above the pet
+function drawFloatingAccessory(acc, sz, stage) {
+  if (!acc.emoji) return;
+  
+  const s = sz * 0.3;
   const oy = stage === 'ADULT' || stage === 'TEEN' ? -sz*0.55 : -sz*0.4;
+  
+  ctx.font = Math.round(s) + 'px sans-serif';
+  ctx.textAlign = 'center';
   ctx.fillText(acc.emoji, 0, oy);
   ctx.textAlign = 'start';
 }
