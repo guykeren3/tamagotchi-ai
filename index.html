@@ -7174,6 +7174,9 @@ function confirmAvatarCreation() {
 
   state.avatar = { ...tempAvatar };
   state.customized = true;
+  // Reset egg timer so the user sees the full egg → hatch sequence
+  // (stageTime was accumulating while the avatar creator was open)
+  state.stageTime = 0;
   save();
   closeAvatarCreator();
   notify('🎉 Welcome, ' + state.avatar.name + '!');
