@@ -143,11 +143,11 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
 /* Avatar Creator Panel */
 #avatar-creator{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);opacity:0;pointer-events:none;transition:opacity 0.4s;overflow-y:auto;padding:20px;}
 #avatar-creator.open{opacity:1;pointer-events:auto;}
-#avatar-creator .creator-content{display:flex;flex-direction:column;align-items:center;gap:20px;max-width:400px;width:100%;}
+#avatar-creator .creator-content{display:flex;flex-direction:column;align-items:center;gap:20px;max-width:480px;width:100%;}
 #avatar-creator .creator-title{font-size:24px;font-weight:700;color:#fff;text-align:center;margin-bottom:10px;text-shadow:0 2px 20px rgba(162,155,254,0.5);}
 #avatar-creator .creator-subtitle{font-size:14px;color:rgba(255,255,255,0.6);text-align:center;margin-top:-15px;}
-#avatar-creator .preview-area{width:200px;height:200px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-#avatar-creator .preview-canvas{width:180px;height:180px;}
+#avatar-creator .preview-area{width:280px;height:280px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);border-radius:24px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+#avatar-creator .preview-canvas{width:260px;height:260px;}
 #avatar-creator .option-section{width:100%;background:rgba(255,255,255,0.05);border-radius:16px;padding:16px;}
 #avatar-creator .option-label{font-size:12px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
 #avatar-creator .color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
@@ -597,7 +597,7 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
     <div class="creator-subtitle">Customize your new companion</div>
     
     <div class="preview-area">
-      <canvas id="avatar-preview" class="preview-canvas" width="180" height="180"></canvas>
+      <canvas id="avatar-preview" class="preview-canvas" width="260" height="260"></canvas>
     </div>
     
     <div class="option-section">
@@ -946,52 +946,52 @@ const LANDSCAPES = [
 // Garden elements per landscape
 const GARDEN_ELEMENTS = {
   0: [ // Night Sky - Moonlit garden
-    { x:0.15, emoji:'🍄', label:'mushroom', glow:'#7B68EE' },
-    { x:0.30, emoji:'🌸', label:'moon flower', glow:'#DDA0DD' },
-    { x:0.70, emoji:'🍄', label:'mushroom', glow:'#9370DB' },
-    { x:0.85, emoji:'🌺', label:'moon flower', glow:'#DA70D6' },
+    { x:0.15, drawType:'mushroom', color:'#7B68EE', label:'mushroom', glow:'#7B68EE' },
+    { x:0.30, drawType:'flower', color:'#DDA0DD', label:'moon flower', glow:'#DDA0DD' },
+    { x:0.70, drawType:'mushroom', color:'#9370DB', label:'mushroom', glow:'#9370DB' },
+    { x:0.85, drawType:'flower', color:'#DA70D6', label:'moon flower', glow:'#DA70D6' },
   ],
   1: [ // Green Meadow - Classic garden
-    { x:0.12, emoji:'🌻', label:'flower bed' },
-    { x:0.28, emoji:'🚿', label:'watering can' },
-    { x:0.72, emoji:'🥕', label:'veggie patch' },
-    { x:0.88, emoji:'🌷', label:'flower bed' },
+    { x:0.12, drawType:'flower', color:'#fdd835', label:'flower bed' },
+    { x:0.28, drawType:'bush', color:'#66bb6a', label:'herb bush' },
+    { x:0.72, drawType:'flower', color:'#ff7043', label:'veggie patch' },
+    { x:0.88, drawType:'flower', color:'#e84393', label:'flower bed' },
   ],
   2: [ // Desert - Succulent garden
-    { x:0.14, emoji:'🪴', label:'succulent' },
-    { x:0.32, emoji:'🪨', label:'rock garden' },
-    { x:0.70, emoji:'💧', label:'small oasis' },
-    { x:0.86, emoji:'🪴', label:'succulent' },
+    { x:0.14, drawType:'cactus', color:'#66bb6a', label:'succulent' },
+    { x:0.32, drawType:'bush', color:'#8d6e63', label:'rock garden' },
+    { x:0.70, drawType:'cactus', color:'#7cb342', label:'cactus' },
+    { x:0.86, drawType:'cactus', color:'#558b2f', label:'succulent' },
   ],
   3: [ // Clouds - Sky garden
-    { x:0.15, emoji:'🌈', label:'rainbow plant' },
-    { x:0.35, emoji:'💮', label:'cloud flower' },
-    { x:0.65, emoji:'💮', label:'cloud flower' },
-    { x:0.85, emoji:'🌈', label:'rainbow plant' },
+    { x:0.15, drawType:'flower', color:'#ff7043', label:'sky flower' },
+    { x:0.35, drawType:'flower', color:'#e0e0e0', label:'cloud flower' },
+    { x:0.65, drawType:'flower', color:'#b3e5fc', label:'cloud flower' },
+    { x:0.85, drawType:'flower', color:'#ce93d8', label:'sky flower' },
   ],
   4: [ // Snow - Ice garden
-    { x:0.13, emoji:'❄️', label:'crystal flower' },
-    { x:0.30, emoji:'💎', label:'ice sculpture' },
-    { x:0.70, emoji:'💎', label:'ice sculpture' },
-    { x:0.87, emoji:'❄️', label:'crystal flower' },
+    { x:0.13, drawType:'crystal', color:'#80deea', label:'crystal flower' },
+    { x:0.30, drawType:'crystal', color:'#b3e5fc', label:'ice sculpture' },
+    { x:0.70, drawType:'crystal', color:'#b3e5fc', label:'ice sculpture' },
+    { x:0.87, drawType:'crystal', color:'#80deea', label:'crystal flower' },
   ],
   5: [ // Beach - Tropical garden
-    { x:0.14, emoji:'🐚', label:'shell planter' },
-    { x:0.32, emoji:'🪸', label:'coral garden' },
-    { x:0.68, emoji:'🫧', label:'tide pool' },
-    { x:0.86, emoji:'🐚', label:'shell planter' },
+    { x:0.14, drawType:'flower', color:'#ff8a80', label:'tropical flower' },
+    { x:0.32, drawType:'fern', color:'#4caf50', label:'palm fern' },
+    { x:0.68, drawType:'bush', color:'#26a69a', label:'sea bush' },
+    { x:0.86, drawType:'flower', color:'#ffab91', label:'tropical flower' },
   ],
   6: [ // Forest - Fairy garden
-    { x:0.12, emoji:'🍄', label:'mushroom ring' },
-    { x:0.30, emoji:'🌿', label:'moss patch' },
-    { x:0.70, emoji:'🌿', label:'fern bed' },
-    { x:0.88, emoji:'🍄', label:'mushroom ring' },
+    { x:0.12, drawType:'mushroom', color:'#e53935', label:'mushroom ring' },
+    { x:0.30, drawType:'fern', color:'#388e3c', label:'moss patch' },
+    { x:0.70, drawType:'fern', color:'#2e7d32', label:'fern bed' },
+    { x:0.88, drawType:'mushroom', color:'#ff7043', label:'mushroom ring' },
   ],
   7: [ // Space - Alien garden
-    { x:0.13, emoji:'👾', label:'alien plant', glow:'#00FF88' },
-    { x:0.32, emoji:'🔮', label:'crystal pod', glow:'#FF00FF' },
-    { x:0.68, emoji:'🌀', label:'space vine', glow:'#00BFFF' },
-    { x:0.87, emoji:'👾', label:'alien plant', glow:'#00FF88' },
+    { x:0.13, drawType:'crystal', color:'#00FF88', label:'alien plant', glow:'#00FF88' },
+    { x:0.32, drawType:'crystal', color:'#FF00FF', label:'crystal pod', glow:'#FF00FF' },
+    { x:0.68, drawType:'fern', color:'#00BFFF', label:'space vine', glow:'#00BFFF' },
+    { x:0.87, drawType:'crystal', color:'#00FF88', label:'alien plant', glow:'#00FF88' },
   ]
 };
 
@@ -1113,8 +1113,8 @@ function drawBackground(t, mood) {
   // Stars
   if (theme.stars) drawStars(t);
 
-  // Ground
-  const gy = h * 0.72;
+  // Ground (lowered to give more landscape room)
+  const gy = h * 0.78;
   ctx.fillStyle = theme.ground;
   ctx.beginPath();
   ctx.moveTo(0, gy);
@@ -1176,9 +1176,10 @@ function updatePetWander(t) {
 }
 
 const petX = () => vw() / 2 + gardenPetOffsetX;
-const petY = () => vh() * 0.62 + gardenPetOffsetY;
+const petY = () => vh() * 0.68 + gardenPetOffsetY;
 
 function drawPet(t, mood, stage, variant, sleeping, accessory) {
+  if (!stage) return;
   const sz = petSize();
   const px = petX();
   const py = petY();
@@ -1186,6 +1187,7 @@ function drawPet(t, mood, stage, variant, sleeping, accessory) {
   const breathe = 1 + Math.sin(t * 0.002) * 0.02;
 
   ctx.save();
+  ctx.globalAlpha = 1;
   ctx.translate(px, py + bounce);
   ctx.scale(breathe, breathe);
 
@@ -2674,8 +2676,8 @@ function drawLandscapeBackground(t, mood) {
         drawCloud(w*0.2 + Math.sin(t*0.0003)*20, h*0.12, 40);
         drawCloud(w*0.6 + Math.sin(t*0.0002+1)*15, h*0.08, 30);
         drawCloud(w*0.85 + Math.sin(t*0.00025+2)*18, h*0.2, 25);
-        // Ground
-        const gy = h*0.68;
+        // Ground (lowered for more room)
+        const gy = h*0.75;
         ctx.fillStyle = '#3CB371';
         ctx.fillRect(0, gy, w, h-gy);
         // Grass tufts
@@ -2713,8 +2715,8 @@ function drawLandscapeBackground(t, mood) {
         ctx.beginPath(); ctx.arc(w*0.5, h*0.08, 70, 0, Math.PI*2); ctx.fill();
         ctx.fillStyle = 'rgba(255,220,50,0.5)';
         ctx.beginPath(); ctx.arc(w*0.5, h*0.08, 40, 0, Math.PI*2); ctx.fill();
-        // Dunes
-        const gy = h*0.68;
+        // Dunes (lowered)
+        const gy = h*0.75;
         ctx.fillStyle = '#D2B48C';
         ctx.beginPath();
         ctx.moveTo(0, gy);
@@ -2754,9 +2756,9 @@ function drawLandscapeBackground(t, mood) {
           const cy = h*0.1 + i*h*0.1 + Math.sin(i*5)*h*0.05;
           drawCloud(cx, cy, 25+i*5);
         }
-        // Ground clouds
+        // Ground clouds (lowered)
         ctx.fillStyle = 'rgba(255,255,255,0.9)';
-        const gy = h*0.72;
+        const gy = h*0.78;
         for (let x = -50; x < w+50; x += 40) {
           const cr = 25 + Math.sin(x*0.05)*10;
           ctx.beginPath(); ctx.arc(x, gy+10, cr, 0, Math.PI*2); ctx.fill();
@@ -2773,8 +2775,8 @@ function drawLandscapeBackground(t, mood) {
         grad.addColorStop(1, '#FFFFFF');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, w, h);
-        // Snow ground
-        const gy = h*0.68;
+        // Snow ground (lowered)
+        const gy = h*0.75;
         ctx.fillStyle = '#F0F8FF';
         ctx.beginPath();
         ctx.moveTo(0, gy);
@@ -2831,16 +2833,24 @@ function drawLandscapeBackground(t, mood) {
           ctx.stroke();
         }
         // Sand
-        const sy = h*0.62;
+        const sy = h*0.72;
         ctx.fillStyle = '#F5DEB3';
         ctx.fillRect(0, sy, w, h-sy);
         // Palm tree
         drawPalmTree(w*0.12, sy, 60);
-        // Shells
-        ctx.font = '10px sans-serif';
-        ctx.fillText('🐚', w*0.4, sy+15);
-        ctx.fillText('🐚', w*0.7, sy+20);
-        ctx.fillText('⭐', w*0.55, sy+12);
+        // Shells (drawn)
+        ctx.fillStyle = '#f5e6d3';
+        ctx.beginPath(); ctx.ellipse(w*0.4, sy+13, 5, 3.5, 0.3, 0, Math.PI*2); ctx.fill();
+        ctx.strokeStyle = '#d4c0a8'; ctx.lineWidth = 0.5;
+        ctx.beginPath(); ctx.arc(w*0.4, sy+13, 4, 0.3, Math.PI-0.3); ctx.stroke();
+        ctx.fillStyle = '#f0dcc8';
+        ctx.beginPath(); ctx.ellipse(w*0.7, sy+18, 4.5, 3, -0.2, 0, Math.PI*2); ctx.fill();
+        // Starfish
+        ctx.fillStyle = '#e8c170';
+        for (let si = 0; si < 5; si++) {
+          const sa = si * Math.PI * 2 / 5 - Math.PI / 2;
+          ctx.beginPath(); ctx.ellipse(w*0.55 + Math.cos(sa)*5, sy+10 + Math.sin(sa)*5, 3, 1.5, sa, 0, Math.PI*2); ctx.fill();
+        }
       }
       break;
 
@@ -2866,8 +2876,8 @@ function drawLandscapeBackground(t, mood) {
           ctx.fill();
         }
         ctx.globalAlpha = 1;
-        // Ground
-        const gy = h*0.7;
+        // Ground (lowered)
+        const gy = h*0.76;
         ctx.fillStyle = '#1a3a0a';
         ctx.fillRect(0, gy, w, h-gy);
         // Background trees
@@ -2924,8 +2934,8 @@ function drawLandscapeBackground(t, mood) {
         // Small planet
         ctx.fillStyle = '#74b9ff';
         ctx.beginPath(); ctx.arc(w*0.15, h*0.15, 12, 0, Math.PI*2); ctx.fill();
-        // Ground (space platform)
-        const gy = h*0.72;
+        // Ground (space platform, lowered)
+        const gy = h*0.78;
         ctx.fillStyle = '#1a1a3e';
         ctx.fillRect(0, gy, w, h-gy);
         ctx.strokeStyle = 'rgba(100,100,200,0.2)';
@@ -3084,7 +3094,7 @@ function drawGardenBed(t, landscapeId) {
   
   // Garden bed dimensions - positioned on the right side
   const bedX = w * 0.55;
-  const bedY = h * 0.65;
+  const bedY = h * 0.72;
   const bedW = w * 0.38;
   const bedH = h * 0.18;
   
@@ -3092,10 +3102,10 @@ function drawGardenBed(t, landscapeId) {
   ctx.fillStyle = theme.pathColor;
   ctx.globalAlpha = 0.6;
   ctx.beginPath();
-  ctx.moveTo(w * 0.5, h * 0.75);
-  ctx.quadraticCurveTo(w * 0.6, h * 0.73, bedX + bedW * 0.3, bedY + bedH);
+  ctx.moveTo(w * 0.5, h * 0.82);
+  ctx.quadraticCurveTo(w * 0.6, h * 0.80, bedX + bedW * 0.3, bedY + bedH);
   ctx.lineTo(bedX + bedW * 0.5, bedY + bedH);
-  ctx.quadraticCurveTo(w * 0.58, h * 0.73, w * 0.5, h * 0.78);
+  ctx.quadraticCurveTo(w * 0.58, h * 0.80, w * 0.5, h * 0.85);
   ctx.fill();
   ctx.globalAlpha = 1;
   
@@ -3180,7 +3190,7 @@ function drawSecondaryGarden(t, landscapeId) {
   
   // Smaller garden on the left
   const bedX = w * 0.05;
-  const bedY = h * 0.68;
+  const bedY = h * 0.75;
   const bedW = w * 0.25;
   const bedH = h * 0.12;
   
@@ -3246,20 +3256,19 @@ function drawSecondaryGarden(t, landscapeId) {
 
 function drawGarden(t, landscapeId) {
   const w = vw(), h = vh();
-  
+
   // Draw the main garden beds first (background)
   drawSecondaryGarden(t, landscapeId);
   const mainBed = drawGardenBed(t, landscapeId);
-  
-  // Now draw the garden elements on top
-  const gy = h * 0.72; // ground line
+
+  // Now draw the garden elements on top (drawn, no emojis)
+  const gy = h * 0.78;
   const elements = GARDEN_ELEMENTS[landscapeId] || GARDEN_ELEMENTS[0];
-  const emojiSize = Math.round(Math.min(w, h) * 0.045);
+  const plantSize = Math.round(Math.min(w, h) * 0.045);
 
   for (let i = 0; i < elements.length; i++) {
     const el = elements[i];
     const ex = el.x * w;
-    // Position elements in the garden bed area
     const inMainBed = ex > mainBed.x && ex < mainBed.x + mainBed.w;
     const ey = inMainBed ? mainBed.y + mainBed.h * 0.4 : gy + 10 + Math.sin(ex * 0.01) * 4;
 
@@ -3269,28 +3278,22 @@ function drawGarden(t, landscapeId) {
       ctx.globalAlpha = pulse;
       ctx.fillStyle = el.glow;
       ctx.beginPath();
-      ctx.arc(ex, ey - emojiSize * 0.2, emojiSize * 1.2, 0, Math.PI * 2);
+      ctx.arc(ex, ey - plantSize * 0.2, plantSize * 0.8, 0, Math.PI * 2);
       ctx.fill();
       ctx.globalAlpha = 1;
     }
-
-    // Small bob animation
-    const bob = Math.sin(t * 0.002 + i * 2) * 3;
-
-    // Draw emoji (larger now)
-    ctx.font = emojiSize + 'px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(el.emoji, ex, ey + bob);
 
     // Small soil/pot base for items not in main bed
     if (!inMainBed) {
       ctx.fillStyle = 'rgba(80,60,40,0.4)';
       ctx.beginPath();
-      ctx.ellipse(ex, ey + 8, emojiSize * 0.5, emojiSize * 0.15, 0, 0, Math.PI * 2);
+      ctx.ellipse(ex, ey + 8, plantSize * 0.4, plantSize * 0.12, 0, 0, Math.PI * 2);
       ctx.fill();
     }
+
+    // Draw the element as a shape (no emoji)
+    drawDecoPlant(ex, ey, plantSize, el.drawType || 'flower', el.color || '#66bb6a', t, i);
   }
-  ctx.textAlign = 'start';
 }
 
 // ============================================================
@@ -3405,13 +3408,12 @@ function drawFarmBackground(t) {
   drawHayBale(w * 0.88, h * 0.58, 18);
   drawHayBale(w * 0.92, h * 0.6, 15);
 
-  // Flowers along fence
-  ctx.font = '12px sans-serif';
-  const flowers = ['🌻', '🌷', '🌸', '🌼'];
+  // Flowers along fence (drawn)
+  const flowerPalette = ['#fdd835', '#e84393', '#f8a4c8', '#ff7043'];
   for (let i = 0; i < 8; i++) {
     const fx = w * 0.06 + i * w * 0.12;
     const fy = fenceY + 18 + Math.sin(t * 0.002 + i * 1.5) * 2;
-    ctx.fillText(flowers[i % flowers.length], fx, fy);
+    drawDecoPlant(fx, fy, 14, 'flower', flowerPalette[i % flowerPalette.length], t, i + 20);
   }
 
   // Small bushes
@@ -3434,10 +3436,10 @@ function drawFarmBackground(t) {
   // Dirt path leading to garden
   ctx.fillStyle = 'rgba(141,110,99,0.5)';
   ctx.beginPath();
-  ctx.moveTo(w * 0.3, h * 0.92);
-  ctx.quadraticCurveTo(w * 0.4, h * 0.75, w * 0.5, h * 0.65);
-  ctx.lineTo(w * 0.52, h * 0.65);
-  ctx.quadraticCurveTo(w * 0.42, h * 0.76, w * 0.34, h * 0.92);
+  ctx.moveTo(w * 0.3, h * 0.95);
+  ctx.quadraticCurveTo(w * 0.4, h * 0.82, w * 0.5, h * 0.72);
+  ctx.lineTo(w * 0.52, h * 0.72);
+  ctx.quadraticCurveTo(w * 0.42, h * 0.83, w * 0.34, h * 0.95);
   ctx.closePath();
   ctx.fill();
 }
@@ -3540,18 +3542,213 @@ function adjustBrightness(hex, percent) {
   return '#' + (0x1000000 + r * 0x10000 + g * 0x100 + b).toString(16).slice(1);
 }
 
+// ============================================================
+// DRAWN PLANT HELPERS (no emojis)
+// ============================================================
+function drawSprout(x, y, size) {
+  // Tiny green sprout with two cotyledon leaves
+  ctx.strokeStyle = '#4a8a3c';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - size * 0.6); ctx.stroke();
+  ctx.fillStyle = '#6abf4a';
+  ctx.beginPath(); ctx.ellipse(x - size * 0.3, y - size * 0.7, size * 0.25, size * 0.12, -0.6, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(x + size * 0.3, y - size * 0.7, size * 0.25, size * 0.12, 0.6, 0, Math.PI * 2); ctx.fill();
+}
+
+function drawLeafCluster(x, y, size, t, seed) {
+  // Bushy leaf cluster
+  const s = Math.sin(t * 0.003 + seed) * 1.5;
+  ctx.fillStyle = '#3da33a';
+  ctx.beginPath(); ctx.ellipse(x + s, y - size * 0.2, size * 0.5, size * 0.35, -0.2, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#4dbf48';
+  ctx.beginPath(); ctx.ellipse(x - size * 0.2 + s, y - size * 0.4, size * 0.35, size * 0.25, 0.4, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(x + size * 0.25 + s, y - size * 0.35, size * 0.3, size * 0.2, -0.3, 0, Math.PI * 2); ctx.fill();
+}
+
+function drawFlowerHead(x, y, size, color1, color2, t, seed) {
+  // Multi-petal flower
+  const petalCount = 5;
+  const s = Math.sin(t * 0.002 + seed) * 1;
+  ctx.fillStyle = color1;
+  for (let i = 0; i < petalCount; i++) {
+    const angle = (i / petalCount) * Math.PI * 2 + t * 0.001;
+    const px = x + Math.cos(angle) * size * 0.35 + s;
+    const py = y + Math.sin(angle) * size * 0.35;
+    ctx.beginPath(); ctx.ellipse(px, py, size * 0.25, size * 0.15, angle, 0, Math.PI * 2); ctx.fill();
+  }
+  // Center
+  ctx.fillStyle = color2;
+  ctx.beginPath(); ctx.arc(x + s, y, size * 0.15, 0, Math.PI * 2); ctx.fill();
+}
+
+function drawBud(x, y, size, color) {
+  // Unopened flower bud
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.ellipse(x, y, size * 0.2, size * 0.3, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // Sepals
+  ctx.fillStyle = '#3d7a28';
+  ctx.beginPath(); ctx.ellipse(x - size * 0.12, y + size * 0.15, size * 0.12, size * 0.06, -0.5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(x + size * 0.12, y + size * 0.15, size * 0.12, size * 0.06, 0.5, 0, Math.PI * 2); ctx.fill();
+}
+
+function drawFruit(x, y, size, color1, color2) {
+  // Round fruit with highlight
+  ctx.fillStyle = color1;
+  ctx.beginPath(); ctx.arc(x, y, size * 0.3, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = color2;
+  ctx.beginPath(); ctx.arc(x - size * 0.08, y - size * 0.1, size * 0.12, 0, Math.PI * 2); ctx.fill();
+  // Small leaf on top
+  ctx.fillStyle = '#3d7a28';
+  ctx.beginPath(); ctx.ellipse(x + size * 0.1, y - size * 0.3, size * 0.12, size * 0.06, 0.5, 0, Math.PI * 2); ctx.fill();
+}
+
+function drawWaterDrop(x, y, size) {
+  // Teardrop shape
+  ctx.fillStyle = 'rgba(100,180,255,0.7)';
+  ctx.beginPath();
+  ctx.moveTo(x, y - size * 0.4);
+  ctx.quadraticCurveTo(x + size * 0.25, y, x, y + size * 0.2);
+  ctx.quadraticCurveTo(x - size * 0.25, y, x, y - size * 0.4);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(200,230,255,0.6)';
+  ctx.beginPath(); ctx.arc(x - size * 0.05, y - size * 0.1, size * 0.06, 0, Math.PI * 2); ctx.fill();
+}
+
+// Color mapping for seed types (used instead of emojis)
+const SEED_DRAW_COLORS = {
+  basic_flower: { petal: '#f8a4c8', center: '#f0e040' },
+  carrot: { fruit1: '#ff8c33', fruit2: '#ffb366' },
+  daisy: { petal: '#fff8dc', center: '#f5d442' },
+  lettuce: { petal: '#7ecf6a', center: '#5aad3c' },
+  tomato: { fruit1: '#e53935', fruit2: '#ff7043' },
+  tulip: { petal: '#e84393', center: '#fdcb6e' },
+  pepper: { fruit1: '#d32f2f', fruit2: '#ff5252' },
+  herb: { petal: '#66bb6a', center: '#388e3c' },
+  sunflower: { petal: '#fdd835', center: '#5d4037' },
+  strawberry: { fruit1: '#e53935', fruit2: '#ffcdd2' },
+  rose: { petal: '#c62828', center: '#f44336' },
+  magic_mushroom: { petal: '#ab47bc', center: '#f8bbd0' },
+  crystal_flower: { petal: '#80deea', center: '#e0f7fa' },
+  dragon_fruit: { fruit1: '#e91e63', fruit2: '#f48fb1' },
+  moonflower: { petal: '#b39ddb', center: '#ede7f6' },
+  golden_apple: { fruit1: '#ffd600', fruit2: '#fff9c4' },
+  rainbow_rose: { petal: '#ff7043', center: '#ffcc02' },
+  stardust_bloom: { petal: '#ffd54f', center: '#fff8e1' }
+};
+
+function drawPlantTop(x, y, size, seedId, stage, t, seed) {
+  const colors = SEED_DRAW_COLORS[seedId] || { petal: '#f8a4c8', center: '#f0e040' };
+  if (stage <= 1) {
+    drawLeafCluster(x, y, size * 0.6, t, seed);
+  } else if (stage === 2) {
+    drawBud(x, y, size * 0.8, colors.petal || colors.fruit1);
+  } else if (stage === 3) {
+    if (colors.fruit1) {
+      drawFruit(x, y, size, colors.fruit1, colors.fruit2);
+    } else {
+      drawFlowerHead(x, y, size * 0.8, colors.petal, colors.center, t, seed);
+    }
+  } else {
+    // Stage 4 - fully grown, larger
+    if (colors.fruit1) {
+      drawFruit(x, y, size * 1.2, colors.fruit1, colors.fruit2);
+    } else {
+      drawFlowerHead(x, y, size, colors.petal, colors.center, t, seed);
+    }
+  }
+}
+
+// Draw a decorative drawn bush/plant for garden elements (replaces emojis)
+function drawDecoPlant(x, y, size, type, color, t, i) {
+  const sway = Math.sin(t * 0.002 + i * 2) * 2;
+  switch (type) {
+    case 'flower':
+      // Stem
+      ctx.strokeStyle = '#3d6e28'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(x, y + size * 0.4); ctx.quadraticCurveTo(x + sway, y, x + sway * 0.5, y - size * 0.3); ctx.stroke();
+      drawFlowerHead(x + sway * 0.5, y - size * 0.4, size * 0.5, color, '#f0e040', t, i);
+      break;
+    case 'bush':
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(x + sway * 0.3, y - size * 0.1, size * 0.4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = adjustBrightness(color, 20);
+      ctx.beginPath(); ctx.arc(x - size * 0.15 + sway * 0.3, y - size * 0.25, size * 0.3, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x + size * 0.2 + sway * 0.3, y - size * 0.2, size * 0.25, 0, Math.PI * 2); ctx.fill();
+      break;
+    case 'mushroom':
+      // Stem
+      ctx.fillStyle = '#f5f5dc';
+      ctx.fillRect(x - size * 0.08, y - size * 0.15, size * 0.16, size * 0.35);
+      // Cap
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.ellipse(x, y - size * 0.2, size * 0.3, size * 0.2, 0, Math.PI, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(x, y - size * 0.2, size * 0.3, size * 0.08, 0, 0, Math.PI); ctx.fill();
+      // Spots
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.beginPath(); ctx.arc(x - size * 0.1, y - size * 0.3, size * 0.05, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x + size * 0.12, y - size * 0.25, size * 0.04, 0, Math.PI * 2); ctx.fill();
+      break;
+    case 'crystal':
+      ctx.fillStyle = color; ctx.globalAlpha = 0.7;
+      ctx.beginPath();
+      ctx.moveTo(x, y - size * 0.5);
+      ctx.lineTo(x + size * 0.2, y + size * 0.1);
+      ctx.lineTo(x - size * 0.2, y + size * 0.1);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = adjustBrightness(color, 40); ctx.globalAlpha = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(x - size * 0.08, y - size * 0.3);
+      ctx.lineTo(x + size * 0.12, y + size * 0.05);
+      ctx.lineTo(x - size * 0.15, y + size * 0.05);
+      ctx.closePath(); ctx.fill();
+      ctx.globalAlpha = 1;
+      break;
+    case 'cactus':
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.ellipse(x, y - size * 0.15, size * 0.15, size * 0.35, 0, 0, Math.PI * 2); ctx.fill();
+      // Arms
+      ctx.beginPath(); ctx.ellipse(x - size * 0.2, y - size * 0.15, size * 0.07, size * 0.15, 0.4, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(x + size * 0.18, y - size * 0.25, size * 0.06, size * 0.12, -0.3, 0, Math.PI * 2); ctx.fill();
+      break;
+    case 'fern':
+      for (let f = 0; f < 5; f++) {
+        const angle = -Math.PI / 2 + (f - 2) * 0.35 + sway * 0.02;
+        const len = size * (0.3 + f * 0.05);
+        ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(x, y);
+        const ex = x + Math.cos(angle) * len, ey = y + Math.sin(angle) * len;
+        ctx.lineTo(ex, ey); ctx.stroke();
+        // Leaflets
+        ctx.fillStyle = adjustBrightness(color, 15);
+        for (let l = 0.3; l < 1; l += 0.25) {
+          const lx = x + Math.cos(angle) * len * l;
+          const ly = y + Math.sin(angle) * len * l;
+          ctx.beginPath(); ctx.ellipse(lx + 3, ly, size * 0.06, size * 0.03, angle + 0.8, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.ellipse(lx - 3, ly, size * 0.06, size * 0.03, angle - 0.8, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+      break;
+    default: // generic small plant
+      ctx.strokeStyle = '#3d6e28'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(x, y + size * 0.2); ctx.lineTo(x, y - size * 0.2); ctx.stroke();
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.ellipse(x, y - size * 0.25, size * 0.2, size * 0.15, 0, 0, Math.PI * 2); ctx.fill();
+  }
+}
+
 function drawIsometricGarden(t) {
   if (!state || !state.gardenGrid) return;
 
   const w = vw(), h = vh();
 
-  // Position garden horizontally on the ground at far right
-  // The isometric grid extends left-up from the origin, so place origin
-  // so the garden sits on the ground plane at the right side of the screen
+  // Position garden in the background on the right, sitting on the ground
+  // Placed higher up (further back in perspective) so it doesn't overlap the pet
   const gardenWidth = (ISO_GRID_COLS + ISO_GRID_ROWS) * ISO_TILE_W / 2;
   isoGardenOrigin = {
-    x: w - gardenWidth * 0.35,
-    y: h * 0.68
+    x: w * 0.82,
+    y: h * 0.52
   };
 
   // Get garden bed theme colors matching current landscape
@@ -3712,28 +3909,23 @@ function drawIsoPlant(gridX, gridY, plant, t) {
       }
     }
 
-    // --- Draw flower/fruit at top (stage 2+) ---
+    // --- Draw plant top (drawn, no emojis) ---
     if (stage >= 2) {
       const topX = baseX + sway * 0.3;
       const topY = stemTopY;
-      const emojiSize = stage === 2 ? 14 : stage === 3 ? 18 : 24;
+      const headSize = stage === 2 ? 14 : stage === 3 ? 18 : 24;
 
       // Rarity glow ring (uncommon+)
-      if (rarity !== 'common' && stage >= 2) {
+      if (rarity !== 'common') {
         const glowColor = SEED_RARITY_COLORS[rarity] || '#fff';
         const glowPulse = 0.2 + Math.sin(t * 0.003 + gridX * 2 + gridY) * 0.15;
-        const glowSize = emojiSize * 0.7 + (rarity === 'legendary' ? 8 : rarity === 'epic' ? 6 : 3);
+        const glowSize = headSize * 0.7 + (rarity === 'legendary' ? 8 : rarity === 'epic' ? 6 : 3);
         ctx.globalAlpha = glowPulse;
         ctx.strokeStyle = glowColor;
         ctx.lineWidth = rarity === 'legendary' ? 3 : rarity === 'epic' ? 2.5 : 2;
-        ctx.beginPath();
-        ctx.arc(topX, topY, glowSize, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.fillStyle = glowColor;
-        ctx.globalAlpha = glowPulse * 0.25;
-        ctx.beginPath();
-        ctx.arc(topX, topY, glowSize * 0.6, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(topX, topY, glowSize, 0, Math.PI * 2); ctx.stroke();
+        ctx.fillStyle = glowColor; ctx.globalAlpha = glowPulse * 0.25;
+        ctx.beginPath(); ctx.arc(topX, topY, glowSize * 0.6, 0, Math.PI * 2); ctx.fill();
         ctx.globalAlpha = 1;
       }
 
@@ -3742,48 +3934,26 @@ function drawIsoPlant(gridX, gridY, plant, t) {
         const harvestGlow = rarity === 'legendary' ? '#FFD700' : rarity === 'epic' ? '#a855f7' : '#FFD700';
         ctx.globalAlpha = 0.35 + Math.sin(t * 0.004) * 0.2;
         ctx.fillStyle = harvestGlow;
-        ctx.beginPath();
-        ctx.arc(topX, topY, emojiSize * 0.7, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(topX, topY, headSize * 0.7, 0, Math.PI * 2); ctx.fill();
         ctx.globalAlpha = 1;
       }
 
-      // Draw the bud / bloom / fruit emoji at top
-      const plantEmojis = ['🌱', '🌿', '🌸', '🌺', seedData.emoji];
-      const emoji = plantEmojis[stage];
-      ctx.font = emojiSize + 'px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(emoji, topX, topY + emojiSize * 0.35);
-      ctx.textAlign = 'start';
+      // Draw the plant top as shapes
+      drawPlantTop(topX, topY, headSize, seedData.id, stage, t, gridX + gridY * 7);
     } else if (stage === 1) {
-      // Small sprout leaves at top
-      const topX = baseX + sway * 0.3;
-      const topY = stemTopY;
-      ctx.font = '12px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('🌿', topX, topY + 4);
-      ctx.textAlign = 'start';
+      // Small leaf cluster at top of sprout
+      drawLeafCluster(baseX + sway * 0.3, stemTopY, 10, t, gridX + gridY);
     } else {
-      // Stage 0: tiny seed sprout poking out
-      ctx.font = '10px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('🌱', baseX, baseY - 2);
-      ctx.textAlign = 'start';
+      // Stage 0: tiny sprout
+      drawSprout(baseX, baseY, 10);
     }
 
     ctx.restore();
   }
 
-  // Water droplet indicator if recently watered
+  // Water droplet indicator if recently watered (drawn, no emoji)
   if (now - plant.wateredAt < 30000) {
-    const dropY = stemTopY - 6;
-    const dropX = baseX + 14;
-    ctx.font = '10px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.globalAlpha = 0.7;
-    ctx.fillText('💧', dropX, dropY);
-    ctx.globalAlpha = 1;
-    ctx.textAlign = 'start';
+    drawWaterDrop(baseX + 12, stemTopY - 8, 10);
   }
 }
 
@@ -4101,7 +4271,7 @@ function drawGardenPlants(t) {
   if (!state || !state.gardenPlants || state.gardenPlants.length === 0) return;
 
   const w = vw(), h = vh();
-  const groundY = h * 0.72;
+  const groundY = h * 0.78;
   const baseSize = Math.round(Math.min(w, h) * 0.035);
 
   for (let i = 0; i < state.gardenPlants.length; i++) {
@@ -4155,15 +4325,19 @@ function drawGardenPlants(t) {
       ctx.globalAlpha = 1;
     }
 
-    // Emoji at top of stem
-    const emojiSize = Math.round(baseSize * (0.7 + stg * 0.15));
-    const emoji = PLANT_STAGES[stg];
-    ctx.font = emojiSize + 'px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(emoji, px + sway * 0.3, stemTop + emojiSize * 0.35);
+    // Drawn plant top (no emoji)
+    const headSize = Math.round(baseSize * (0.7 + stg * 0.15));
+    const topX = px + sway * 0.3;
+    if (stg === 0) {
+      drawSprout(topX, stemTop + 4, headSize);
+    } else if (stg === 1) {
+      drawLeafCluster(topX, stemTop, headSize, t, i);
+    } else if (stg === 2) {
+      drawBud(topX, stemTop, headSize, '#f8a4c8');
+    } else {
+      drawFlowerHead(topX, stemTop, headSize, '#f06292', '#fdd835', t, i);
+    }
   }
-
-  ctx.textAlign = 'start';
 }
 
 // Draw companion pet
@@ -4174,7 +4348,7 @@ function drawCompanion(t) {
   if (!companion) return;
   
   const h = vh();
-  const baseY = h * 0.62;
+  const baseY = h * 0.68;
   const y = baseY + companionBounce;
   
   // Calculate size (40% of pet size)
@@ -4433,7 +4607,7 @@ function addGardenPlant() {
   };
   
   state.gardenPlants.push(plant);
-  spawnParticle(x * w, vh() * 0.7, '🌱');
+  spawnParticle(x * w, vh() * 0.7, '+');
   save();
 }
 
@@ -4452,7 +4626,7 @@ function harvestPlant() {
   state.happiness = Math.min(100, state.happiness + 3);
   
   // Celebration
-  spawnParticle(plant.x * w, vh() * 0.68, '🌺');
+  spawnParticle(plant.x * w, vh() * 0.68, '*');
   spawnParticle(plant.x * w, vh() * 0.68, '✨');
   save();
   
@@ -6406,6 +6580,9 @@ function gameLoop(now){
     drawBalloon(now);
   }
 
+  // Ensure clean state before pet drawing
+  ctx.globalAlpha = 1;
+
   if(state&&state.alive){
     drawHouse(now);
     // Draw companion pet (before main pet for layering)
@@ -6805,6 +6982,7 @@ function buildAvatarCreatorUI() {
   nameInput.value = tempAvatar.name;
   nameInput.oninput = function() {
     tempAvatar.name = this.value.trim() || 'Pet';
+    updateAvatarPreview();
   };
 
   // Set up start button
@@ -6842,12 +7020,18 @@ function updateAvatarPreview() {
   const w = canvas.width;
   const h = canvas.height;
   const cx = w / 2;
-  const cy = h / 2;
-  const r = 45;
+  const cy = h / 2 + 10;
+  const r = 65;
 
   pctx.clearRect(0, 0, w, h);
 
   const colors = AVATAR_COLORS[tempAvatar.bodyColor] || AVATAR_COLORS[0];
+
+  // Shadow under pet
+  pctx.fillStyle = 'rgba(0,0,0,0.15)';
+  pctx.beginPath();
+  pctx.ellipse(cx, cy + r * 0.95, r * 0.6, r * 0.12, 0, 0, Math.PI * 2);
+  pctx.fill();
 
   // Draw tail behind body
   drawAvatarTail(pctx, cx, cy, r, tempAvatar.tailType, colors);
@@ -6880,6 +7064,15 @@ function updateAvatarPreview() {
   pctx.fillStyle = colors.secondary;
   pctx.beginPath(); pctx.ellipse(cx - r * 0.3, cy + r * 0.9, r * 0.2, r * 0.12, -0.1, 0, Math.PI * 2); pctx.fill();
   pctx.beginPath(); pctx.ellipse(cx + r * 0.3, cy + r * 0.9, r * 0.2, r * 0.12, 0.1, 0, Math.PI * 2); pctx.fill();
+
+  // Draw name label below pet
+  if (tempAvatar.name && tempAvatar.name !== 'Pet') {
+    pctx.font = 'bold 14px sans-serif';
+    pctx.fillStyle = 'rgba(255,255,255,0.7)';
+    pctx.textAlign = 'center';
+    pctx.fillText(tempAvatar.name, cx, cy + r * 1.15);
+    pctx.textAlign = 'start';
+  }
 }
 
 function drawBodyShape(c, cx, cy, r, shapeIndex) {
