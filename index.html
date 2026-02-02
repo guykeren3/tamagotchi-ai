@@ -140,6 +140,189 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
 #math-modal .modal-close{background:rgba(255,255,255,0.1);border:none;border-radius:20px;padding:10px 24px;color:#fff;font-size:13px;cursor:pointer;transition:all 0.2s;}
 #math-modal .modal-close:hover{background:rgba(255,255,255,0.2);}
 
+/* Avatar Creator Panel */
+#avatar-creator{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);opacity:0;pointer-events:none;transition:opacity 0.4s;overflow-y:auto;padding:20px;}
+#avatar-creator.open{opacity:1;pointer-events:auto;}
+#avatar-creator .creator-content{display:flex;flex-direction:column;align-items:center;gap:20px;max-width:400px;width:100%;}
+#avatar-creator .creator-title{font-size:24px;font-weight:700;color:#fff;text-align:center;margin-bottom:10px;text-shadow:0 2px 20px rgba(162,155,254,0.5);}
+#avatar-creator .creator-subtitle{font-size:14px;color:rgba(255,255,255,0.6);text-align:center;margin-top:-15px;}
+#avatar-creator .preview-area{width:200px;height:200px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+#avatar-creator .preview-canvas{width:180px;height:180px;}
+#avatar-creator .option-section{width:100%;background:rgba(255,255,255,0.05);border-radius:16px;padding:16px;}
+#avatar-creator .option-label{font-size:12px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+#avatar-creator .color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+#avatar-creator .color-swatch{width:42px;height:42px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.2s;position:relative;}
+#avatar-creator .color-swatch:hover{transform:scale(1.1);}
+#avatar-creator .color-swatch.selected{border-color:#fff;box-shadow:0 0 15px rgba(255,255,255,0.4);}
+#avatar-creator .eye-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+#avatar-creator .eye-option{background:rgba(255,255,255,0.08);border:2px solid transparent;border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s;font-size:24px;}
+#avatar-creator .eye-option:hover{background:rgba(255,255,255,0.15);}
+#avatar-creator .eye-option.selected{border-color:#a29bfe;background:rgba(162,155,254,0.2);}
+#avatar-creator .eye-option span{display:block;font-size:10px;color:rgba(255,255,255,0.5);margin-top:4px;}
+#avatar-creator .pattern-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+#avatar-creator .pattern-option{background:rgba(255,255,255,0.08);border:2px solid transparent;border-radius:12px;padding:12px 8px;cursor:pointer;text-align:center;transition:all 0.2s;}
+#avatar-creator .pattern-option:hover{background:rgba(255,255,255,0.15);}
+#avatar-creator .pattern-option.selected{border-color:#a29bfe;background:rgba(162,155,254,0.2);}
+#avatar-creator .pattern-option span{display:block;font-size:11px;color:rgba(255,255,255,0.7);}
+#avatar-creator .name-input{width:100%;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px 18px;color:#fff;font-size:18px;text-align:center;outline:none;transition:all 0.2s;}
+#avatar-creator .name-input::placeholder{color:rgba(255,255,255,0.3);}
+#avatar-creator .name-input:focus{border-color:#a29bfe;background:rgba(162,155,254,0.1);}
+#avatar-creator .start-btn{width:100%;background:linear-gradient(135deg,#a29bfe,#6c5ce7);border:none;border-radius:16px;padding:16px;color:#fff;font-size:18px;font-weight:700;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 20px rgba(108,92,231,0.4);}
+#avatar-creator .start-btn:hover{transform:translateY(-2px);box-shadow:0 6px 25px rgba(108,92,231,0.5);}
+#avatar-creator .start-btn:active{transform:scale(0.98);}
+
+/* Experience Bar */
+#exp-bar-container{position:fixed;top:78px;left:16px;right:16px;z-index:10;pointer-events:none;}
+#exp-bar-wrapper{display:flex;align-items:center;gap:8px;}
+#exp-level-badge{background:linear-gradient(135deg,#a29bfe,#6c5ce7);border-radius:12px;padding:4px 10px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;box-shadow:0 2px 8px rgba(108,92,231,0.3);}
+#exp-bar-track{flex:1;height:10px;background:rgba(255,255,255,0.1);border-radius:5px;overflow:hidden;position:relative;}
+#exp-bar-fill{height:100%;background:linear-gradient(90deg,#ffd93d,#ff6b6b,#a29bfe);border-radius:5px;transition:width 0.5s ease, box-shadow 0.5s ease;box-shadow:0 0 10px rgba(255,217,61,0.4);}
+#exp-bar-text{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:8px;color:rgba(255,255,255,0.7);text-shadow:0 1px 2px rgba(0,0,0,0.5);}
+#skill-points-badge{background:linear-gradient(135deg,#ffd93d,#ff9f43);border-radius:12px;padding:4px 10px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;cursor:pointer;pointer-events:auto;box-shadow:0 2px 8px rgba(255,159,67,0.3);animation:pulse-glow 2s infinite;}
+#skill-points-badge:hover{transform:scale(1.05);}
+#skill-points-badge.hidden{display:none;}
+@keyframes pulse-glow{0%,100%{box-shadow:0 2px 8px rgba(255,159,67,0.3);}50%{box-shadow:0 2px 15px rgba(255,159,67,0.6);}}
+
+/* Skill Point Allocation Modal */
+#skill-alloc-modal{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,26,0.95);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity 0.3s;}
+#skill-alloc-modal.open{opacity:1;pointer-events:auto;}
+#skill-alloc-modal .modal-content{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:24px;max-width:360px;width:90%;text-align:center;}
+#skill-alloc-modal .modal-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px;}
+#skill-alloc-modal .modal-subtitle{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:20px;}
+#skill-alloc-modal .points-available{font-size:28px;font-weight:700;color:#ffd93d;margin-bottom:20px;text-shadow:0 0 20px rgba(255,217,61,0.4);}
+#skill-alloc-modal .skill-alloc-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.skill-alloc-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.05);border-radius:12px;padding:10px 14px;}
+.skill-alloc-row .skill-icon{font-size:20px;}
+.skill-alloc-row .skill-info{flex:1;text-align:left;}
+.skill-alloc-row .skill-name{font-size:12px;color:#fff;font-weight:600;}
+.skill-alloc-row .skill-bonus{font-size:10px;color:rgba(255,255,255,0.4);}
+.skill-alloc-row .skill-points-display{font-size:14px;color:#a29bfe;font-weight:700;min-width:30px;text-align:center;}
+.skill-alloc-row .alloc-btn{width:32px;height:32px;border-radius:50%;border:none;font-size:18px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.skill-alloc-row .alloc-btn.add{background:linear-gradient(135deg,#55efc4,#00b894);color:#fff;}
+.skill-alloc-row .alloc-btn.add:hover{transform:scale(1.1);box-shadow:0 0 10px rgba(85,239,196,0.5);}
+.skill-alloc-row .alloc-btn.add:disabled{opacity:0.3;cursor:not-allowed;transform:none;}
+#skill-alloc-modal .modal-close-btn{background:rgba(255,255,255,0.1);border:none;border-radius:20px;padding:12px 30px;color:#fff;font-size:14px;cursor:pointer;transition:all 0.2s;}
+#skill-alloc-modal .modal-close-btn:hover{background:rgba(255,255,255,0.2);}
+
+/* Stat Boost Selection Modal */
+#stat-boost-modal{position:fixed;inset:0;z-index:101;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,26,0.95);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity 0.3s;}
+#stat-boost-modal.open{opacity:1;pointer-events:auto;}
+#stat-boost-modal .modal-content{background:linear-gradient(135deg,rgba(255,215,0,0.1),rgba(255,107,107,0.1));border:2px solid rgba(255,215,0,0.3);border-radius:24px;padding:24px;max-width:380px;width:90%;text-align:center;}
+#stat-boost-modal .modal-title{font-size:22px;font-weight:700;color:#ffd700;margin-bottom:4px;text-shadow:0 0 20px rgba(255,215,0,0.5);}
+#stat-boost-modal .modal-level{font-size:32px;font-weight:700;color:#fff;margin-bottom:8px;}
+#stat-boost-modal .modal-subtitle{font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:20px;}
+#stat-boost-modal .stat-boost-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.stat-boost-card{background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);border-radius:16px;padding:14px 10px;cursor:pointer;transition:all 0.2s;text-align:center;}
+.stat-boost-card:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,215,0,0.4);transform:translateY(-3px);}
+.stat-boost-card:active{transform:scale(0.97);}
+.stat-boost-card .boost-icon{font-size:28px;margin-bottom:6px;}
+.stat-boost-card .boost-name{font-size:12px;color:#fff;font-weight:600;margin-bottom:2px;}
+.stat-boost-card .boost-desc{font-size:10px;color:rgba(255,255,255,0.5);}
+.stat-boost-card .boost-current{font-size:9px;color:#ffd700;margin-top:4px;}
+
+/* Coins Display */
+#coins-display{position:fixed;top:10px;right:10px;background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,165,0,0.1));backdrop-filter:blur(10px);border:1px solid rgba(255,215,0,0.3);border-radius:20px;padding:8px 16px;display:flex;align-items:center;gap:8px;z-index:20;cursor:pointer;transition:all 0.2s;}
+#coins-display:hover{transform:scale(1.05);border-color:rgba(255,215,0,0.5);}
+#coins-display .coin-icon{font-size:20px;}
+#coins-display .coin-amount{font-size:16px;font-weight:700;color:#ffd700;text-shadow:0 0 10px rgba(255,215,0,0.5);}
+
+/* Inventory Panel */
+#inventory-panel{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;background:rgba(10,10,26,0.95);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity 0.3s;overflow-y:auto;}
+#inventory-panel.open{opacity:1;pointer-events:auto;}
+.inventory-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.inventory-header h2{font-size:20px;color:#fff;margin:0;}
+.inventory-tabs{display:flex;gap:8px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.1);overflow-x:auto;}
+.inventory-tab{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:8px 16px;color:rgba(255,255,255,0.6);font-size:12px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.inventory-tab:hover{background:rgba(255,255,255,0.1);}
+.inventory-tab.active{background:rgba(139,92,246,0.3);border-color:rgba(139,92,246,0.5);color:#fff;}
+.inventory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:12px;padding:16px 20px;}
+.inventory-item{background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;}
+.inventory-item:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px);}
+.inventory-item.empty{opacity:0.3;cursor:default;}
+.inventory-item .item-emoji{font-size:28px;margin-bottom:4px;}
+.inventory-item .item-name{font-size:10px;color:rgba(255,255,255,0.8);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.inventory-item .item-qty{position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.6);border-radius:10px;padding:2px 6px;font-size:10px;color:#fff;font-weight:600;}
+.inventory-item .item-price{font-size:9px;color:#ffd700;}
+.inventory-item.rarity-common{border-color:rgba(156,163,175,0.3);}
+.inventory-item.rarity-uncommon{border-color:rgba(34,197,94,0.4);}
+.inventory-item.rarity-rare{border-color:rgba(59,130,246,0.5);}
+.inventory-item.rarity-legendary{border-color:rgba(245,158,11,0.6);box-shadow:0 0 15px rgba(245,158,11,0.2);}
+.inventory-empty{text-align:center;padding:40px 20px;color:rgba(255,255,255,0.4);}
+.inventory-empty .empty-icon{font-size:48px;margin-bottom:12px;}
+
+/* Market Panel */
+#market-panel{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;background:rgba(10,10,26,0.95);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity 0.3s;overflow-y:auto;}
+#market-panel.open{opacity:1;pointer-events:auto;}
+.market-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.market-header h2{font-size:20px;color:#fff;margin:0;}
+.market-coins{display:flex;align-items:center;gap:6px;font-size:16px;color:#ffd700;}
+.market-section{padding:16px 20px;}
+.market-section h3{font-size:14px;color:rgba(255,255,255,0.6);margin:0 0 12px 0;text-transform:uppercase;letter-spacing:1px;}
+.market-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;}
+.market-item{background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all 0.2s;}
+.market-item:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px);}
+.market-item.disabled{opacity:0.4;cursor:not-allowed;}
+.market-item .item-emoji{font-size:32px;margin-bottom:6px;}
+.market-item .item-name{font-size:12px;color:#fff;font-weight:600;margin-bottom:2px;}
+.market-item .item-desc{font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:6px;}
+.market-item .item-price{display:flex;align-items:center;justify-content:center;gap:4px;font-size:14px;font-weight:700;color:#ffd700;}
+.market-item.rarity-common{border-color:rgba(156,163,175,0.3);}
+.market-item.rarity-uncommon{border-color:rgba(34,197,94,0.4);}
+.market-item.rarity-rare{border-color:rgba(59,130,246,0.5);}
+.market-item.rarity-epic{border-color:rgba(168,85,247,0.5);box-shadow:0 0 12px rgba(168,85,247,0.3);}
+.market-item.rarity-legendary{border-color:rgba(245,158,11,0.6);box-shadow:0 0 15px rgba(245,158,11,0.2);}
+.rarity-epic{border-color:rgba(168,85,247,0.5)!important;}
+.inventory-item.rarity-epic{border-color:rgba(168,85,247,0.5);box-shadow:0 0 10px rgba(168,85,247,0.3);}
+
+/* Tasks Panel */
+#tasks-panel{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;background:rgba(10,10,26,0.95);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity 0.3s;overflow-y:auto;}
+#tasks-panel.open{opacity:1;pointer-events:auto;}
+.tasks-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.tasks-header h2{font-size:20px;color:#fff;margin:0;}
+.tasks-reset{font-size:11px;color:rgba(255,255,255,0.4);}
+.tasks-list{padding:16px 20px;display:flex;flex-direction:column;gap:12px;}
+.task-item{background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;transition:all 0.2s;}
+.task-item.completed{border-color:rgba(34,197,94,0.4);background:rgba(34,197,94,0.1);}
+.task-item .task-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.task-item .task-desc{font-size:13px;color:#fff;flex:1;}
+.task-item .task-reward{display:flex;align-items:center;gap:4px;font-size:13px;color:#ffd700;font-weight:600;}
+.task-item .task-progress{height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;}
+.task-item .task-progress-fill{height:100%;background:linear-gradient(90deg,#8b5cf6,#a78bfa);border-radius:3px;transition:width 0.3s;}
+.task-item.completed .task-progress-fill{background:linear-gradient(90deg,#22c55e,#4ade80);}
+.task-item .task-status{font-size:11px;color:rgba(255,255,255,0.5);margin-top:6px;}
+.task-item .claim-btn{background:linear-gradient(135deg,#ffd700,#ffaa00);border:none;border-radius:8px;padding:8px 16px;color:#000;font-weight:700;font-size:12px;cursor:pointer;margin-top:8px;transition:all 0.2s;}
+.task-item .claim-btn:hover{transform:scale(1.05);box-shadow:0 0 15px rgba(255,215,0,0.4);}
+
+/* World Collectible */
+.world-item{position:absolute;cursor:pointer;transition:all 0.2s;animation:float 2s ease-in-out infinite;}
+.world-item:hover{transform:scale(1.2);}
+.world-item .item-glow{position:absolute;inset:-10px;border-radius:50%;opacity:0.5;animation:pulse 1.5s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+/* Close button for panels */
+.panel-close{background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;cursor:pointer;transition:all 0.2s;}
+.panel-close:hover{background:rgba(255,255,255,0.2);transform:rotate(90deg);}
+
+/* Bottom nav for inventory/market/tasks */
+#bottom-nav{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:18;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);border-radius:25px;padding:6px;}
+.nav-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:8px 14px;color:rgba(255,255,255,0.7);font-size:18px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+.nav-btn:hover{background:rgba(255,255,255,0.2);color:#fff;}
+.nav-btn .nav-label{font-size:11px;}
+.nav-btn.has-notification::after{content:'';position:absolute;top:4px;right:4px;width:8px;height:8px;background:#ef4444;border-radius:50%;}
+
+/* Skills Panel */
+#skills-panel{display:none;position:fixed;bottom:100px;left:10px;right:10px;max-width:380px;margin:0 auto;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px);border-radius:16px;padding:12px;z-index:15;pointer-events:auto;}
+#skills-panel.visible{display:block;}
+.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.skill-item{background:rgba(255,255,255,0.05);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:4px;}
+.skill-header{display:flex;justify-content:space-between;align-items:center;}
+.skill-name{font-size:11px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.5px;}
+.skill-level{font-size:10px;color:#a29bfe;}
+.skill-stars{font-size:10px;letter-spacing:-1px;}
+.skill-xp-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;}
+.skill-xp-fill{height:100%;background:linear-gradient(90deg,#a29bfe,#6c5ce7);border-radius:2px;transition:width 0.3s;}
+.skill-allocated{font-size:9px;color:#ffd93d;margin-top:2px;}
+
 /* Stats panel */
 #stats-panel .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px;width:320px;max-width:90vw;}
 .stat-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px;text-align:center;}
@@ -227,6 +410,92 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
   <div class="stat"><div class="stat-label">Energy</div><div class="stat-track"><div class="stat-fill energy" id="bar-energy"></div></div></div>
   <div class="stat"><div class="stat-label">Hygiene</div><div class="stat-track"><div class="stat-fill hygiene" id="bar-hygiene"></div></div></div>
   <div class="stat"><div class="stat-label">Health</div><div class="stat-track"><div class="stat-fill health" id="bar-health"></div></div></div>
+</div>
+
+<!-- Experience Bar -->
+<div id="exp-bar-container">
+  <div id="exp-bar-wrapper">
+    <div id="exp-level-badge">Lv.1</div>
+    <div id="exp-bar-track">
+      <div id="exp-bar-fill" style="width:0%"></div>
+      <span id="exp-bar-text">0/50 XP</span>
+    </div>
+    <div id="skill-points-badge" class="hidden" onclick="openSkillAllocation()">+1 Point</div>
+  </div>
+</div>
+
+<!-- Coins Display -->
+<div id="coins-display" onclick="openMarket()">
+  <span class="coin-icon">🪙</span>
+  <span class="coin-amount" id="coin-amount">0</span>
+</div>
+
+<!-- Bottom Navigation -->
+<div id="bottom-nav">
+  <button class="nav-btn" onclick="openInventory()" title="Inventory">📦<span class="nav-label">Bag</span></button>
+  <button class="nav-btn" onclick="openMarket()" title="Market">🏪<span class="nav-label">Shop</span></button>
+  <button class="nav-btn" onclick="openTasks()" title="Tasks">📋<span class="nav-label">Tasks</span></button>
+</div>
+
+<!-- Inventory Panel -->
+<div id="inventory-panel">
+  <div class="inventory-header">
+    <h2>📦 Inventory</h2>
+    <button class="panel-close" onclick="closeInventory()">✕</button>
+  </div>
+  <div class="inventory-tabs" id="inventory-tabs"></div>
+  <div class="inventory-grid" id="inventory-grid"></div>
+</div>
+
+<!-- Market Panel -->
+<div id="market-panel">
+  <div class="market-header">
+    <h2>🏪 Market</h2>
+    <div class="market-coins">🪙 <span id="market-coins">0</span></div>
+    <button class="panel-close" onclick="closeMarket()">✕</button>
+  </div>
+  <div class="market-section">
+    <h3>🛒 Buy Items</h3>
+    <div class="market-grid" id="market-buy-grid"></div>
+  </div>
+  <div class="market-section">
+    <h3>💰 Sell from Inventory</h3>
+    <div class="market-grid" id="market-sell-grid"></div>
+  </div>
+</div>
+
+<!-- Tasks Panel -->
+<div id="tasks-panel">
+  <div class="tasks-header">
+    <h2>📋 Daily Tasks</h2>
+    <span class="tasks-reset" id="tasks-reset-timer">Resets in: --:--</span>
+    <button class="panel-close" onclick="closeTasks()">✕</button>
+  </div>
+  <div class="tasks-list" id="tasks-list"></div>
+</div>
+
+<!-- World Items Container -->
+<div id="world-items-container"></div>
+
+<!-- Stat Boost Selection Modal (shown on level up) -->
+<div id="stat-boost-modal">
+  <div class="modal-content">
+    <div class="modal-title">Level Up!</div>
+    <div class="modal-level" id="new-level-display">Lv.2</div>
+    <div class="modal-subtitle">Choose a permanent stat boost</div>
+    <div class="stat-boost-grid" id="stat-boost-grid"></div>
+  </div>
+</div>
+
+<!-- Skill Point Allocation Modal -->
+<div id="skill-alloc-modal">
+  <div class="modal-content">
+    <div class="modal-title">Skill Points</div>
+    <div class="modal-subtitle">Choose where to spend your skill points</div>
+    <div class="points-available" id="points-available">0 Points</div>
+    <div class="skill-alloc-grid" id="skill-alloc-grid"></div>
+    <button class="modal-close-btn" onclick="closeSkillAllocation()">Done</button>
+  </div>
 </div>
 
 <!-- Action bar -->
@@ -321,6 +590,65 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
   </div>
 </div>
 
+<!-- AVATAR CREATOR OVERLAY -->
+<div id="avatar-creator">
+  <div class="creator-content">
+    <div class="creator-title">Create Your Pet!</div>
+    <div class="creator-subtitle">Customize your new companion</div>
+    
+    <div class="preview-area">
+      <canvas id="avatar-preview" class="preview-canvas" width="180" height="180"></canvas>
+    </div>
+    
+    <div class="option-section">
+      <div class="option-label">Choose Color</div>
+      <div class="color-grid" id="color-picker"></div>
+    </div>
+    
+    <div class="option-section">
+      <div class="option-label">Eye Style</div>
+      <div class="eye-grid" id="eye-picker"></div>
+    </div>
+    
+    <div class="option-section">
+      <div class="option-label">Pattern</div>
+      <div class="pattern-grid" id="pattern-picker"></div>
+    </div>
+
+    <div class="option-section">
+      <div class="option-label">Mouth Style</div>
+      <div class="eye-grid" id="mouth-picker"></div>
+    </div>
+
+    <div class="option-section">
+      <div class="option-label">Body Shape</div>
+      <div class="eye-grid" id="shape-picker"></div>
+    </div>
+
+    <div class="option-section">
+      <div class="option-label">Ear Type</div>
+      <div class="eye-grid" id="ear-picker"></div>
+    </div>
+
+    <div class="option-section">
+      <div class="option-label">Tail Type</div>
+      <div class="eye-grid" id="tail-picker"></div>
+    </div>
+
+    <div class="option-section">
+      <div class="option-label">Name Your Pet</div>
+      <input type="text" class="name-input" id="pet-name-input" placeholder="Enter a name..." maxlength="12">
+    </div>
+
+    <button class="start-btn" id="start-adventure-btn">Start Adventure!</button>
+  </div>
+</div>
+
+<!-- SKILLS PANEL -->
+<div id="skills-panel">
+  <div class="skills-grid" id="skills-grid"></div>
+</div>
+
 <!-- MINIGAME OVERLAY -->
 <div id="minigame-overlay">
   <div id="mg-hud"><div id="mg-score">Score: 0</div></div>
@@ -373,6 +701,196 @@ const FOODS = [
   { name:'Soup',   emoji:'🍜', hunger:35, happiness:5,  health:10, energy:5 },
   { name:'Vitamin',emoji:'💊', hunger:5,  happiness:-5, health:30, energy:5 },
   { name:'Candy',  emoji:'🍬', hunger:10, happiness:30, health:-10,energy:15 }
+];
+
+// ============================================================
+// AVATAR CUSTOMIZATION
+// ============================================================
+const AVATAR_COLORS = [
+  { name: 'Purple', primary: '#a29bfe', secondary: '#6c5ce7' },
+  { name: 'Teal', primary: '#55efc4', secondary: '#00b894' },
+  { name: 'Pink', primary: '#fd79a8', secondary: '#e84393' },
+  { name: 'Blue', primary: '#74b9ff', secondary: '#0984e3' },
+  { name: 'Orange', primary: '#fab1a0', secondary: '#e17055' },
+  { name: 'Yellow', primary: '#ffeaa7', secondary: '#fdcb6e' },
+  { name: 'Red', primary: '#ff7675', secondary: '#d63031' },
+  { name: 'Gray', primary: '#dfe6e9', secondary: '#b2bec3' },
+  { name: 'Mint', primary: '#b8f0d8', secondary: '#5cbf8a' },
+  { name: 'Lavender', primary: '#d4b8f0', secondary: '#9b6fd4' },
+  { name: 'Peach', primary: '#fcd5ce', secondary: '#e8998d' },
+  { name: 'Forest', primary: '#6bbd6b', secondary: '#3d7a3d' },
+  { name: 'Navy', primary: '#7ea8d4', secondary: '#3a5f8a' },
+  { name: 'Coral', primary: '#ff8a80', secondary: '#d4534b' },
+  { name: 'Gold', primary: '#ffe082', secondary: '#c9a736' },
+  { name: 'Midnight', primary: '#7986cb', secondary: '#3949ab' }
+];
+
+const EYE_STYLES = ['round', 'sleepy', 'sparkle', 'cat', 'dot', 'anime'];
+
+const PATTERNS = [
+  { name: 'None', draw: null },
+  { name: 'Spots', draw: 'spots' },
+  { name: 'Stripes', draw: 'stripes' },
+  { name: 'Heart', draw: 'heart' },
+  { name: 'Star', draw: 'star' },
+  { name: 'Gradient', draw: 'gradient' }
+];
+
+const MOUTH_STYLES = ['smile', 'grin', 'cat', 'open', 'tongue', 'flat'];
+const BODY_SHAPES = ['round', 'oval', 'chubby', 'slim', 'square', 'bean'];
+const EAR_TYPES = ['none', 'round', 'pointy', 'floppy', 'bunny', 'bear'];
+const TAIL_TYPES = ['none', 'round', 'long', 'fluffy', 'curly', 'fish'];
+
+// ============================================================
+// SKILL SYSTEM
+// ============================================================
+const SKILL_XP_PER_LEVEL = [0, 100, 250, 500, 1000, 2000, 4000, 8000, 15000, 30000]; // Level 1-10
+
+// Global pet level XP thresholds (level 1-50)
+const PET_LEVEL_XP = [
+  0, 50, 120, 200, 300, 420, 560, 720, 900, 1100,        // 1-10
+  1320, 1560, 1820, 2100, 2400, 2720, 3060, 3420, 3800, 4200, // 11-20
+  4620, 5060, 5520, 6000, 6500, 7020, 7560, 8120, 8700, 9300, // 21-30
+  9920, 10560, 11220, 11900, 12600, 13320, 14060, 14820, 15600, 16400, // 31-40
+  17220, 18060, 18920, 19800, 20700, 21620, 22560, 23520, 24500, 25500  // 41-50
+];
+
+// Skill point boost per allocated point
+const SKILL_POINT_BOOST = 0.15; // 15% increase per skill point
+
+const SKILL_EFFECTS = {
+  gardening: { growthSpeedPerLevel: 0.10, seedUnlockLevels: [3, 5, 7, 10] },
+  foraging: { findSeedChancePerLevel: 0.05, rareSeedChancePerLevel: 0.02 },
+  social: { happinessBoostPerLevel: 0.10, bondingSpeedPerLevel: 0.05 },
+  athletics: { scoreBoostPerLevel: 0.05, energyCostReductionPerLevel: 0.05 },
+  creativity: { decorationUnlockLevels: [2, 4, 6, 8, 10] },
+  health: { decayReductionPerLevel: 0.05, healingBoostPerLevel: 0.10 }
+};
+
+// ============================================================
+// SEED TYPES & GARDEN
+// ============================================================
+const SEED_TYPES = [
+  // Common seeds (4)
+  { id: 'basic_flower', name: 'Basic Flower', emoji: '🌸', seedEmoji: '🤍', rarity: 'common', growTime: 180000, harvestValue: { happiness: 5 }, requiredLevel: 1, coinReward: 3, xpReward: 5 },
+  { id: 'carrot', name: 'Carrot', emoji: '🥕', seedEmoji: '🤍', rarity: 'common', growTime: 300000, harvestValue: { hunger: 10 }, requiredLevel: 1, unlockMethod: 'foraging', coinReward: 5, xpReward: 5 },
+  { id: 'daisy', name: 'Daisy', emoji: '🌼', seedEmoji: '🤍', rarity: 'common', growTime: 200000, harvestValue: { happiness: 6 }, requiredLevel: 1, coinReward: 3, xpReward: 5 },
+  { id: 'lettuce', name: 'Lettuce', emoji: '🥬', seedEmoji: '🤍', rarity: 'common', growTime: 250000, harvestValue: { hunger: 8, health: 3 }, requiredLevel: 2, coinReward: 4, xpReward: 6 },
+  // Uncommon seeds (4)
+  { id: 'tomato', name: 'Tomato', emoji: '🍅', seedEmoji: '💚', rarity: 'uncommon', growTime: 480000, harvestValue: { hunger: 15 }, requiredLevel: 3, coinReward: 10, xpReward: 10 },
+  { id: 'tulip', name: 'Tulip', emoji: '🌷', seedEmoji: '💚', rarity: 'uncommon', growTime: 400000, harvestValue: { happiness: 12 }, requiredLevel: 3, coinReward: 8, xpReward: 10 },
+  { id: 'pepper', name: 'Hot Pepper', emoji: '🌶️', seedEmoji: '💚', rarity: 'uncommon', growTime: 500000, harvestValue: { hunger: 12, energy: 8 }, requiredLevel: 4, coinReward: 12, xpReward: 12 },
+  { id: 'herb', name: 'Healing Herb', emoji: '🌿', seedEmoji: '💚', rarity: 'uncommon', growTime: 450000, harvestValue: { health: 15 }, requiredLevel: 4, unlockMethod: 'foraging', coinReward: 10, xpReward: 12 },
+  // Rare seeds (4)
+  { id: 'sunflower', name: 'Sunflower', emoji: '🌻', seedEmoji: '💙', rarity: 'rare', growTime: 600000, harvestValue: { happiness: 20 }, requiredLevel: 5, coinReward: 20, xpReward: 18 },
+  { id: 'strawberry', name: 'Strawberry', emoji: '🍓', seedEmoji: '💙', rarity: 'rare', growTime: 700000, harvestValue: { hunger: 18, happiness: 10 }, requiredLevel: 5, coinReward: 25, xpReward: 18 },
+  { id: 'rose', name: 'Rose', emoji: '🌹', seedEmoji: '💙', rarity: 'rare', growTime: 650000, harvestValue: { happiness: 25 }, requiredLevel: 6, coinReward: 22, xpReward: 20 },
+  { id: 'magic_mushroom', name: 'Magic Mushroom', emoji: '🍄', seedEmoji: '💙', rarity: 'rare', growTime: 900000, harvestValue: { hunger: 10, happiness: 10, health: 5 }, requiredLevel: 7, coinReward: 30, xpReward: 22 },
+  // Epic seeds (3)
+  { id: 'crystal_flower', name: 'Crystal Flower', emoji: '💎', seedEmoji: '💜', rarity: 'epic', growTime: 1200000, harvestValue: { happiness: 30, health: 15 }, requiredLevel: 8, coinReward: 60, xpReward: 35 },
+  { id: 'dragon_fruit', name: 'Dragon Fruit', emoji: '🐉', seedEmoji: '💜', rarity: 'epic', growTime: 1400000, harvestValue: { hunger: 25, energy: 20, health: 10 }, requiredLevel: 8, coinReward: 70, xpReward: 40 },
+  { id: 'moonflower', name: 'Moonflower', emoji: '🌙', seedEmoji: '💜', rarity: 'epic', growTime: 1300000, harvestValue: { happiness: 20, energy: 20, health: 10 }, requiredLevel: 9, coinReward: 65, xpReward: 38 },
+  // Legendary seeds (3)
+  { id: 'golden_apple', name: 'Golden Apple', emoji: '🍎', seedEmoji: '💛', rarity: 'legendary', growTime: 1800000, harvestValue: { hunger: 25, happiness: 25, health: 25, energy: 25 }, requiredLevel: 10, coinReward: 150, xpReward: 60 },
+  { id: 'rainbow_rose', name: 'Rainbow Rose', emoji: '🌈', seedEmoji: '💛', rarity: 'legendary', growTime: 2100000, harvestValue: { happiness: 40, health: 20 }, requiredLevel: 10, coinReward: 120, xpReward: 55 },
+  { id: 'stardust_bloom', name: 'Stardust Bloom', emoji: '⭐', seedEmoji: '💛', rarity: 'legendary', growTime: 2400000, harvestValue: { hunger: 30, happiness: 30, health: 30, energy: 30 }, requiredLevel: 10, coinReward: 200, xpReward: 75 }
+];
+
+const SEED_RARITY_WEIGHTS = { common: 60, uncommon: 25, rare: 10, epic: 3, legendary: 2 };
+
+const SEED_RARITY_COLORS = {
+  common: '#9ca3af',
+  uncommon: '#22c55e',
+  rare: '#3b82f6',
+  epic: '#a855f7',
+  legendary: '#f59e0b'
+};
+
+const SEED_MARKET_PRICES = { common: 10, uncommon: 30, rare: 80, epic: 250, legendary: 500 };
+
+// Isometric garden constants
+const ISO_TILE_W = 60;
+const ISO_TILE_H = 30;
+const ISO_GRID_COLS = 6;
+const ISO_GRID_ROWS = 5;
+
+// Plant growth stages (5 stages: 0-4)
+const PLANT_STAGES_NEW = ['seed', 'sprout', 'growing', 'flowering', 'harvestable'];
+
+// ============================================================
+// ITEMS & MARKET SYSTEM
+// ============================================================
+const ITEM_CATEGORIES = {
+  food: { name: 'Food', icon: '🍎' },
+  material: { name: 'Materials', icon: '📦' },
+  treasure: { name: 'Treasures', icon: '💎' },
+  toy: { name: 'Toys', icon: '🧸' },
+  decoration: { name: 'Decorations', icon: '🎨' }
+};
+
+const ITEMS = [
+  // Food items (can be found or bought, used to feed pet)
+  { id: 'apple', name: 'Apple', emoji: '🍎', category: 'food', sellPrice: 5, buyPrice: 10, rarity: 'common', effect: { hunger: 8, health: 2 } },
+  { id: 'berry', name: 'Berry', emoji: '🫐', category: 'food', sellPrice: 3, buyPrice: 8, rarity: 'common', effect: { hunger: 5, happiness: 3 } },
+  { id: 'mushroom', name: 'Mushroom', emoji: '🍄', category: 'food', sellPrice: 8, buyPrice: 15, rarity: 'uncommon', effect: { hunger: 10, energy: 5 } },
+  { id: 'honey', name: 'Honey', emoji: '🍯', category: 'food', sellPrice: 15, buyPrice: 30, rarity: 'rare', effect: { hunger: 15, happiness: 10, health: 5 } },
+  { id: 'golden_apple', name: 'Golden Apple', emoji: '🌟', category: 'food', sellPrice: 50, buyPrice: 100, rarity: 'legendary', effect: { hunger: 30, happiness: 20, health: 15, energy: 20 } },
+  
+  // Materials (found in world, sold for coins)
+  { id: 'stick', name: 'Stick', emoji: '🪵', category: 'material', sellPrice: 2, buyPrice: null, rarity: 'common' },
+  { id: 'stone', name: 'Stone', emoji: '🪨', category: 'material', sellPrice: 3, buyPrice: null, rarity: 'common' },
+  { id: 'feather', name: 'Feather', emoji: '🪶', category: 'material', sellPrice: 5, buyPrice: null, rarity: 'common' },
+  { id: 'shell', name: 'Shell', emoji: '🐚', category: 'material', sellPrice: 8, buyPrice: null, rarity: 'uncommon' },
+  { id: 'crystal', name: 'Crystal', emoji: '🔮', category: 'material', sellPrice: 20, buyPrice: null, rarity: 'rare' },
+  { id: 'pearl', name: 'Pearl', emoji: '🦪', category: 'material', sellPrice: 35, buyPrice: null, rarity: 'rare' },
+  { id: 'star_fragment', name: 'Star Fragment', emoji: '⭐', category: 'material', sellPrice: 75, buyPrice: null, rarity: 'legendary' },
+  
+  // Treasures (rare finds, valuable)
+  { id: 'coin_bag', name: 'Coin Bag', emoji: '💰', category: 'treasure', sellPrice: 25, buyPrice: null, rarity: 'uncommon' },
+  { id: 'gem', name: 'Gem', emoji: '💎', category: 'treasure', sellPrice: 50, buyPrice: null, rarity: 'rare' },
+  { id: 'crown', name: 'Crown', emoji: '👑', category: 'treasure', sellPrice: 100, buyPrice: null, rarity: 'legendary' },
+  
+  // Toys (buy to increase happiness)
+  { id: 'ball', name: 'Ball', emoji: '⚽', category: 'toy', sellPrice: 10, buyPrice: 25, rarity: 'common', effect: { happiness: 15 } },
+  { id: 'teddy', name: 'Teddy Bear', emoji: '🧸', category: 'toy', sellPrice: 20, buyPrice: 50, rarity: 'uncommon', effect: { happiness: 25 } },
+  { id: 'kite', name: 'Kite', emoji: '🪁', category: 'toy', sellPrice: 15, buyPrice: 40, rarity: 'uncommon', effect: { happiness: 20, energy: -5 } },
+  { id: 'puzzle', name: 'Puzzle Box', emoji: '🧩', category: 'toy', sellPrice: 30, buyPrice: 75, rarity: 'rare', effect: { happiness: 30 } },
+  
+  // Decorations (permanent bonuses when owned)
+  { id: 'plant_pot', name: 'Plant Pot', emoji: '🪴', category: 'decoration', sellPrice: 25, buyPrice: 60, rarity: 'uncommon', bonus: { gardenSpeed: 0.05 } },
+  { id: 'lamp', name: 'Cute Lamp', emoji: '🪔', category: 'decoration', sellPrice: 40, buyPrice: 100, rarity: 'rare', bonus: { happinessDecay: -0.05 } },
+  { id: 'fountain', name: 'Fountain', emoji: '⛲', category: 'decoration', sellPrice: 75, buyPrice: 200, rarity: 'rare', bonus: { hygieneDecay: -0.10 } },
+  { id: 'rainbow', name: 'Rainbow Arch', emoji: '🌈', category: 'decoration', sellPrice: 150, buyPrice: 400, rarity: 'legendary', bonus: { allStats: 0.05 } }
+];
+
+const RARITY_COLORS = {
+  common: '#9ca3af',
+  uncommon: '#22c55e',
+  rare: '#3b82f6',
+  epic: '#a855f7',
+  legendary: '#f59e0b'
+};
+
+// World item spawn rates by rarity
+const WORLD_SPAWN_WEIGHTS = {
+  common: 60,
+  uncommon: 25,
+  rare: 12,
+  legendary: 3
+};
+
+// Daily tasks templates
+const TASK_TEMPLATES = [
+  { id: 'feed_pet', desc: 'Feed your pet 3 times', target: 3, reward: 15, trackKey: 'feedCount' },
+  { id: 'play_game', desc: 'Play a minigame', target: 1, reward: 20, trackKey: 'playCount' },
+  { id: 'chat_pet', desc: 'Chat with your pet 2 times', target: 2, reward: 15, trackKey: 'chatCount' },
+  { id: 'collect_items', desc: 'Collect 3 items from the world', target: 3, reward: 25, trackKey: 'collectCount' },
+  { id: 'clean_pet', desc: 'Clean your pet 2 times', target: 2, reward: 10, trackKey: 'cleanCount' },
+  { id: 'water_plants', desc: 'Water plants 3 times', target: 3, reward: 15, trackKey: 'waterCount' },
+  { id: 'harvest_plants', desc: 'Harvest 2 plants', target: 2, reward: 30, trackKey: 'harvestCount' },
+  { id: 'earn_xp', desc: 'Earn 50 XP', target: 50, reward: 20, trackKey: 'xpEarned' },
+  { id: 'pat_pet', desc: 'Pat your pet 5 times', target: 5, reward: 10, trackKey: 'patCount' },
+  { id: 'sell_items', desc: 'Sell items worth 20 coins', target: 20, reward: 25, trackKey: 'soldValue' }
 ];
 
 const ACCESSORIES = [
@@ -514,7 +1032,11 @@ const vh = () => window.innerHeight;
 let particles = [];
 
 function spawnParticle(x, y, emoji, vx, vy) {
-  particles.push({ x, y, vx: vx||((Math.random()-0.5)*2), vy: vy||(-(2+Math.random()*2)), life:1, emoji: emoji||'❤️', size:18+Math.random()*10 });
+  particles.push({ x, y, vx: vx||((Math.random()-0.5)*2), vy: vy||(-(2+Math.random()*2)), life:1, emoji: emoji||'❤️', size:18+Math.random()*10, type:'emoji' });
+}
+
+function spawnXPText(x, y, amount) {
+  particles.push({ x, y, vx: (Math.random()-0.5)*0.5, vy: -1.5, life: 1.2, text: '+' + amount + ' XP', size: 14, type: 'xp_text', color: '#ffd93d' });
 }
 
 function updateParticles(dt) {
@@ -522,7 +1044,11 @@ function updateParticles(dt) {
     const p = particles[i];
     p.x += p.vx;
     p.y += p.vy;
-    p.vy += 0.03;
+    if (p.type === 'xp_text') {
+      p.vy -= 0.01; // Float upward
+    } else {
+      p.vy += 0.03;
+    }
     p.life -= dt * 0.001;
     if (p.life <= 0) particles.splice(i, 1);
   }
@@ -531,8 +1057,19 @@ function updateParticles(dt) {
 function drawParticles() {
   for (const p of particles) {
     ctx.globalAlpha = Math.max(0, p.life);
-    ctx.font = Math.round(p.size * p.life) + 'px sans-serif';
-    ctx.fillText(p.emoji, p.x, p.y);
+    if (p.type === 'xp_text') {
+      ctx.font = 'bold ' + Math.round(p.size) + 'px sans-serif';
+      ctx.fillStyle = p.color;
+      ctx.textAlign = 'center';
+      ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+      ctx.lineWidth = 3;
+      ctx.strokeText(p.text, p.x, p.y);
+      ctx.fillText(p.text, p.x, p.y);
+      ctx.textAlign = 'start';
+    } else {
+      ctx.font = Math.round(p.size * p.life) + 'px sans-serif';
+      ctx.fillText(p.emoji, p.x, p.y);
+    }
   }
   ctx.globalAlpha = 1;
 }
@@ -617,8 +1154,29 @@ function drawBackground(t, mood) {
 // ============================================================
 const petSize = () => Math.min(vw(), vh()) * 0.22;
 let gardenPetOffsetX = 0; // offset from center for garden wandering
+let gardenPetOffsetY = 0;
+let wanderTargetX = 0;
+let wanderTargetY = 0;
+let wanderTimer = 0;
+const WANDER_SPEED = 0.3; // pixels per frame
+const WANDER_INTERVAL = 4000; // pick new target every 4s
+
+function updatePetWander(t) {
+  if (!state || !state.alive || state.sleeping || state.stage === 'EGG') return;
+  if (t > wanderTimer) {
+    // Pick a new random wander target within a reasonable range
+    const range = Math.min(vw(), vh()) * 0.12;
+    wanderTargetX = (Math.random() - 0.5) * range * 2;
+    wanderTargetY = (Math.random() - 0.5) * range * 0.4; // less vertical movement
+    wanderTimer = t + WANDER_INTERVAL + Math.random() * 2000;
+  }
+  // Smoothly interpolate toward target
+  gardenPetOffsetX += (wanderTargetX - gardenPetOffsetX) * 0.01;
+  gardenPetOffsetY += (wanderTargetY - gardenPetOffsetY) * 0.01;
+}
+
 const petX = () => vw() / 2 + gardenPetOffsetX;
-const petY = () => vh() * 0.55;
+const petY = () => vh() * 0.62 + gardenPetOffsetY;
 
 function drawPet(t, mood, stage, variant, sleeping, accessory) {
   const sz = petSize();
@@ -670,6 +1228,169 @@ function drawPet(t, mood, stage, variant, sleeping, accessory) {
   ctx.restore();
 }
 
+// ============================================================
+// AVATAR DRAWING HELPERS
+// ============================================================
+function getAvatarColors() {
+  // Return default colors if state not ready or not customized
+  if (!state || !state.avatar || !state.customized) {
+    return AVATAR_COLORS[0]; // Default purple
+  }
+  return AVATAR_COLORS[state.avatar.bodyColor] || AVATAR_COLORS[0];
+}
+
+function drawPetPattern(r, colors) {
+  if (!state || !state.avatar || !state.customized) return;
+  
+  const pattern = PATTERNS[state.avatar.pattern];
+  if (!pattern || !pattern.draw) return;
+  
+  ctx.save();
+  ctx.globalAlpha = 0.3;
+  
+  switch (pattern.draw) {
+    case 'spots':
+      ctx.fillStyle = colors.secondary;
+      ctx.beginPath(); ctx.arc(-r * 0.2, -r * 0.3, r * 0.12, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(r * 0.25, -r * 0.1, r * 0.1, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(-r * 0.1, r * 0.2, r * 0.08, 0, Math.PI * 2); ctx.fill();
+      break;
+    case 'stripes':
+      ctx.strokeStyle = colors.secondary;
+      ctx.lineWidth = r * 0.08;
+      for (let i = -2; i <= 2; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * r * 0.25 - r * 0.3, -r * 0.5);
+        ctx.lineTo(i * r * 0.25 + r * 0.3, r * 0.5);
+        ctx.stroke();
+      }
+      break;
+    case 'heart':
+      ctx.fillStyle = '#ff6b6b';
+      ctx.font = `${r * 0.4}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('❤️', 0, -r * 0.1);
+      break;
+    case 'star':
+      ctx.fillStyle = '#ffd93d';
+      ctx.font = `${r * 0.4}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('⭐', 0, -r * 0.1);
+      break;
+    case 'gradient':
+      const gradOverlay = ctx.createLinearGradient(-r, -r, r, r);
+      gradOverlay.addColorStop(0, 'rgba(255,255,255,0.4)');
+      gradOverlay.addColorStop(0.5, 'rgba(255,255,255,0)');
+      gradOverlay.addColorStop(1, 'rgba(0,0,0,0.2)');
+      ctx.fillStyle = gradOverlay;
+      ctx.beginPath();
+      ctx.arc(0, 0, r - 1, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+  }
+  
+  ctx.restore();
+}
+
+function drawFaceWithStyle(t, spread, mood, sz) {
+  const eyeSize = sz * 0.04;
+  const blink = (t % 4000) < 100;
+  
+  // Get eye style from avatar
+  const eyeStyleIndex = (state && state.avatar && state.customized) ? state.avatar.eyeStyle : 0;
+  const eyeStyle = EYE_STYLES[eyeStyleIndex] || 'round';
+  
+  // Eyes - based on mood and eye style
+  if (mood === 'sleepy' || eyeStyle === 'sleepy') {
+    // Closed/sleepy eyes
+    ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(-spread*0.5, -spread*0.15); ctx.lineTo(-spread*0.2, -spread*0.1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(spread*0.2, -spread*0.1); ctx.lineTo(spread*0.5, -spread*0.15); ctx.stroke();
+  } else if (blink) {
+    ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(-spread-eyeSize, -spread*0.15); ctx.lineTo(-spread+eyeSize, -spread*0.15); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(spread-eyeSize, -spread*0.15); ctx.lineTo(spread+eyeSize, -spread*0.15); ctx.stroke();
+  } else {
+    // Draw eyes based on style
+    const eyeY = -spread * 0.15;
+    const eyeX = spread * 0.35;
+    
+    switch (eyeStyle) {
+      case 'sparkle':
+        // Sparkle eyes with multiple highlights
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.arc(-eyeX, eyeY, eyeSize * 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(eyeX, eyeY, eyeSize * 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = mood === 'sick' ? '#636e72' : '#2d3436';
+        ctx.beginPath(); ctx.arc(-eyeX, eyeY + 2, eyeSize * 0.9, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(eyeX, eyeY + 2, eyeSize * 0.9, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.arc(-eyeX - 3, eyeY - 3, eyeSize * 0.4, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(-eyeX + 3, eyeY + 2, eyeSize * 0.2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(eyeX - 3, eyeY - 3, eyeSize * 0.4, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(eyeX + 3, eyeY + 2, eyeSize * 0.2, 0, Math.PI * 2); ctx.fill();
+        break;
+      case 'cat':
+        // Cat slit pupils
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.arc(-eyeX, eyeY, eyeSize * 1.3, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(eyeX, eyeY, eyeSize * 1.3, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = mood === 'sick' ? '#636e72' : '#2d3436';
+        ctx.beginPath(); ctx.ellipse(-eyeX, eyeY, eyeSize * 0.25, eyeSize * 0.8, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(eyeX, eyeY, eyeSize * 0.25, eyeSize * 0.8, 0, 0, Math.PI * 2); ctx.fill();
+        break;
+      case 'dot':
+        // Simple dot eyes
+        ctx.fillStyle = mood === 'sick' ? '#636e72' : '#2d3436';
+        ctx.beginPath(); ctx.arc(-eyeX, eyeY, eyeSize * 0.6, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(eyeX, eyeY, eyeSize * 0.6, 0, Math.PI * 2); ctx.fill();
+        break;
+      case 'anime':
+        // Large anime eyes
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.ellipse(-eyeX, eyeY, eyeSize * 1.8, eyeSize * 2, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(eyeX, eyeY, eyeSize * 1.8, eyeSize * 2, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#6c5ce7';
+        ctx.beginPath(); ctx.ellipse(-eyeX, eyeY + 2, eyeSize * 1.2, eyeSize * 1.4, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(eyeX, eyeY + 2, eyeSize * 1.2, eyeSize * 1.4, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#2d3436';
+        ctx.beginPath(); ctx.arc(-eyeX, eyeY + 3, eyeSize * 0.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(eyeX, eyeY + 3, eyeSize * 0.5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.arc(-eyeX - 4, eyeY - 3, eyeSize * 0.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(eyeX - 4, eyeY - 3, eyeSize * 0.5, 0, Math.PI * 2); ctx.fill();
+        break;
+      default: // 'round'
+        // Standard round eyes
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.arc(-eyeX, eyeY, eyeSize * 1.4, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(eyeX, eyeY, eyeSize * 1.4, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = mood === 'sick' ? '#636e72' : '#2d3436';
+        const pupilSize = eyeSize * 0.55;
+        ctx.beginPath(); ctx.arc(-eyeX, eyeY + 2, pupilSize, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(eyeX, eyeY + 2, pupilSize, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.beginPath(); ctx.arc(-eyeX - pupilSize * 0.3, eyeY - 2, pupilSize * 0.35, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(eyeX - pupilSize * 0.3, eyeY - 2, pupilSize * 0.35, 0, Math.PI * 2); ctx.fill();
+        break;
+    }
+  }
+  
+  // Mouth - use custom mouth style
+  drawPetMouth(mood, spread);
+
+  // Sick swirl
+  if (mood === 'sick') {
+    ctx.fillStyle = 'rgba(100,200,100,0.3)';
+    ctx.font = Math.round(sz * 0.15) + 'px sans-serif';
+    ctx.fillText('~', spread * 0.5, -spread * 0.5);
+  }
+}
+
 function drawEggPet(t, sz) {
   const wobble = Math.sin(t * 0.005) * 0.05 * (state.stageTime > STAGES.EGG.dur * 1000 * 0.5 ? 2 : 1);
   ctx.rotate(wobble);
@@ -705,44 +1426,208 @@ function drawEggPet(t, sz) {
   ctx.rotate(-wobble);
 }
 
+function drawPetEars(r, colors) {
+  const earType = getAvatarEarType();
+  const ear = EAR_TYPES[earType] || 'none';
+  if (ear === 'none') return;
+  ctx.fillStyle = colors.secondary;
+  switch (ear) {
+    case 'round':
+      ctx.beginPath(); ctx.arc(-r*0.7, -r*0.7, r*0.25, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(r*0.7, -r*0.7, r*0.25, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = colors.primary;
+      ctx.beginPath(); ctx.arc(-r*0.7, -r*0.7, r*0.15, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(r*0.7, -r*0.7, r*0.15, 0, Math.PI*2); ctx.fill();
+      break;
+    case 'pointy':
+      ctx.beginPath(); ctx.moveTo(-r*0.6, -r*0.5); ctx.lineTo(-r*0.45, -r*1.3); ctx.lineTo(-r*0.1, -r*0.7); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(r*0.6, -r*0.5); ctx.lineTo(r*0.45, -r*1.3); ctx.lineTo(r*0.1, -r*0.7); ctx.closePath(); ctx.fill();
+      break;
+    case 'floppy':
+      ctx.beginPath(); ctx.ellipse(-r*0.85, -r*0.2, r*0.2, r*0.4, -0.4, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(r*0.85, -r*0.2, r*0.2, r*0.4, 0.4, 0, Math.PI*2); ctx.fill();
+      break;
+    case 'bunny':
+      ctx.beginPath(); ctx.ellipse(-r*0.3, -r*1.2, r*0.15, r*0.45, -0.1, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(r*0.3, -r*1.2, r*0.15, r*0.45, 0.1, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#ffb8c6';
+      ctx.beginPath(); ctx.ellipse(-r*0.3, -r*1.15, r*0.08, r*0.3, -0.1, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(r*0.3, -r*1.15, r*0.08, r*0.3, 0.1, 0, Math.PI*2); ctx.fill();
+      break;
+    case 'bear':
+      ctx.beginPath(); ctx.arc(-r*0.6, -r*0.75, r*0.28, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(r*0.6, -r*0.75, r*0.28, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = colors.primary;
+      ctx.beginPath(); ctx.arc(-r*0.6, -r*0.75, r*0.16, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(r*0.6, -r*0.75, r*0.16, 0, Math.PI*2); ctx.fill();
+      break;
+  }
+}
+
+function drawPetTail(t, r, colors) {
+  const tailType = getAvatarTailType();
+  const tail = TAIL_TYPES[tailType] || 'none';
+  if (tail === 'none') return;
+  ctx.fillStyle = colors.secondary;
+  ctx.strokeStyle = colors.secondary;
+  ctx.lineWidth = r * 0.12;
+  ctx.lineCap = 'round';
+  const tw = Math.sin(t * 0.004) * 0.3;
+  switch (tail) {
+    case 'round':
+      ctx.beginPath(); ctx.arc(r*0.9, r*0.3, r*0.18, 0, Math.PI*2); ctx.fill();
+      break;
+    case 'long':
+      ctx.beginPath(); ctx.moveTo(r*0.7, r*0.4); ctx.quadraticCurveTo(r*1.4+tw*r*0.3, r*0.1, r*1.2, -r*0.3+tw*r*0.5); ctx.stroke();
+      break;
+    case 'fluffy':
+      ctx.beginPath(); ctx.arc(r*0.85, r*0.25, r*0.25, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(r*1.0+tw*r*0.1, r*0.1, r*0.2, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(r*0.95, r*0.35, r*0.15, 0, Math.PI*2); ctx.fill();
+      break;
+    case 'curly':
+      ctx.beginPath(); ctx.moveTo(r*0.7, r*0.4);
+      ctx.bezierCurveTo(r*1.3, r*0.5+tw*r, r*1.1, -r*0.2+tw*r, r*1.4, -r*0.1+tw*r*0.5);
+      ctx.stroke();
+      ctx.beginPath(); ctx.arc(r*1.4, -r*0.1+tw*r*0.5, r*0.1, 0, Math.PI*2); ctx.fill();
+      break;
+    case 'fish':
+      ctx.beginPath(); ctx.moveTo(r*0.7, r*0.4); ctx.lineTo(r*1.2, r*0.1); ctx.lineTo(r*1.2, r*0.55); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(r*1.2, r*0.1+tw*r*0.2); ctx.lineTo(r*1.45, r*0.0); ctx.lineTo(r*1.2, r*0.3); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(r*1.2, r*0.35); ctx.lineTo(r*1.45, r*0.55+tw*r*0.2); ctx.lineTo(r*1.2, r*0.55); ctx.closePath(); ctx.fill();
+      break;
+  }
+}
+
+function drawPetBodyShape(r) {
+  const shape = BODY_SHAPES[getAvatarBodyShape()] || 'round';
+  ctx.beginPath();
+  switch (shape) {
+    case 'round': ctx.arc(0, 0, r, 0, Math.PI * 2); break;
+    case 'oval': ctx.ellipse(0, 0, r * 0.85, r * 1.1, 0, 0, Math.PI * 2); break;
+    case 'chubby': ctx.ellipse(0, 0, r * 1.1, r * 0.95, 0, 0, Math.PI * 2); break;
+    case 'slim': ctx.ellipse(0, 0, r * 0.75, r * 1.15, 0, 0, Math.PI * 2); break;
+    case 'square':
+      ctx.moveTo(-r*0.8+r*0.2, -r*0.8);
+      ctx.lineTo(r*0.8-r*0.2, -r*0.8);
+      ctx.quadraticCurveTo(r*0.8, -r*0.8, r*0.8, -r*0.6);
+      ctx.lineTo(r*0.8, r*0.6);
+      ctx.quadraticCurveTo(r*0.8, r*0.8, r*0.6, r*0.8);
+      ctx.lineTo(-r*0.6, r*0.8);
+      ctx.quadraticCurveTo(-r*0.8, r*0.8, -r*0.8, r*0.6);
+      ctx.lineTo(-r*0.8, -r*0.6);
+      ctx.quadraticCurveTo(-r*0.8, -r*0.8, -r*0.6, -r*0.8);
+      break;
+    case 'bean': ctx.ellipse(-r*0.1, 0, r*0.9, r*1.05, -0.15, 0, Math.PI*2); break;
+    default: ctx.arc(0, 0, r, 0, Math.PI * 2);
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawPetMouth(mood, spread) {
+  const mouthStyle = MOUTH_STYLES[getAvatarMouth()] || 'smile';
+  ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  const my = spread * 0.25;
+
+  // Override mouth for certain moods
+  if (mood === 'sad' || mood === 'hungry' || mood === 'sick') {
+    ctx.beginPath();
+    ctx.arc(0, spread * 0.45, spread * 0.15, Math.PI + 0.2, -0.2);
+    ctx.stroke();
+    return;
+  }
+  if (mood === 'sleepy') {
+    ctx.beginPath();
+    ctx.ellipse(0, my, spread * 0.08, spread * 0.06, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    return;
+  }
+
+  switch (mouthStyle) {
+    case 'smile':
+      ctx.beginPath(); ctx.arc(0, my, spread * 0.2, 0.1, Math.PI - 0.1); ctx.stroke();
+      break;
+    case 'grin':
+      ctx.beginPath(); ctx.arc(0, my - spread * 0.05, spread * 0.25, 0.1, Math.PI - 0.1); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-spread * 0.2, my - spread * 0.04); ctx.lineTo(spread * 0.2, my - spread * 0.04); ctx.stroke();
+      break;
+    case 'cat':
+      ctx.beginPath(); ctx.moveTo(-spread * 0.15, my); ctx.lineTo(0, my + spread * 0.08); ctx.lineTo(spread * 0.15, my); ctx.stroke();
+      break;
+    case 'open':
+      ctx.fillStyle = 'rgba(0,0,0,0.4)';
+      ctx.beginPath(); ctx.ellipse(0, my + spread * 0.05, spread * 0.12, spread * 0.1, 0, 0, Math.PI * 2); ctx.fill();
+      break;
+    case 'tongue':
+      ctx.beginPath(); ctx.arc(0, my, spread * 0.2, 0.1, Math.PI - 0.1); ctx.stroke();
+      ctx.fillStyle = '#ff6b6b';
+      ctx.beginPath(); ctx.ellipse(0, my + spread * 0.12, spread * 0.08, spread * 0.06, 0, 0, Math.PI * 2); ctx.fill();
+      break;
+    case 'flat':
+      ctx.beginPath(); ctx.moveTo(-spread * 0.15, my); ctx.lineTo(spread * 0.15, my); ctx.stroke();
+      break;
+  }
+}
+
 function drawBabyPet(t, sz, mood) {
   const r = sz * 0.4;
-  // Body
+  const colors = getAvatarColors();
+
+  // Draw tail behind body
+  drawPetTail(t, r, colors);
+  // Draw ears behind body
+  drawPetEars(r, colors);
+
+  // Body with shape
   const grad = ctx.createRadialGradient(-r*0.2, -r*0.3, r*0.1, 0, 0, r);
-  grad.addColorStop(0, '#a29bfe');
-  grad.addColorStop(1, '#6c5ce7');
+  grad.addColorStop(0, colors.primary);
+  grad.addColorStop(1, colors.secondary);
   ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.arc(0, 0, r, 0, Math.PI * 2);
-  ctx.fill();
+  drawPetBodyShape(r);
+
+  // Draw avatar pattern
+  drawPetPattern(r, colors);
 
   // Cheeks
   ctx.fillStyle = 'rgba(255,150,150,0.3)';
   ctx.beginPath(); ctx.arc(-r*0.45, r*0.15, r*0.15, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.arc(r*0.45, r*0.15, r*0.15, 0, Math.PI*2); ctx.fill();
 
-  drawFace(t, r * 0.65, mood, sz);
+  drawFaceWithStyle(t, r * 0.65, mood, sz);
 
   // Feet
-  ctx.fillStyle = '#5b4ccc';
+  ctx.fillStyle = colors.secondary;
   ctx.beginPath(); ctx.ellipse(-r*0.3, r*0.9, r*0.2, r*0.12, -0.1, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.ellipse(r*0.3, r*0.9, r*0.2, r*0.12, 0.1, 0, Math.PI*2); ctx.fill();
 }
 
 function drawChildPet(t, sz, mood, variant) {
   const r = sz * 0.42;
-  const hue = variant === 0 ? '#55efc4' : '#fd79a8';
-  const hue2 = variant === 0 ? '#00b894' : '#e84393';
+  const colors = getAvatarColors();
+  const hue = colors.primary;
+  const hue2 = colors.secondary;
+
+  // Draw tail behind body
+  drawPetTail(t, r, colors);
+  // Draw ears behind body
+  drawPetEars(r, colors);
 
   const grad = ctx.createRadialGradient(-r*0.2, -r*0.3, r*0.1, 0, 0, r);
   grad.addColorStop(0, hue);
   grad.addColorStop(1, hue2);
   ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.arc(0, 0, r, 0, Math.PI * 2);
-  ctx.fill();
+  drawPetBodyShape(r);
 
-  // Variant features
+  // Draw avatar pattern
+  drawPetPattern(r, colors);
+
+  // Variant features (only if no custom ears)
+  const earType = getAvatarEarType();
+  if (earType === 0) { // No custom ears, use variant ears
   if (variant === 0) { // Round ears
     ctx.fillStyle = hue2;
     ctx.beginPath(); ctx.arc(-r*0.65, -r*0.65, r*0.25, 0, Math.PI*2); ctx.fill();
@@ -763,8 +1648,9 @@ function drawChildPet(t, sz, mood, variant) {
       ctx.fill();
     }
   }
+  } // close earType === 0
 
-  drawFace(t, r * 0.6, mood, sz);
+  drawFaceWithStyle(t, r * 0.6, mood, sz);
 
   // Arms
   ctx.fillStyle = hue2;
@@ -778,22 +1664,48 @@ function drawChildPet(t, sz, mood, variant) {
 
 function drawTeenPet(t, sz, mood, variant) {
   const r = sz * 0.38;
-  const colors = [
-    ['#74b9ff','#0984e3'], // Horned
-    ['#dfe6e9','#b2bec3'], // Winged
-    ['#ffeaa7','#fdcb6e'], // Tailed
-    ['#fab1a0','#e17055']  // Antenna
-  ];
-  const [c1, c2] = colors[variant % 4];
+  const avatarColors = getAvatarColors();
+  const c1 = avatarColors.primary;
+  const c2 = avatarColors.secondary;
+
+  // Draw tail behind body
+  drawPetTail(t, r * 1.1, avatarColors);
+  // Draw ears behind body
+  drawPetEars(r * 1.1, avatarColors);
 
   // Body - taller
   const grad = ctx.createRadialGradient(-r*0.2, -r*0.3, r*0.1, 0, 0, r*1.1);
   grad.addColorStop(0, c1);
   grad.addColorStop(1, c2);
   ctx.fillStyle = grad;
+  // Use custom body shape but scale taller
+  const shape = BODY_SHAPES[getAvatarBodyShape()] || 'round';
   ctx.beginPath();
-  ctx.ellipse(0, 0, r, r * 1.2, 0, 0, Math.PI * 2);
+  if (shape === 'round') {
+    ctx.ellipse(0, 0, r, r * 1.2, 0, 0, Math.PI * 2);
+  } else if (shape === 'oval') {
+    ctx.ellipse(0, 0, r * 0.85, r * 1.3, 0, 0, Math.PI * 2);
+  } else if (shape === 'chubby') {
+    ctx.ellipse(0, 0, r * 1.1, r * 1.15, 0, 0, Math.PI * 2);
+  } else if (shape === 'slim') {
+    ctx.ellipse(0, 0, r * 0.75, r * 1.35, 0, 0, Math.PI * 2);
+  } else if (shape === 'square') {
+    const sr = r;
+    ctx.moveTo(-sr*0.8+sr*0.2, -sr*1.0); ctx.lineTo(sr*0.8-sr*0.2, -sr*1.0);
+    ctx.quadraticCurveTo(sr*0.8, -sr*1.0, sr*0.8, -sr*0.8);
+    ctx.lineTo(sr*0.8, sr*0.8); ctx.quadraticCurveTo(sr*0.8, sr*1.0, sr*0.6, sr*1.0);
+    ctx.lineTo(-sr*0.6, sr*1.0); ctx.quadraticCurveTo(-sr*0.8, sr*1.0, -sr*0.8, sr*0.8);
+    ctx.lineTo(-sr*0.8, -sr*0.8); ctx.quadraticCurveTo(-sr*0.8, -sr*1.0, -sr*0.6, -sr*1.0);
+  } else if (shape === 'bean') {
+    ctx.ellipse(-r*0.1, 0, r*0.9, r*1.25, -0.15, 0, Math.PI*2);
+  } else {
+    ctx.ellipse(0, 0, r, r * 1.2, 0, 0, Math.PI * 2);
+  }
+  ctx.closePath();
   ctx.fill();
+
+  // Draw avatar pattern
+  drawPetPattern(r * 1.1, avatarColors);
 
   const v = variant % 4;
   ctx.fillStyle = c2;
@@ -824,7 +1736,7 @@ function drawTeenPet(t, sz, mood, variant) {
     ctx.beginPath(); ctx.arc(0, -r*1.7, r*0.12, 0, Math.PI*2); ctx.fill();
   }
 
-  drawFace(t, r * 0.6, mood, sz);
+  drawFaceWithStyle(t, r * 0.6, mood, sz);
 
   // Feet
   ctx.fillStyle = c2;
@@ -834,16 +1746,15 @@ function drawTeenPet(t, sz, mood, variant) {
 
 function drawAdultPet(t, sz, mood, variant) {
   const r = sz * 0.42;
-  const forms = [
-    { name:'Dragon',  c1:'#ff7675', c2:'#d63031' },
-    { name:'Angel',   c1:'#dfe6e9', c2:'#b2bec3' },
-    { name:'Devil',   c1:'#636e72', c2:'#2d3436' },
-    { name:'Cat',     c1:'#ffeaa7', c2:'#fdcb6e' },
-    { name:'Robot',   c1:'#74b9ff', c2:'#0984e3' },
-    { name:'BlobKing',c1:'#a29bfe', c2:'#6c5ce7' }
-  ];
+  const avatarColors = getAvatarColors();
+  const c1 = avatarColors.primary;
+  const c2 = avatarColors.secondary;
   const v = variant % 6;
-  const {c1, c2} = forms[v];
+
+  // Draw custom tail behind body (unless variant already has tail)
+  if (v !== 2 && v !== 3) drawPetTail(t, r * 1.1, avatarColors);
+  // Draw custom ears behind body
+  drawPetEars(r * 1.1, avatarColors);
 
   // Main body
   const grad = ctx.createRadialGradient(-r*0.2, -r*0.3, r*0.1, 0, 0, r*1.1);
@@ -854,10 +1765,21 @@ function drawAdultPet(t, sz, mood, variant) {
   if (v === 4) { // Robot - square
     roundRect(-r*0.8, -r, r*1.6, r*2, r*0.15);
   } else {
+    // Use custom body shape
+    const shape = BODY_SHAPES[getAvatarBodyShape()] || 'round';
     ctx.beginPath();
-    ctx.ellipse(0, 0, r, r * 1.15, 0, 0, Math.PI * 2);
+    if (shape === 'round') { ctx.ellipse(0, 0, r, r * 1.15, 0, 0, Math.PI * 2); }
+    else if (shape === 'oval') { ctx.ellipse(0, 0, r * 0.85, r * 1.25, 0, 0, Math.PI * 2); }
+    else if (shape === 'chubby') { ctx.ellipse(0, 0, r * 1.1, r * 1.1, 0, 0, Math.PI * 2); }
+    else if (shape === 'slim') { ctx.ellipse(0, 0, r * 0.8, r * 1.3, 0, 0, Math.PI * 2); }
+    else if (shape === 'bean') { ctx.ellipse(-r*0.1, 0, r*0.95, r*1.2, -0.15, 0, Math.PI*2); }
+    else { ctx.ellipse(0, 0, r, r * 1.15, 0, 0, Math.PI * 2); }
+    ctx.closePath();
     ctx.fill();
   }
+
+  // Draw avatar pattern
+  drawPetPattern(r * 1.1, avatarColors);
 
   // Variant decorations
   ctx.fillStyle = c2;
@@ -966,7 +1888,7 @@ function drawAdultPet(t, sz, mood, variant) {
     ctx.beginPath(); ctx.arc(r*0.3, -r*0.95, r*0.04, 0, Math.PI*2); ctx.fill();
   }
 
-  drawFace(t, r * 0.55, mood, sz);
+  drawFaceWithStyle(t, r * 0.55, mood, sz);
 
   // Feet (not robot)
   if (v !== 4) {
@@ -2372,6 +3294,705 @@ function drawGarden(t, landscapeId) {
 }
 
 // ============================================================
+// FARM BACKGROUND SYSTEM
+// ============================================================
+function drawFarmBackground(t) {
+  const w = vw(), h = vh();
+
+  // Sky gradient (light blue to green horizon)
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.5);
+  skyGrad.addColorStop(0, '#87CEEB');
+  skyGrad.addColorStop(0.5, '#B0E0E6');
+  skyGrad.addColorStop(1, '#90C695');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, w, h * 0.55);
+
+  // Sun/moon
+  const timeOfDay = (t * 0.00003) % (Math.PI * 2);
+  const sunX = w * 0.82;
+  const sunY = h * 0.1;
+  ctx.fillStyle = 'rgba(255,240,100,0.9)';
+  ctx.beginPath(); ctx.arc(sunX, sunY, 28, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(255,240,100,0.2)';
+  ctx.beginPath(); ctx.arc(sunX, sunY, 45, 0, Math.PI * 2); ctx.fill();
+
+  // Distant hills
+  ctx.fillStyle = '#7CB342';
+  ctx.beginPath();
+  ctx.moveTo(0, h * 0.45);
+  for (let x = 0; x <= w; x += 40) {
+    ctx.lineTo(x, h * 0.45 - Math.sin(x * 0.008 + 1) * 20 - Math.sin(x * 0.003) * 30);
+  }
+  ctx.lineTo(w, h * 0.55);
+  ctx.lineTo(0, h * 0.55);
+  ctx.closePath();
+  ctx.fill();
+
+  // Nearer hills
+  ctx.fillStyle = '#66BB6A';
+  ctx.beginPath();
+  ctx.moveTo(0, h * 0.48);
+  for (let x = 0; x <= w; x += 30) {
+    ctx.lineTo(x, h * 0.48 - Math.sin(x * 0.006 + 2.5) * 15 - Math.sin(x * 0.012) * 10);
+  }
+  ctx.lineTo(w, h * 0.55);
+  ctx.lineTo(0, h * 0.55);
+  ctx.closePath();
+  ctx.fill();
+
+  // Clouds
+  const cloudY = h * 0.1;
+  for (let i = 0; i < 4; i++) {
+    const cx = ((t * 0.008 + i * w * 0.3) % (w + 200)) - 100;
+    const cy = cloudY + i * 25 + Math.sin(i * 2) * 15;
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.beginPath(); ctx.arc(cx, cy, 20, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx + 18, cy - 5, 16, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx - 15, cy + 2, 14, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx + 8, cy + 4, 18, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // Lush green grass field (lower half)
+  const grassGrad = ctx.createLinearGradient(0, h * 0.45, 0, h);
+  grassGrad.addColorStop(0, '#4CAF50');
+  grassGrad.addColorStop(0.3, '#43A047');
+  grassGrad.addColorStop(0.7, '#388E3C');
+  grassGrad.addColorStop(1, '#2E7D32');
+  ctx.fillStyle = grassGrad;
+  ctx.fillRect(0, h * 0.45, w, h * 0.55);
+
+  // Grass texture lines
+  ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 30; i++) {
+    const gx = (i * w / 30) + Math.sin(t * 0.001 + i) * 5;
+    const gy = h * 0.5 + (i % 5) * h * 0.08;
+    ctx.beginPath();
+    ctx.moveTo(gx, gy);
+    ctx.lineTo(gx + Math.sin(t * 0.002 + i) * 4, gy - 8);
+    ctx.stroke();
+  }
+
+  // Wooden fence border around farm perimeter
+  const fenceY = h * 0.46;
+  const fenceBottom = h * 0.92;
+  ctx.fillStyle = '#8D6E63';
+  // Top fence rail
+  ctx.fillRect(w * 0.03, fenceY, w * 0.94, 4);
+  // Bottom fence rail
+  ctx.fillRect(w * 0.03, fenceBottom, w * 0.94, 4);
+  // Fence posts
+  const postCount = 12;
+  for (let i = 0; i < postCount; i++) {
+    const px = w * 0.03 + (i / (postCount - 1)) * w * 0.94;
+    // Top posts
+    ctx.fillStyle = '#795548';
+    ctx.fillRect(px - 3, fenceY - 12, 6, 16);
+    ctx.fillStyle = '#8D6E63';
+    ctx.beginPath(); ctx.arc(px, fenceY - 12, 4, 0, Math.PI * 2); ctx.fill();
+  }
+  // Side fence posts
+  const sidePosts = 6;
+  for (let i = 0; i < sidePosts; i++) {
+    const py = fenceY + (i / (sidePosts - 1)) * (fenceBottom - fenceY);
+    ctx.fillStyle = '#795548';
+    ctx.fillRect(w * 0.03 - 3, py - 2, 6, 4);
+    ctx.fillRect(w * 0.97 - 3, py - 2, 6, 4);
+  }
+
+  // Decorative elements
+  // Hay bales (right side)
+  drawHayBale(w * 0.88, h * 0.58, 18);
+  drawHayBale(w * 0.92, h * 0.6, 15);
+
+  // Flowers along fence
+  ctx.font = '12px sans-serif';
+  const flowers = ['🌻', '🌷', '🌸', '🌼'];
+  for (let i = 0; i < 8; i++) {
+    const fx = w * 0.06 + i * w * 0.12;
+    const fy = fenceY + 18 + Math.sin(t * 0.002 + i * 1.5) * 2;
+    ctx.fillText(flowers[i % flowers.length], fx, fy);
+  }
+
+  // Small bushes
+  ctx.fillStyle = '#2E7D32';
+  for (let i = 0; i < 5; i++) {
+    const bx = w * 0.08 + i * w * 0.22;
+    const by = h * 0.88;
+    ctx.beginPath(); ctx.arc(bx, by, 8 + Math.sin(i * 3) * 3, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(bx + 6, by - 3, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(bx - 5, by + 1, 7, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // Small pond (bottom left)
+  const pondX = w * 0.12, pondY = h * 0.82;
+  ctx.fillStyle = 'rgba(100,181,246,0.5)';
+  ctx.beginPath(); ctx.ellipse(pondX, pondY, 25, 12, 0.2, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(130,200,255,0.3)';
+  ctx.beginPath(); ctx.ellipse(pondX - 5, pondY - 3, 10, 5, 0, 0, Math.PI * 2); ctx.fill();
+
+  // Dirt path leading to garden
+  ctx.fillStyle = 'rgba(141,110,99,0.5)';
+  ctx.beginPath();
+  ctx.moveTo(w * 0.3, h * 0.92);
+  ctx.quadraticCurveTo(w * 0.4, h * 0.75, w * 0.5, h * 0.65);
+  ctx.lineTo(w * 0.52, h * 0.65);
+  ctx.quadraticCurveTo(w * 0.42, h * 0.76, w * 0.34, h * 0.92);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawHayBale(x, y, size) {
+  ctx.fillStyle = '#D4A44E';
+  ctx.beginPath(); ctx.ellipse(x, y, size, size * 0.7, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#C49A3C';
+  ctx.beginPath(); ctx.ellipse(x, y, size * 0.7, size * 0.5, 0, 0, Math.PI * 2); ctx.fill();
+  // Straw texture
+  ctx.strokeStyle = '#B8860B';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 5; i++) {
+    const sx = x - size * 0.5 + i * size * 0.25;
+    ctx.beginPath(); ctx.moveTo(sx, y - size * 0.3); ctx.lineTo(sx + 2, y + size * 0.3); ctx.stroke();
+  }
+}
+
+// ============================================================
+// ISOMETRIC GARDEN SYSTEM
+// ============================================================
+let isoGardenOrigin = { x: 0, y: 0 };
+let selectedGardenTile = null;
+let gardenSeedMenuOpen = false;
+let gardenSeedMenuTile = null;
+
+function isoToScreen(gridX, gridY) {
+  return {
+    x: isoGardenOrigin.x + (gridX - gridY) * ISO_TILE_W / 2,
+    y: isoGardenOrigin.y + (gridX + gridY) * ISO_TILE_H / 2
+  };
+}
+
+function screenToIso(screenX, screenY) {
+  const dx = screenX - isoGardenOrigin.x;
+  const dy = screenY - isoGardenOrigin.y;
+  
+  const gridX = (dx / (ISO_TILE_W / 2) + dy / (ISO_TILE_H / 2)) / 2;
+  const gridY = (dy / (ISO_TILE_H / 2) - dx / (ISO_TILE_W / 2)) / 2;
+  
+  return { x: Math.floor(gridX), y: Math.floor(gridY) };
+}
+
+function drawIsoTile(x, y, color, borderColor, height = 0) {
+  const pos = isoToScreen(x, y);
+  const hw = ISO_TILE_W / 2;
+  const hh = ISO_TILE_H / 2;
+  
+  // Top face
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(pos.x, pos.y - height - hh);
+  ctx.lineTo(pos.x + hw, pos.y - height);
+  ctx.lineTo(pos.x, pos.y - height + hh);
+  ctx.lineTo(pos.x - hw, pos.y - height);
+  ctx.closePath();
+  ctx.fill();
+  
+  // Right face (darker)
+  if (height > 0) {
+    ctx.fillStyle = adjustBrightness(color, -30);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y - height + hh);
+    ctx.lineTo(pos.x + hw, pos.y - height);
+    ctx.lineTo(pos.x + hw, pos.y);
+    ctx.lineTo(pos.x, pos.y + hh);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Left face (darker)
+    ctx.fillStyle = adjustBrightness(color, -50);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y - height + hh);
+    ctx.lineTo(pos.x - hw, pos.y - height);
+    ctx.lineTo(pos.x - hw, pos.y);
+    ctx.lineTo(pos.x, pos.y + hh);
+    ctx.closePath();
+    ctx.fill();
+  }
+  
+  // Border
+  if (borderColor) {
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y - height - hh);
+    ctx.lineTo(pos.x + hw, pos.y - height);
+    ctx.lineTo(pos.x, pos.y - height + hh);
+    ctx.lineTo(pos.x - hw, pos.y - height);
+    ctx.closePath();
+    ctx.stroke();
+  }
+}
+
+function adjustBrightness(hex, percent) {
+  const num = parseInt(hex.replace('#', ''), 16);
+  const r = Math.min(255, Math.max(0, (num >> 16) + percent));
+  const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + percent));
+  const b = Math.min(255, Math.max(0, (num & 0x0000FF) + percent));
+  return '#' + (0x1000000 + r * 0x10000 + g * 0x100 + b).toString(16).slice(1);
+}
+
+function drawIsometricGarden(t) {
+  if (!state || !state.gardenGrid) return;
+  
+  const w = vw(), h = vh();
+  
+  // Center the garden on screen
+  isoGardenOrigin = {
+    x: w * 0.5,
+    y: h * 0.45
+  };
+  
+  // Get garden bed theme colors
+  const landscapeId = state.landscape || 0;
+  const theme = GARDEN_BED_THEMES[landscapeId] || GARDEN_BED_THEMES[0];
+  
+  // Draw grid from back to front (for proper overlap)
+  for (let row = 0; row < ISO_GRID_ROWS; row++) {
+    for (let col = 0; col < ISO_GRID_COLS; col++) {
+      const cell = state.gardenGrid[row][col];
+      const isSelected = selectedGardenTile && selectedGardenTile.row === row && selectedGardenTile.col === col;
+      
+      // Soil tile color
+      let tileColor = theme.soilColor || '#5D4037';
+      let borderColor = isSelected ? '#FFD700' : 'rgba(0,0,0,0.2)';
+      let tileHeight = 3;
+      
+      // If planted, adjust appearance
+      if (cell) {
+        tileColor = '#3E2723'; // Darker soil for planted
+      }
+      
+      // Hover/selection highlight
+      if (isSelected) {
+        tileColor = adjustBrightness(tileColor, 20);
+        tileHeight = 5;
+      }
+      
+      // Draw the tile
+      drawIsoTile(col, row, tileColor, borderColor, tileHeight);
+      
+      // Draw plant if exists
+      if (cell) {
+        drawIsoPlant(col, row, cell, t);
+      }
+    }
+  }
+  
+  // Draw garden label
+  ctx.font = '11px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.textAlign = 'center';
+  ctx.fillText('Garden', isoGardenOrigin.x, isoGardenOrigin.y + ISO_GRID_ROWS * ISO_TILE_H + 25);
+  ctx.textAlign = 'start';
+}
+
+function drawIsoPlant(gridX, gridY, plant, t) {
+  const pos = isoToScreen(gridX, gridY);
+  const seedData = SEED_TYPES.find(s => s.id === plant.seedType);
+  if (!seedData) return;
+
+  // Calculate growth progress
+  const now = Date.now();
+  const growthBonus = 1 + getSkillBonus('gardening', 'growthSpeedPerLevel');
+  const waterBonus = (now - plant.wateredAt < 60000) ? 1.2 : 1.0;
+  const effectiveGrowTime = seedData.growTime / (growthBonus * waterBonus);
+  const age = now - plant.plantedAt;
+  const growthPercent = Math.min(1, age / effectiveGrowTime);
+  const stage = Math.min(4, Math.floor(growthPercent * 5));
+
+  // Update plant stage
+  plant.stage = stage;
+
+  const rarity = seedData.rarity || 'common';
+  const sway = Math.sin(t * 0.002 + gridX + gridY * 2) * (1 + stage * 0.5);
+
+  // Base position = top of soil tile
+  const baseY = pos.y - 4;
+  const baseX = pos.x;
+
+  // Stem and plant height grows upward with stage (Farmville-style)
+  const maxStemH = 38;
+  const stemH = stage === 0 ? 4 : stage === 1 ? 12 : stage === 2 ? 22 : stage === 3 ? 32 : maxStemH;
+  const stemTopY = baseY - stemH;
+
+  // Stem color darkens as plant matures
+  const stemColors = ['#5a8a3c', '#4a7a30', '#3d6e28', '#357020', '#2d6018'];
+  const stemColor = stemColors[stage];
+
+  // --- Draw dirt mound at base ---
+  ctx.fillStyle = 'rgba(80,50,20,0.6)';
+  ctx.beginPath();
+  ctx.ellipse(baseX, baseY + 2, 10, 4, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // --- Draw stem growing upward ---
+  if (stage >= 0) {
+    ctx.save();
+    ctx.translate(sway * 0.3, 0); // subtle sway on stem
+
+    // Main stem
+    const stemWidth = stage === 0 ? 1.5 : stage <= 2 ? 2 : 2.5;
+    ctx.strokeStyle = stemColor;
+    ctx.lineWidth = stemWidth;
+    ctx.beginPath();
+    ctx.moveTo(baseX, baseY);
+    // Slight curve to the stem
+    const cpx = baseX + sway * 0.5;
+    const cpy = baseY - stemH * 0.5;
+    ctx.quadraticCurveTo(cpx, cpy, baseX + sway * 0.3, stemTopY);
+    ctx.stroke();
+
+    // --- Draw leaves on stem (stage 1+) ---
+    if (stage >= 1) {
+      const leafCount = stage === 1 ? 1 : stage === 2 ? 2 : stage === 3 ? 3 : 3;
+      for (let i = 0; i < leafCount; i++) {
+        const leafProgress = (i + 1) / (leafCount + 1);
+        const leafY = baseY - stemH * leafProgress;
+        const leafX = baseX + sway * 0.3 * leafProgress;
+        const leafSide = (i % 2 === 0) ? 1 : -1;
+        const leafSize = 4 + stage * 1.5;
+        const leafSway = Math.sin(t * 0.003 + i * 1.5 + gridX) * 1.5;
+
+        ctx.fillStyle = stage >= 3 ? '#3cb043' : '#5aad3c';
+        ctx.beginPath();
+        // Leaf shape: oval angled away from stem
+        ctx.ellipse(
+          leafX + leafSide * (leafSize * 0.7) + leafSway,
+          leafY,
+          leafSize,
+          leafSize * 0.4,
+          leafSide * 0.5,
+          0, Math.PI * 2
+        );
+        ctx.fill();
+      }
+    }
+
+    // --- Draw flower/fruit at top (stage 2+) ---
+    if (stage >= 2) {
+      const topX = baseX + sway * 0.3;
+      const topY = stemTopY;
+      const emojiSize = stage === 2 ? 14 : stage === 3 ? 18 : 24;
+
+      // Rarity glow ring (uncommon+)
+      if (rarity !== 'common' && stage >= 2) {
+        const glowColor = SEED_RARITY_COLORS[rarity] || '#fff';
+        const glowPulse = 0.2 + Math.sin(t * 0.003 + gridX * 2 + gridY) * 0.15;
+        const glowSize = emojiSize * 0.7 + (rarity === 'legendary' ? 8 : rarity === 'epic' ? 6 : 3);
+        ctx.globalAlpha = glowPulse;
+        ctx.strokeStyle = glowColor;
+        ctx.lineWidth = rarity === 'legendary' ? 3 : rarity === 'epic' ? 2.5 : 2;
+        ctx.beginPath();
+        ctx.arc(topX, topY, glowSize, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = glowColor;
+        ctx.globalAlpha = glowPulse * 0.25;
+        ctx.beginPath();
+        ctx.arc(topX, topY, glowSize * 0.6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+
+      // Harvestable glow (stage 4)
+      if (stage >= 4) {
+        const harvestGlow = rarity === 'legendary' ? '#FFD700' : rarity === 'epic' ? '#a855f7' : '#FFD700';
+        ctx.globalAlpha = 0.35 + Math.sin(t * 0.004) * 0.2;
+        ctx.fillStyle = harvestGlow;
+        ctx.beginPath();
+        ctx.arc(topX, topY, emojiSize * 0.7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+
+      // Draw the bud / bloom / fruit emoji at top
+      const plantEmojis = ['🌱', '🌿', '🌸', '🌺', seedData.emoji];
+      const emoji = plantEmojis[stage];
+      ctx.font = emojiSize + 'px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(emoji, topX, topY + emojiSize * 0.35);
+      ctx.textAlign = 'start';
+    } else if (stage === 1) {
+      // Small sprout leaves at top
+      const topX = baseX + sway * 0.3;
+      const topY = stemTopY;
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🌿', topX, topY + 4);
+      ctx.textAlign = 'start';
+    } else {
+      // Stage 0: tiny seed sprout poking out
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🌱', baseX, baseY - 2);
+      ctx.textAlign = 'start';
+    }
+
+    ctx.restore();
+  }
+
+  // Water droplet indicator if recently watered
+  if (now - plant.wateredAt < 30000) {
+    const dropY = stemTopY - 6;
+    const dropX = baseX + 14;
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.globalAlpha = 0.7;
+    ctx.fillText('💧', dropX, dropY);
+    ctx.globalAlpha = 1;
+    ctx.textAlign = 'start';
+  }
+}
+
+function handleGardenClick(x, y) {
+  if (!state || !state.gardenGrid) return false;
+  
+  const gridPos = screenToIso(x, y);
+  
+  // Check if click is within garden bounds
+  if (gridPos.x >= 0 && gridPos.x < ISO_GRID_COLS && gridPos.y >= 0 && gridPos.y < ISO_GRID_ROWS) {
+    const cell = state.gardenGrid[gridPos.y][gridPos.x];
+    
+    if (cell) {
+      // Plant exists - check if harvestable or water
+      if (cell.stage >= 4) {
+        harvestPlant(gridPos.y, gridPos.x);
+      } else {
+        waterPlant(gridPos.y, gridPos.x);
+      }
+    } else {
+      // Empty plot - open seed menu
+      openSeedMenu(gridPos.y, gridPos.x);
+    }
+    return true;
+  }
+  return false;
+}
+
+function plantSeed(row, col, seedType) {
+  if (!state || !state.gardenGrid) return false;
+  
+  // Check if we have the seed
+  if (getSeedCount(seedType) <= 0) {
+    notify('No ' + seedType + ' seeds!');
+    return false;
+  }
+  
+  // Check if plot is empty
+  if (state.gardenGrid[row][col] !== null) {
+    notify('Plot is occupied!');
+    return false;
+  }
+  
+  // Plant the seed
+  removeSeed(seedType, 1);
+  state.gardenGrid[row][col] = {
+    seedType: seedType,
+    plantedAt: Date.now(),
+    wateredAt: Date.now(),
+    stage: 0
+  };
+  
+  const seedData = SEED_TYPES.find(s => s.id === seedType);
+  notify('🌱 Planted ' + (seedData ? seedData.name : seedType) + '!');
+  sfxConfirm();
+  
+  // Award XP
+  addSkillXP('gardening', 5);
+  
+  // Chance to find seed from foraging
+  if (Math.random() < 0.1) {
+    tryFindSeedFromForaging();
+  }
+  
+  save();
+  return true;
+}
+
+function waterPlant(row, col) {
+  if (!state || !state.gardenGrid || !state.gardenGrid[row][col]) return;
+  
+  const plant = state.gardenGrid[row][col];
+  const now = Date.now();
+  
+  // Check if recently watered
+  if (now - plant.wateredAt < 30000) {
+    notify('Already watered recently!');
+    return;
+  }
+  
+  plant.wateredAt = now;
+  notify('💧 Watered plant!');
+  sfxSelect();
+  
+  // Award XP
+  addSkillXP('gardening', 3);
+  
+  // Track for daily tasks
+  trackTask('waterCount', 1);
+  
+  // Spawn water particles
+  const pos = isoToScreen(col, row);
+  for (let i = 0; i < 3; i++) {
+    spawnParticle(pos.x + (Math.random() - 0.5) * 20, pos.y - 10, '💧');
+  }
+  
+  save();
+}
+
+function harvestPlant(row, col) {
+  if (!state || !state.gardenGrid || !state.gardenGrid[row][col]) return;
+
+  const plant = state.gardenGrid[row][col];
+  const seedData = SEED_TYPES.find(s => s.id === plant.seedType);
+
+  if (!seedData) {
+    state.gardenGrid[row][col] = null;
+    save();
+    return;
+  }
+
+  // Rarity multipliers for rewards
+  const rarityMultipliers = { common: 1, uncommon: 2, rare: 4, epic: 8, legendary: 15 };
+  const rarityXPMultipliers = { common: 1, uncommon: 1.5, rare: 2, epic: 3, legendary: 5 };
+  const rarityMult = rarityMultipliers[seedData.rarity] || 1;
+  const rarityXPMult = rarityXPMultipliers[seedData.rarity] || 1;
+
+  // Apply harvest rewards
+  const rewards = seedData.harvestValue;
+  if (rewards.hunger) state.hunger = Math.min(100, state.hunger + rewards.hunger);
+  if (rewards.happiness) state.happiness = Math.min(100, state.happiness + rewards.happiness);
+  if (rewards.health) state.health = Math.min(getMaxHealth(), state.health + rewards.health);
+  if (rewards.energy) state.energy = Math.min(getMaxEnergy(), state.energy + rewards.energy);
+
+  // Clear the plot
+  state.gardenGrid[row][col] = null;
+
+  // Award XP based on seed rarity
+  const xpReward = Math.round((seedData.xpReward || 10) * rarityXPMult);
+  addSkillXP('gardening', xpReward);
+
+  // Award coins based on seed rarity
+  const coinReward = seedData.coinReward || (3 + (seedData.requiredLevel * 2));
+  addCoins(coinReward);
+
+  // Track for daily tasks
+  trackTask('harvestCount', 1);
+
+  // Rarity-specific notification prefixes
+  const rarityPrefixes = { common: '🌱', uncommon: '🌿', rare: '💎', epic: '🔮', legendary: '👑' };
+  const prefix = rarityPrefixes[seedData.rarity] || '🎉';
+
+  // Chance to get seeds back
+  if (Math.random() < 0.3 + getSkillBonus('foraging', 'findSeedChancePerLevel')) {
+    addSeed(plant.seedType, 1);
+    notify(prefix + ' Harvested ' + seedData.name + ' (+' + coinReward + '🪙 +seed)!');
+  } else {
+    notify(prefix + ' Harvested ' + seedData.name + ' (+' + coinReward + '🪙)!');
+  }
+
+  sfxConfirm();
+
+  // Spawn celebration particles (more for higher rarity)
+  const pos = isoToScreen(col, row);
+  const particleCount = { common: 3, uncommon: 5, rare: 7, epic: 10, legendary: 15 }[seedData.rarity] || 5;
+  for (let i = 0; i < particleCount; i++) {
+    spawnParticle(pos.x + (Math.random() - 0.5) * 30, pos.y - 20, seedData.emoji);
+  }
+  if (seedData.rarity === 'epic' || seedData.rarity === 'legendary') {
+    for (let i = 0; i < 5; i++) {
+      spawnParticle(pos.x + (Math.random() - 0.5) * 40, pos.y - 30, '✨');
+    }
+  }
+
+  updateHUD();
+  save();
+}
+
+function openSeedMenu(row, col) {
+  if (!state || !state.seeds || state.seeds.length === 0) {
+    notify('No seeds! Find some by foraging.');
+    return;
+  }
+  
+  // Build available seeds list
+  const availableSeeds = state.seeds.filter(s => s.count > 0);
+  if (availableSeeds.length === 0) {
+    notify('No seeds available!');
+    return;
+  }
+  
+  gardenSeedMenuOpen = true;
+  gardenSeedMenuTile = { row, col };
+  selectedGardenTile = { row, col };
+  
+  buildSeedMenuUI(row, col, availableSeeds);
+}
+
+function buildSeedMenuUI(row, col, seeds) {
+  // Create seed selection modal
+  let modal = document.getElementById('seed-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'seed-modal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(10,10,26,0.9);backdrop-filter:blur(10px);';
+    document.body.appendChild(modal);
+  }
+
+  const seedOptions = seeds.map(s => {
+    const seedData = SEED_TYPES.find(st => st.id === s.type);
+    const rarity = seedData ? (seedData.rarity || 'common') : 'common';
+    const borderColor = SEED_RARITY_COLORS[rarity] || '#555';
+    const rarityLabel = rarity.charAt(0).toUpperCase() + rarity.slice(1);
+    return `
+      <div class="seed-option" onclick="selectSeedToPlant('${s.type}')" style="background:rgba(255,255,255,0.08);border:2px solid ${borderColor};border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s;min-width:80px;${rarity === 'epic' ? 'box-shadow:0 0 10px rgba(168,85,247,0.4);' : rarity === 'legendary' ? 'box-shadow:0 0 12px rgba(245,158,11,0.5);' : ''}">
+        <div style="font-size:28px;margin-bottom:4px;">${seedData ? seedData.emoji : '🌱'}</div>
+        <div style="font-size:12px;color:#fff;">${seedData ? seedData.name : s.type}</div>
+        <div style="font-size:9px;color:${borderColor};font-weight:600;text-transform:uppercase;">${rarityLabel}</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.5);">x${s.count}</div>
+      </div>
+    `;
+  }).join('');
+
+  modal.innerHTML = `
+    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:20px;max-width:360px;width:90%;max-height:80vh;overflow-y:auto;">
+      <div style="font-size:16px;font-weight:700;color:#fff;text-align:center;margin-bottom:16px;">Choose a Seed</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:16px;">${seedOptions}</div>
+      <button onclick="closeSeedMenu()" style="width:100%;background:rgba(255,255,255,0.1);border:none;border-radius:12px;padding:10px;color:#fff;cursor:pointer;">Cancel</button>
+    </div>
+  `;
+
+  modal.style.display = 'flex';
+}
+
+function selectSeedToPlant(seedType) {
+  if (gardenSeedMenuTile) {
+    plantSeed(gardenSeedMenuTile.row, gardenSeedMenuTile.col, seedType);
+  }
+  closeSeedMenu();
+}
+
+function closeSeedMenu() {
+  gardenSeedMenuOpen = false;
+  gardenSeedMenuTile = null;
+  selectedGardenTile = null;
+  const modal = document.getElementById('seed-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+// Make functions globally accessible
+window.selectSeedToPlant = selectSeedToPlant;
+window.closeSeedMenu = closeSeedMenu;
+
+// ============================================================
 // GARDEN ENHANCED DRAWING (Balloon, Plants, Companion)
 // ============================================================
 
@@ -2443,47 +4064,70 @@ function drawBalloon(t) {
 // Draw planted garden plants
 function drawGardenPlants(t) {
   if (!state || !state.gardenPlants || state.gardenPlants.length === 0) return;
-  
+
   const w = vw(), h = vh();
-  const gy = h * 0.70; // slightly above main garden elements
-  const emojiSize = Math.round(Math.min(w, h) * 0.035);
-  
-  ctx.font = emojiSize + 'px sans-serif';
-  ctx.textAlign = 'center';
-  
+  const groundY = h * 0.72;
+  const baseSize = Math.round(Math.min(w, h) * 0.035);
+
   for (let i = 0; i < state.gardenPlants.length; i++) {
     const plant = state.gardenPlants[i];
     const px = plant.x * w;
-    const py = gy + (plant.stage * -3); // taller plants grow upward
-    
-    // Growth-based size
-    const sizeMultiplier = 0.7 + (plant.stage * 0.15);
-    ctx.font = Math.round(emojiSize * sizeMultiplier) + 'px sans-serif';
-    
-    // Gentle sway animation
-    const sway = Math.sin(t * 0.0015 + i * 2) * (2 + plant.stage);
-    
-    // Glow for fully grown plants
-    if (plant.stage >= 3) {
+    const stg = Math.min(plant.stage, PLANT_STAGES.length - 1);
+    const sway = Math.sin(t * 0.0015 + i * 2) * (1 + stg * 0.8);
+
+    // Stem grows upward with stage
+    const stemH = stg === 0 ? 4 : stg === 1 ? 14 : stg === 2 ? 26 : 36;
+    const stemTop = groundY - stemH;
+
+    // Dirt mound at base
+    ctx.fillStyle = 'rgba(101,67,33,0.5)';
+    ctx.beginPath();
+    ctx.ellipse(px, groundY + 3, baseSize * 0.45, baseSize * 0.15, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Stem
+    const stemW = stg === 0 ? 1.5 : stg <= 2 ? 2 : 2.5;
+    ctx.strokeStyle = stg >= 2 ? '#3d6e28' : '#5a8a3c';
+    ctx.lineWidth = stemW;
+    ctx.beginPath();
+    ctx.moveTo(px, groundY);
+    ctx.quadraticCurveTo(px + sway * 0.4, groundY - stemH * 0.5, px + sway * 0.3, stemTop);
+    ctx.stroke();
+
+    // Leaves on stem (stage 1+)
+    if (stg >= 1) {
+      const leafCount = Math.min(stg, 3);
+      for (let li = 0; li < leafCount; li++) {
+        const lp = (li + 1) / (leafCount + 1);
+        const ly = groundY - stemH * lp;
+        const lx = px + sway * 0.3 * lp;
+        const side = li % 2 === 0 ? 1 : -1;
+        const lsz = 3.5 + stg * 1.5;
+        ctx.fillStyle = '#4aad3c';
+        ctx.beginPath();
+        ctx.ellipse(lx + side * lsz * 0.7, ly, lsz, lsz * 0.4, side * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Glow for fully grown
+    if (stg >= 3) {
       ctx.globalAlpha = 0.3 + Math.sin(t * 0.003 + i) * 0.15;
       ctx.fillStyle = '#FFD700';
       ctx.beginPath();
-      ctx.arc(px, py, emojiSize * 0.6, 0, Math.PI * 2);
+      ctx.arc(px + sway * 0.3, stemTop, baseSize * 0.5, 0, Math.PI * 2);
       ctx.fill();
       ctx.globalAlpha = 1;
     }
-    
-    // Draw plant emoji based on stage
-    const emoji = PLANT_STAGES[Math.min(plant.stage, PLANT_STAGES.length - 1)];
-    ctx.fillText(emoji, px + sway, py);
-    
-    // Small dirt mound
-    ctx.fillStyle = 'rgba(101,67,33,0.4)';
-    ctx.beginPath();
-    ctx.ellipse(px, gy + 8, emojiSize * 0.4, emojiSize * 0.12, 0, 0, Math.PI * 2);
-    ctx.fill();
+
+    // Emoji at top of stem
+    const emojiSize = Math.round(baseSize * (0.7 + stg * 0.15));
+    const emoji = PLANT_STAGES[stg];
+    ctx.font = emojiSize + 'px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(emoji, px + sway * 0.3, stemTop + emojiSize * 0.35);
   }
-  
+
   ctx.textAlign = 'start';
 }
 
@@ -2933,6 +4577,9 @@ function updateGarden(dt) {
     }
     
     if (gardenActivityTimer <= 0) {
+      // Award social XP for playing with companion
+      addSkillXP('social', 10);
+      
       // Chance to spawn balloon after activity
       if (Math.random() < BALLOON_SPAWN_CHANCE && !gardenBalloon.active) {
         spawnBalloon();
@@ -2954,6 +4601,9 @@ function updateGarden(dt) {
         addGardenPlant();
       }
       
+      // Award gardening XP for autonomous planting
+      addSkillXP('gardening', 2);
+      
       // Chance to spawn balloon after activity
       if (Math.random() < BALLOON_SPAWN_CHANCE && !gardenBalloon.active) {
         spawnBalloon();
@@ -2973,6 +4623,12 @@ function updateGarden(dt) {
       // Try to harvest a fully grown plant
       harvestPlant();
       
+      // Award foraging XP for picking
+      addSkillXP('foraging', 2);
+      
+      // Small chance to find seeds from foraging
+      tryFindSeedFromForaging();
+      
       // Chance to spawn balloon after activity
       if (Math.random() < BALLOON_SPAWN_CHANCE && !gardenBalloon.active) {
         spawnBalloon();
@@ -2990,6 +4646,12 @@ function updateGarden(dt) {
     }
     
     if (gardenActivityTimer <= 0) {
+      // Award gardening XP for garden activities
+      addSkillXP('gardening', 1);
+      
+      // Award athletics XP for walking in garden
+      addSkillXP('athletics', 1);
+      
       // Chance to spawn balloon after activity
       if (Math.random() < BALLOON_SPAWN_CHANCE && !gardenBalloon.active) {
         spawnBalloon();
@@ -3022,8 +4684,89 @@ function newState() {
     sleeping:false, alive:true, accessory:0,
     unlockedAccessories:[],
     house:0, landscape:0, unlockedHouses:[],
-    gardenPlants:[], // {x, type, plantedAt, stage: 0-3}
+    gardenPlants:[], // Legacy - kept for migration
     companion:null, // {type: 0-4, unlockedAt: timestamp}
+    
+    // Avatar customization (set during character creation)
+    avatar: {
+      bodyColor: 0,    // Index into AVATAR_COLORS
+      eyeStyle: 0,     // Index into EYE_STYLES
+      pattern: 0,      // Index into PATTERNS
+      mouth: 0,        // Index into MOUTH_STYLES
+      bodyShape: 0,    // Index into BODY_SHAPES
+      earType: 0,      // Index into EAR_TYPES
+      tailType: 0,     // Index into TAIL_TYPES
+      name: 'Pet'      // Custom name
+    },
+    customized: false, // Whether avatar creator was completed
+    
+    // Global pet experience system
+    experience: {
+      totalXP: 0,      // Total XP earned ever
+      level: 1,        // Current pet level (1-50)
+      xpToNext: 50     // XP needed for next level
+    },
+    
+    // Skill points (earned on level up, spent to boost skills)
+    skillPoints: 0,
+    allocatedPoints: {
+      gardening: 0,
+      foraging: 0,
+      social: 0,
+      athletics: 0,
+      creativity: 0,
+      health: 0
+    },
+    
+    // Stat boosts (permanent bonuses chosen on level up)
+    statBoosts: {
+      maxHealth: 0,      // +5 max health per point
+      maxEnergy: 0,      // +5 max energy per point
+      foodEfficiency: 0, // +10% food effectiveness per point
+      poopReduction: 0,  // -10% poop frequency per point
+      happinessBoost: 0, // +5% happiness gain per point
+      hygieneBoost: 0    // -5% hygiene decay per point
+    },
+    pendingStatBoost: false, // Whether player needs to choose a stat boost
+    
+    // Currency system
+    coins: 50, // Starting coins
+    
+    // Inventory system (items collected)
+    inventory: {
+      // Format: itemId: quantity
+    },
+    
+    // World collectibles (items spawned in world)
+    worldItems: [],
+    lastWorldItemSpawn: 0,
+    
+    // Daily tasks system
+    dailyTasks: [],
+    lastTaskReset: 0,
+    
+    // Skills system (6 skills, XP-based leveling)
+    skills: {
+      gardening: { xp: 0, level: 1 },
+      foraging: { xp: 0, level: 1 },
+      social: { xp: 0, level: 1 },
+      athletics: { xp: 0, level: 1 },
+      creativity: { xp: 0, level: 1 },
+      health: { xp: 0, level: 1 }
+    },
+    
+    // Seed inventory and unlocks
+    seeds: [{ type: 'basic_flower', count: 3 }], // Start with 3 basic flower seeds
+    unlockedSeeds: ['basic_flower'],
+    
+    // Isometric garden (3x4 = 12 plots)
+    gardenGrid: [
+      [null, null, null],
+      [null, null, null],
+      [null, null, null],
+      [null, null, null]
+    ], // Each cell: null or { seedType, plantedAt, wateredAt, stage }
+    
     lastUpdate:Date.now(), created:Date.now()
   };
 }
@@ -3042,7 +4785,201 @@ function load() {
       // Garden autonomous life migrations
       if(!state.gardenPlants) state.gardenPlants=[];
       if(state.companion===undefined) state.companion=null;
-      // Validate gardenPlants array structure
+      
+      // ============================================
+      // Avatar customization migration
+      // ============================================
+      if (!state.avatar) {
+        state.avatar = {
+          bodyColor: 0,
+          eyeStyle: 0,
+          pattern: 0,
+          mouth: 0,
+          bodyShape: 0,
+          earType: 0,
+          tailType: 0,
+          name: 'Pet'
+        };
+      }
+      // Migration for new avatar fields
+      if (state.avatar.mouth === undefined) state.avatar.mouth = 0;
+      if (state.avatar.bodyShape === undefined) state.avatar.bodyShape = 0;
+      if (state.avatar.earType === undefined) state.avatar.earType = 0;
+      if (state.avatar.tailType === undefined) state.avatar.tailType = 0;
+      // Set customized to true for existing saves so they skip the creator
+      if (state.customized === undefined) {
+        state.customized = true; // Existing pets are already "customized" with defaults
+      }
+      
+      // ============================================
+      // Global experience system migration
+      // ============================================
+      if (!state.experience) {
+        // Calculate initial level based on total play time and activity
+        const timeHours = Math.floor((state.totalTime || 0) / (60 * 60 * 1000));
+        const activityScore = (state.feedCount || 0) + (state.playCount || 0) * 2;
+        const estimatedLevel = Math.min(20, 1 + Math.floor(timeHours / 2) + Math.floor(activityScore / 50));
+        
+        state.experience = {
+          totalXP: 0,
+          level: estimatedLevel,
+          xpToNext: estimatedLevel < 50 ? PET_LEVEL_XP[estimatedLevel] - PET_LEVEL_XP[estimatedLevel - 1] : 0
+        };
+      }
+      
+      if (state.skillPoints === undefined) {
+        state.skillPoints = 0;
+      }
+      
+      if (!state.allocatedPoints) {
+        state.allocatedPoints = {
+          gardening: 0,
+          foraging: 0,
+          social: 0,
+          athletics: 0,
+          creativity: 0,
+          health: 0
+        };
+      }
+      
+      // ============================================
+      // Stat boosts migration
+      // ============================================
+      if (!state.statBoosts) {
+        state.statBoosts = {
+          maxHealth: 0,
+          maxEnergy: 0,
+          foodEfficiency: 0,
+          poopReduction: 0,
+          happinessBoost: 0,
+          hygieneBoost: 0
+        };
+      }
+      if (state.pendingStatBoost === undefined) {
+        state.pendingStatBoost = false;
+      }
+      
+      // ============================================
+      // Currency & Inventory migration
+      // ============================================
+      if (state.coins === undefined) {
+        // Give starting coins based on pet's age
+        const hoursPlayed = (state.totalTime || 0) / (1000 * 60 * 60);
+        state.coins = Math.min(200, 50 + Math.floor(hoursPlayed * 10));
+      }
+      
+      if (!state.inventory) {
+        state.inventory = {};
+      }
+      
+      if (!state.worldItems) {
+        state.worldItems = [];
+      }
+      if (state.lastWorldItemSpawn === undefined) {
+        state.lastWorldItemSpawn = 0;
+      }
+      
+      // ============================================
+      // Daily tasks migration
+      // ============================================
+      if (!state.dailyTasks) {
+        state.dailyTasks = [];
+        state.lastTaskReset = 0;
+      }
+      if (!state.dailyTracking) {
+        state.dailyTracking = {
+          feedCount: 0,
+          playCount: 0,
+          chatCount: 0,
+          collectCount: 0,
+          cleanCount: 0,
+          waterCount: 0,
+          harvestCount: 0,
+          xpEarned: 0,
+          patCount: 0,
+          soldValue: 0,
+          buyCount: 0
+        };
+      }
+      
+      // ============================================
+      // Skills system migration
+      // ============================================
+      if (!state.skills) {
+        // Calculate initial skills based on existing activity
+        const feedLevel = Math.min(5, 1 + Math.floor((state.feedCount || 0) / 20));
+        const playLevel = Math.min(5, 1 + Math.floor((state.playCount || 0) / 15));
+        const timeHours = Math.floor((state.totalTime || 0) / (60 * 60 * 1000));
+        const timeLevel = Math.min(5, 1 + Math.floor(timeHours / 5));
+        
+        state.skills = {
+          gardening: { xp: 0, level: timeLevel },
+          foraging: { xp: 0, level: timeLevel },
+          social: { xp: 0, level: playLevel },
+          athletics: { xp: 0, level: playLevel },
+          creativity: { xp: 0, level: 1 },
+          health: { xp: 0, level: feedLevel }
+        };
+      }
+      
+      // ============================================
+      // Seeds and inventory migration
+      // ============================================
+      if (!state.seeds) {
+        state.seeds = [{ type: 'basic_flower', count: 3 }];
+      }
+      if (!state.unlockedSeeds) {
+        state.unlockedSeeds = ['basic_flower'];
+        // Unlock seeds based on gardening level
+        const gardeningLevel = state.skills ? state.skills.gardening.level : 1;
+        SEED_TYPES.forEach(seed => {
+          if (seed.requiredLevel <= gardeningLevel && !seed.unlockMethod) {
+            if (!state.unlockedSeeds.includes(seed.id)) {
+              state.unlockedSeeds.push(seed.id);
+            }
+          }
+        });
+      }
+      
+      // ============================================
+      // Isometric garden grid migration
+      // ============================================
+      if (!state.gardenGrid) {
+        // Initialize empty grid
+        state.gardenGrid = [
+          [null, null, null],
+          [null, null, null],
+          [null, null, null],
+          [null, null, null]
+        ];
+        
+        // Try to convert old gardenPlants to new grid format
+        if (Array.isArray(state.gardenPlants) && state.gardenPlants.length > 0) {
+          const now = Date.now();
+          state.gardenPlants.slice(0, 12).forEach((plant, index) => {
+            if (plant && plant.plantedAt) {
+              const row = Math.floor(index / 3);
+              const col = index % 3;
+              if (row < 4 && col < 3) {
+                const seedType = plant.type === 'flower' ? 'basic_flower' : 
+                                 plant.type === 'veggie' ? 'carrot' : 'basic_flower';
+                const age = now - plant.plantedAt;
+                const growTime = SEED_TYPES.find(s => s.id === seedType)?.growTime || 180000;
+                const stage = Math.min(4, Math.floor((age / growTime) * 5));
+                
+                state.gardenGrid[row][col] = {
+                  seedType: seedType,
+                  plantedAt: plant.plantedAt,
+                  wateredAt: plant.plantedAt,
+                  stage: stage
+                };
+              }
+            }
+          });
+        }
+      }
+      
+      // Validate gardenPlants array structure (legacy support)
       if(Array.isArray(state.gardenPlants)) {
         state.gardenPlants = state.gardenPlants.filter(p => 
           p && typeof p.x === 'number' && typeof p.plantedAt === 'number'
@@ -3477,6 +5414,12 @@ function buildDressPanel(){
         state.accessory = a.id;
         notify('Wearing: ' + a.name);
         sfxConfirm();
+        
+        // Award creativity XP for using accessories
+        if (a.id !== 0) {
+          addSkillXP('creativity', 2);
+        }
+        
         closePanel('dress');
         save();
         buildDressPanel();
@@ -3823,16 +5766,34 @@ function buildStatsPanel(){
 // ============================================================
 function feedPet(i){
   const f=FOODS[i];
-  state.hunger=Math.min(100,state.hunger+f.hunger);
-  state.happiness=Math.min(100,Math.max(0,state.happiness+f.happiness));
-  state.health=Math.min(100,Math.max(0,state.health+f.health));
-  state.energy=Math.min(100,state.energy+f.energy);
+  
+  // Apply health skill bonus to healing effectiveness
+  const healBonus = 1 + getSkillBonus('health', 'healingBoostPerLevel');
+  
+  // Apply food efficiency stat boost
+  const foodEfficiency = getFoodEfficiencyMultiplier();
+  
+  // Get max values with stat boosts
+  const maxHealth = getMaxHealth();
+  const maxEnergy = getMaxEnergy();
+  
+  state.hunger=Math.min(100, state.hunger + Math.round(f.hunger * foodEfficiency));
+  state.happiness=Math.min(100, Math.max(0, state.happiness + Math.round(f.happiness * foodEfficiency * getHappinessBoostMultiplier())));
+  state.health=Math.min(maxHealth, Math.max(0, state.health + Math.round(f.health * healBonus * foodEfficiency)));
+  state.energy=Math.min(maxEnergy, state.energy + Math.round(f.energy * foodEfficiency));
   state.feedCount++;
   state.careScore=Math.min(100,state.careScore+1);
   notify(f.emoji+' '+f.name+'! Yum!');
   sfxConfirm();
   // Food particles
   for(let j=0;j<5;j++) spawnParticle(petX()+(Math.random()-0.5)*60, petY()-20, f.emoji);
+  
+  // Award health XP for feeding
+  addSkillXP('health', 3);
+  
+  // Track for daily tasks
+  trackTask('feedCount', 1);
+  
   save();
   updateHUD();
 }
@@ -3842,6 +5803,10 @@ function doClean(){
     state.poopCount=0;state.hygiene=100;state.careScore=Math.min(100,state.careScore+3);
     notify('✨ All clean!');sfxConfirm();
     for(let j=0;j<6;j++) spawnParticle(petX()+(Math.random()-0.5)*80, petY()+(Math.random()-0.5)*40, '✨');
+    // Award health XP for cleaning
+    addSkillXP('health', 3);
+    // Track for daily tasks
+    trackTask('cleanCount', 1);
   } else {
     state.hygiene=Math.min(100,state.hygiene+20);
     notify('Already clean!');sfxSelect();
@@ -3852,7 +5817,11 @@ function doClean(){
 
 function toggleSleep(){
   state.sleeping=!state.sleeping;
-  if(state.sleeping){notify('💤 Good night...');}
+  if(state.sleeping){
+    notify('💤 Good night...');
+    // Award health XP for sleeping
+    addSkillXP('health', 5);
+  }
   else{notify('☀️ Good morning!');if(state.energy>80) state.careScore=Math.min(100,state.careScore+2);}
   sfxConfirm();save();updateHUD();
 }
@@ -3860,10 +5829,23 @@ function toggleSleep(){
 function petPat(){
   if(!state||!state.alive||state.stage==='EGG') return;
   if(state.sleeping) return;
-  state.happiness=Math.min(100,state.happiness+2);
+  
+  // Apply social skill bonus and happiness stat boost to happiness gain
+  const socialBonus = 1 + getSkillBonus('social', 'happinessBoostPerLevel');
+  const happinessStatBoost = getHappinessBoostMultiplier();
+  const happinessGain = Math.round(2 * socialBonus * happinessStatBoost);
+  
+  state.happiness=Math.min(100,state.happiness+happinessGain);
   state.careScore=Math.min(100,state.careScore+0.3);
   for(let j=0;j<3;j++) spawnParticle(petX()+(Math.random()-0.5)*40, petY()-petSize()*0.3, '❤️');
   sfxSelect();
+  
+  // Award social XP for petting
+  addSkillXP('social', 1);
+  
+  // Track for daily tasks
+  trackTask('patCount', 1);
+  
   // Hide hint after first pat
   document.getElementById('pet-hint').style.opacity='0';
 }
@@ -3905,6 +5887,11 @@ canvas.addEventListener('click', e=>{
   const cx=e.clientX, cy=e.clientY;
   const dx=cx-petX(), dy=cy-petY();
   const dist=Math.sqrt(dx*dx+dy*dy);
+  
+  // Check isometric garden click first
+  if (state.stage !== 'EGG' && handleGardenClick(cx, cy)) {
+    return;
+  }
 
   // Tap poop to clean
   if(state.poopCount>0){
@@ -3964,15 +5951,34 @@ function quitMiniGame(){
 window.quitMiniGame=quitMiniGame;
 
 function endMiniGame(score){
-  const reward=Math.min(30, score*3);
+  // Apply athletics skill bonus to score
+  const scoreBonus = 1 + getSkillBonus('athletics', 'scoreBoostPerLevel');
+  const boostedScore = Math.round(score * scoreBonus);
+  
+  // Apply happiness stat boost to reward
+  const happinessStatBoost = getHappinessBoostMultiplier();
+  const reward=Math.min(30, Math.round(boostedScore * 3 * happinessStatBoost));
   state.happiness=Math.min(100,state.happiness+reward);
-  state.energy=Math.max(0,state.energy-10);
+  
+  // Apply athletics skill bonus to energy cost reduction
+  const energyCostReduction = getSkillBonus('athletics', 'energyCostReductionPerLevel');
+  const energyCost = Math.max(5, 10 - Math.round(10 * energyCostReduction));
+  state.energy=Math.max(0,state.energy-energyCost);
+  
   state.playCount++;
   state.careScore=Math.min(100,state.careScore+2);
   miniGame=null;
   document.getElementById('minigame-overlay').classList.remove('open');
   notify('🎮 Fun! +'+reward+' happiness');
-  sfxConfirm();save();updateHUD();
+  sfxConfirm();
+  
+  // Award athletics XP based on score
+  addSkillXP('athletics', Math.round(boostedScore / 2));
+  
+  // Track for daily tasks
+  trackTask('playCount', 1);
+  
+  save();updateHUD();
 }
 
 // Guess Direction
@@ -4275,13 +6281,27 @@ function gameLoop(now){
     while(decayAccum>=500){
       decayAccum-=500;
       const s=0.5, sm=state.sleeping?0.3:1;
-      state.hunger=Math.max(0,state.hunger-DECAY.hunger*s*sm);
-      state.happiness=Math.max(0,state.happiness-DECAY.happiness*s*sm);
-      state.energy=state.sleeping?Math.min(100,state.energy+0.05*s):Math.max(0,state.energy-DECAY.energy*s);
-      state.hygiene=Math.max(0,state.hygiene-DECAY.hygiene*s*sm);
+      
+      // Apply health skill decay reduction bonus
+      const decayReduction = 1 - getSkillBonus('health', 'decayReductionPerLevel');
+      const decayMod = Math.max(0.5, decayReduction); // Cap at 50% reduction
+      
+      // Apply hygiene decay stat boost
+      const hygieneDecayMod = getHygieneDecayMultiplier();
+      
+      // Get max values with stat boosts
+      const maxEnergy = getMaxEnergy();
+      
+      state.hunger=Math.max(0,state.hunger-DECAY.hunger*s*sm*decayMod);
+      state.happiness=Math.max(0,state.happiness-DECAY.happiness*s*sm*decayMod);
+      state.energy=state.sleeping?Math.min(maxEnergy,state.energy+0.05*s):Math.max(0,state.energy-DECAY.energy*s*decayMod);
+      state.hygiene=Math.max(0,state.hygiene-DECAY.hygiene*s*sm*decayMod*hygieneDecayMod);
       if(state.hunger<10||state.hygiene<10) state.health=Math.max(0,state.health-DECAY.health*s*2);
+      
+      // Apply poop reduction stat boost
+      const poopInterval = 60000 / getPoopReductionMultiplier(); // Less poop = longer interval
       state.poopTimer+=500;
-      if(state.poopTimer>=60000&&state.poopCount<5){state.poopTimer-=60000;state.poopCount++;state.hygiene=Math.max(0,state.hygiene-10);}
+      if(state.poopTimer>=poopInterval&&state.poopCount<5){state.poopTimer-=poopInterval;state.poopCount++;state.hygiene=Math.max(0,state.hygiene-10);}
       state.happinessSum+=state.happiness;state.happinessSamples++;
       if(state.health<=0) state.alive=false;
     }
@@ -4296,7 +6316,15 @@ function gameLoop(now){
 
   // HUD update
   hudAccum+=dt;
-  if(hudAccum>=500){hudAccum=0;updateHUD();}
+  if(hudAccum>=500){hudAccum=0;updateHUD();updateCoinsDisplay();}
+
+  // World item spawning (every 30-60 seconds)
+  if(state && state.alive && state.stage !== 'EGG') {
+    const spawnInterval = 30000 + Math.random() * 30000; // 30-60s
+    if(Date.now() - (state.lastWorldItemSpawn || 0) >= spawnInterval) {
+      spawnWorldItem();
+    }
+  }
 
   // Warnings
   warnAccum+=dt;
@@ -4334,7 +6362,8 @@ function gameLoop(now){
   // Draw garden elements (after background, before pet)
   if (state && state.alive && state.stage !== 'EGG') {
     drawGarden(now, (state && state.landscape) || 0);
-    drawGardenPlants(now); // Draw planted garden plants
+    drawGardenPlants(now); // Draw planted garden plants (legacy)
+    drawIsometricGarden(now); // Draw new isometric garden
   }
 
   // Draw floating balloon (behind pet)
@@ -4357,6 +6386,14 @@ function gameLoop(now){
 
   drawParticles();
   if(evolveAnim) drawEvolveAnim(now);
+
+  // Level-up gold flash overlay
+  if (levelUpFlash > 0) {
+    levelUpFlash -= dt;
+    const flashAlpha = Math.min(0.4, levelUpFlash / 1500 * 0.4);
+    ctx.fillStyle = `rgba(255,215,0,${flashAlpha})`;
+    ctx.fillRect(0, 0, vw(), vh());
+  }
 
   // Mini-game
   if(miniGame) drawMiniGame();
@@ -4553,8 +6590,17 @@ async function sendChatMessage() {
     // Add to conversation history
     conversationHistory.push({ role: 'assistant', content: data.response });
     
-    // Small happiness boost for chatting
-    state.happiness = Math.min(100, state.happiness + 1);
+    // Apply social skill bonus and happiness stat boost to happiness from chatting
+    const socialBonus = 1 + getSkillBonus('social', 'happinessBoostPerLevel');
+    const happinessStatBoost = getHappinessBoostMultiplier();
+    const happinessGain = Math.round(1 * socialBonus * happinessStatBoost);
+    state.happiness = Math.min(100, state.happiness + happinessGain);
+    
+    // Award social XP for chatting
+    addSkillXP('social', 5);
+    
+    // Track for daily tasks
+    trackTask('chatCount', 1);
     
     // Spawn heart particles
     for(let j=0;j<2;j++) spawnParticle(petX()+(Math.random()-0.5)*40, petY()-petSize()*0.5, '💕');
@@ -4631,16 +6677,1690 @@ function clearChatOnEvolve() {
 }
 
 // ============================================================
+// AVATAR CREATOR
+// ============================================================
+let avatarCreatorOpen = false;
+let tempAvatar = { bodyColor: 0, eyeStyle: 0, pattern: 0, mouth: 0, bodyShape: 0, earType: 0, tailType: 0, name: 'Pet' };
+
+function openAvatarCreator() {
+  avatarCreatorOpen = true;
+  tempAvatar = { bodyColor: 0, eyeStyle: 0, pattern: 0, mouth: 0, bodyShape: 0, earType: 0, tailType: 0, name: 'Pet' };
+  document.getElementById('avatar-creator').classList.add('open');
+  buildAvatarCreatorUI();
+  updateAvatarPreview();
+}
+
+function closeAvatarCreator() {
+  avatarCreatorOpen = false;
+  document.getElementById('avatar-creator').classList.remove('open');
+}
+
+function buildAvatarCreatorUI() {
+  // Build color picker
+  const colorPicker = document.getElementById('color-picker');
+  colorPicker.innerHTML = AVATAR_COLORS.map((c, i) => `
+    <div class="color-swatch ${i === tempAvatar.bodyColor ? 'selected' : ''}" 
+         style="background: linear-gradient(135deg, ${c.primary}, ${c.secondary})"
+         data-index="${i}" onclick="selectAvatarColor(${i})">
+    </div>
+  `).join('');
+  
+  // Build eye picker
+  const eyePicker = document.getElementById('eye-picker');
+  const eyeIcons = ['👁️', '😴', '✨', '😺', '⚫', '🌸'];
+  eyePicker.innerHTML = EYE_STYLES.map((e, i) => `
+    <div class="eye-option ${i === tempAvatar.eyeStyle ? 'selected' : ''}" 
+         data-index="${i}" onclick="selectEyeStyle(${i})">
+      ${eyeIcons[i]}<span>${e}</span>
+    </div>
+  `).join('');
+  
+  // Build pattern picker
+  const patternPicker = document.getElementById('pattern-picker');
+  const patternIcons = ['⬜', '⚪', '〰️', '❤️', '⭐', '🌈'];
+  patternPicker.innerHTML = PATTERNS.map((p, i) => `
+    <div class="pattern-option ${i === tempAvatar.pattern ? 'selected' : ''}"
+         data-index="${i}" onclick="selectPattern(${i})">
+      ${patternIcons[i]}<span>${p.name}</span>
+    </div>
+  `).join('');
+
+  // Build mouth picker
+  const mouthPicker = document.getElementById('mouth-picker');
+  const mouthIcons = ['😊', '😁', '😺', '😮', '😋', '😐'];
+  mouthPicker.innerHTML = MOUTH_STYLES.map((m, i) => `
+    <div class="eye-option ${i === tempAvatar.mouth ? 'selected' : ''}"
+         data-index="${i}" onclick="selectMouth(${i})">
+      ${mouthIcons[i]}<span>${m}</span>
+    </div>
+  `).join('');
+
+  // Build body shape picker
+  const shapePicker = document.getElementById('shape-picker');
+  const shapeIcons = ['⭕', '🥚', '🫧', '📏', '⬜', '🫘'];
+  shapePicker.innerHTML = BODY_SHAPES.map((s, i) => `
+    <div class="eye-option ${i === tempAvatar.bodyShape ? 'selected' : ''}"
+         data-index="${i}" onclick="selectBodyShape(${i})">
+      ${shapeIcons[i]}<span>${s}</span>
+    </div>
+  `).join('');
+
+  // Build ear type picker
+  const earPicker = document.getElementById('ear-picker');
+  const earIcons = ['❌', '🔵', '🔺', '🐕', '🐰', '🐻'];
+  earPicker.innerHTML = EAR_TYPES.map((e, i) => `
+    <div class="eye-option ${i === tempAvatar.earType ? 'selected' : ''}"
+         data-index="${i}" onclick="selectEarType(${i})">
+      ${earIcons[i]}<span>${e}</span>
+    </div>
+  `).join('');
+
+  // Build tail type picker
+  const tailPicker = document.getElementById('tail-picker');
+  const tailIcons = ['❌', '⚫', '〰️', '☁️', '🌀', '🐟'];
+  tailPicker.innerHTML = TAIL_TYPES.map((t, i) => `
+    <div class="eye-option ${i === tempAvatar.tailType ? 'selected' : ''}"
+         data-index="${i}" onclick="selectTailType(${i})">
+      ${tailIcons[i]}<span>${t}</span>
+    </div>
+  `).join('');
+
+  // Set up name input
+  const nameInput = document.getElementById('pet-name-input');
+  nameInput.value = tempAvatar.name;
+  nameInput.oninput = function() {
+    tempAvatar.name = this.value.trim() || 'Pet';
+  };
+
+  // Set up start button
+  document.getElementById('start-adventure-btn').onclick = confirmAvatarCreation;
+}
+
+function selectAvatarColor(index) {
+  tempAvatar.bodyColor = index;
+  document.querySelectorAll('#color-picker .color-swatch').forEach((el, i) => {
+    el.classList.toggle('selected', i === index);
+  });
+  updateAvatarPreview();
+}
+
+function selectEyeStyle(index) {
+  tempAvatar.eyeStyle = index;
+  document.querySelectorAll('#eye-picker .eye-option').forEach((el, i) => {
+    el.classList.toggle('selected', i === index);
+  });
+  updateAvatarPreview();
+}
+
+function selectPattern(index) {
+  tempAvatar.pattern = index;
+  document.querySelectorAll('#pattern-picker .pattern-option').forEach((el, i) => {
+    el.classList.toggle('selected', i === index);
+  });
+  updateAvatarPreview();
+}
+
+function updateAvatarPreview() {
+  const canvas = document.getElementById('avatar-preview');
+  if (!canvas) return;
+  const pctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  const cx = w / 2;
+  const cy = h / 2;
+  const r = 45;
+
+  pctx.clearRect(0, 0, w, h);
+
+  const colors = AVATAR_COLORS[tempAvatar.bodyColor] || AVATAR_COLORS[0];
+
+  // Draw tail behind body
+  drawAvatarTail(pctx, cx, cy, r, tempAvatar.tailType, colors);
+
+  // Draw ears behind body
+  drawAvatarEars(pctx, cx, cy, r, tempAvatar.earType, colors);
+
+  // Draw body based on shape
+  const grad = pctx.createRadialGradient(cx - r * 0.2, cy - r * 0.3, r * 0.1, cx, cy, r);
+  grad.addColorStop(0, colors.primary);
+  grad.addColorStop(1, colors.secondary);
+  pctx.fillStyle = grad;
+  drawBodyShape(pctx, cx, cy, r, tempAvatar.bodyShape);
+
+  // Draw pattern
+  drawAvatarPattern(pctx, cx, cy, r, tempAvatar.pattern, colors);
+
+  // Draw cheeks
+  pctx.fillStyle = 'rgba(255,150,150,0.3)';
+  pctx.beginPath(); pctx.arc(cx - r * 0.45, cy + r * 0.15, r * 0.15, 0, Math.PI * 2); pctx.fill();
+  pctx.beginPath(); pctx.arc(cx + r * 0.45, cy + r * 0.15, r * 0.15, 0, Math.PI * 2); pctx.fill();
+
+  // Draw eyes
+  drawAvatarEyes(pctx, cx, cy, r, tempAvatar.eyeStyle);
+
+  // Draw mouth based on style
+  drawAvatarMouth(pctx, cx, cy, r, tempAvatar.mouth);
+
+  // Draw feet
+  pctx.fillStyle = colors.secondary;
+  pctx.beginPath(); pctx.ellipse(cx - r * 0.3, cy + r * 0.9, r * 0.2, r * 0.12, -0.1, 0, Math.PI * 2); pctx.fill();
+  pctx.beginPath(); pctx.ellipse(cx + r * 0.3, cy + r * 0.9, r * 0.2, r * 0.12, 0.1, 0, Math.PI * 2); pctx.fill();
+}
+
+function drawBodyShape(c, cx, cy, r, shapeIndex) {
+  const shape = BODY_SHAPES[shapeIndex] || 'round';
+  c.beginPath();
+  switch (shape) {
+    case 'round':
+      c.arc(cx, cy, r, 0, Math.PI * 2);
+      break;
+    case 'oval':
+      c.ellipse(cx, cy, r * 0.85, r * 1.1, 0, 0, Math.PI * 2);
+      break;
+    case 'chubby':
+      c.ellipse(cx, cy, r * 1.1, r * 0.95, 0, 0, Math.PI * 2);
+      break;
+    case 'slim':
+      c.ellipse(cx, cy, r * 0.75, r * 1.15, 0, 0, Math.PI * 2);
+      break;
+    case 'square':
+      c.moveTo(cx - r * 0.8 + r * 0.2, cy - r * 0.8);
+      c.lineTo(cx + r * 0.8 - r * 0.2, cy - r * 0.8);
+      c.quadraticCurveTo(cx + r * 0.8, cy - r * 0.8, cx + r * 0.8, cy - r * 0.6);
+      c.lineTo(cx + r * 0.8, cy + r * 0.6);
+      c.quadraticCurveTo(cx + r * 0.8, cy + r * 0.8, cx + r * 0.6, cy + r * 0.8);
+      c.lineTo(cx - r * 0.6, cy + r * 0.8);
+      c.quadraticCurveTo(cx - r * 0.8, cy + r * 0.8, cx - r * 0.8, cy + r * 0.6);
+      c.lineTo(cx - r * 0.8, cy - r * 0.6);
+      c.quadraticCurveTo(cx - r * 0.8, cy - r * 0.8, cx - r * 0.6, cy - r * 0.8);
+      break;
+    case 'bean':
+      c.ellipse(cx - r * 0.1, cy, r * 0.9, r * 1.05, -0.15, 0, Math.PI * 2);
+      break;
+    default:
+      c.arc(cx, cy, r, 0, Math.PI * 2);
+  }
+  c.closePath();
+  c.fill();
+}
+
+function drawAvatarMouth(c, cx, cy, r, mouthIndex) {
+  const mouth = MOUTH_STYLES[mouthIndex] || 'smile';
+  c.strokeStyle = 'rgba(0,0,0,0.5)';
+  c.fillStyle = 'rgba(0,0,0,0.5)';
+  c.lineWidth = 2;
+  c.lineCap = 'round';
+  const my = cy + r * 0.25;
+  switch (mouth) {
+    case 'smile':
+      c.beginPath();
+      c.arc(cx, my, r * 0.2, 0.1, Math.PI - 0.1);
+      c.stroke();
+      break;
+    case 'grin':
+      c.beginPath();
+      c.arc(cx, my - r * 0.05, r * 0.25, 0.1, Math.PI - 0.1);
+      c.stroke();
+      // Teeth line
+      c.beginPath();
+      c.moveTo(cx - r * 0.2, my - r * 0.05 + r * 0.01);
+      c.lineTo(cx + r * 0.2, my - r * 0.05 + r * 0.01);
+      c.stroke();
+      break;
+    case 'cat':
+      c.beginPath();
+      c.moveTo(cx - r * 0.15, my);
+      c.lineTo(cx, my + r * 0.08);
+      c.lineTo(cx + r * 0.15, my);
+      c.stroke();
+      break;
+    case 'open':
+      c.fillStyle = 'rgba(0,0,0,0.4)';
+      c.beginPath();
+      c.ellipse(cx, my + r * 0.05, r * 0.12, r * 0.1, 0, 0, Math.PI * 2);
+      c.fill();
+      break;
+    case 'tongue':
+      c.beginPath();
+      c.arc(cx, my, r * 0.2, 0.1, Math.PI - 0.1);
+      c.stroke();
+      c.fillStyle = '#ff6b6b';
+      c.beginPath();
+      c.ellipse(cx, my + r * 0.12, r * 0.08, r * 0.06, 0, 0, Math.PI * 2);
+      c.fill();
+      break;
+    case 'flat':
+      c.beginPath();
+      c.moveTo(cx - r * 0.15, my);
+      c.lineTo(cx + r * 0.15, my);
+      c.stroke();
+      break;
+  }
+}
+
+function drawAvatarEars(c, cx, cy, r, earIndex, colors) {
+  const ear = EAR_TYPES[earIndex] || 'none';
+  if (ear === 'none') return;
+  c.fillStyle = colors.secondary;
+  switch (ear) {
+    case 'round':
+      c.beginPath(); c.arc(cx - r * 0.7, cy - r * 0.7, r * 0.25, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.arc(cx + r * 0.7, cy - r * 0.7, r * 0.25, 0, Math.PI * 2); c.fill();
+      c.fillStyle = colors.primary;
+      c.beginPath(); c.arc(cx - r * 0.7, cy - r * 0.7, r * 0.15, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.arc(cx + r * 0.7, cy - r * 0.7, r * 0.15, 0, Math.PI * 2); c.fill();
+      break;
+    case 'pointy':
+      c.beginPath(); c.moveTo(cx - r * 0.6, cy - r * 0.5); c.lineTo(cx - r * 0.45, cy - r * 1.3); c.lineTo(cx - r * 0.1, cy - r * 0.7); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(cx + r * 0.6, cy - r * 0.5); c.lineTo(cx + r * 0.45, cy - r * 1.3); c.lineTo(cx + r * 0.1, cy - r * 0.7); c.closePath(); c.fill();
+      break;
+    case 'floppy':
+      c.beginPath(); c.ellipse(cx - r * 0.85, cy - r * 0.2, r * 0.2, r * 0.4, -0.4, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.ellipse(cx + r * 0.85, cy - r * 0.2, r * 0.2, r * 0.4, 0.4, 0, Math.PI * 2); c.fill();
+      break;
+    case 'bunny':
+      c.beginPath(); c.ellipse(cx - r * 0.3, cy - r * 1.2, r * 0.15, r * 0.45, -0.1, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.ellipse(cx + r * 0.3, cy - r * 1.2, r * 0.15, r * 0.45, 0.1, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#ffb8c6';
+      c.beginPath(); c.ellipse(cx - r * 0.3, cy - r * 1.15, r * 0.08, r * 0.3, -0.1, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.ellipse(cx + r * 0.3, cy - r * 1.15, r * 0.08, r * 0.3, 0.1, 0, Math.PI * 2); c.fill();
+      break;
+    case 'bear':
+      c.beginPath(); c.arc(cx - r * 0.6, cy - r * 0.75, r * 0.28, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.arc(cx + r * 0.6, cy - r * 0.75, r * 0.28, 0, Math.PI * 2); c.fill();
+      c.fillStyle = colors.primary;
+      c.beginPath(); c.arc(cx - r * 0.6, cy - r * 0.75, r * 0.16, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.arc(cx + r * 0.6, cy - r * 0.75, r * 0.16, 0, Math.PI * 2); c.fill();
+      break;
+  }
+}
+
+function drawAvatarTail(c, cx, cy, r, tailIndex, colors) {
+  const tail = TAIL_TYPES[tailIndex] || 'none';
+  if (tail === 'none') return;
+  c.fillStyle = colors.secondary;
+  c.strokeStyle = colors.secondary;
+  c.lineWidth = r * 0.12;
+  c.lineCap = 'round';
+  switch (tail) {
+    case 'round':
+      c.beginPath(); c.arc(cx + r * 0.9, cy + r * 0.3, r * 0.18, 0, Math.PI * 2); c.fill();
+      break;
+    case 'long':
+      c.beginPath(); c.moveTo(cx + r * 0.7, cy + r * 0.4); c.quadraticCurveTo(cx + r * 1.4, cy + r * 0.1, cx + r * 1.2, cy - r * 0.3); c.stroke();
+      break;
+    case 'fluffy':
+      c.beginPath(); c.arc(cx + r * 0.85, cy + r * 0.25, r * 0.25, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.arc(cx + r * 1.0, cy + r * 0.1, r * 0.2, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.arc(cx + r * 0.95, cy + r * 0.35, r * 0.15, 0, Math.PI * 2); c.fill();
+      break;
+    case 'curly':
+      c.beginPath(); c.moveTo(cx + r * 0.7, cy + r * 0.4);
+      c.bezierCurveTo(cx + r * 1.3, cy + r * 0.5, cx + r * 1.1, cy - r * 0.2, cx + r * 1.4, cy - r * 0.1);
+      c.stroke();
+      c.beginPath(); c.arc(cx + r * 1.4, cy - r * 0.1, r * 0.1, 0, Math.PI * 2); c.fill();
+      break;
+    case 'fish':
+      c.beginPath(); c.moveTo(cx + r * 0.7, cy + r * 0.4); c.lineTo(cx + r * 1.2, cy + r * 0.1); c.lineTo(cx + r * 1.2, cy + r * 0.55); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(cx + r * 1.2, cy + r * 0.1); c.lineTo(cx + r * 1.45, cy + r * 0.0); c.lineTo(cx + r * 1.2, cy + r * 0.3); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(cx + r * 1.2, cy + r * 0.35); c.lineTo(cx + r * 1.45, cy + r * 0.55); c.lineTo(cx + r * 1.2, cy + r * 0.55); c.closePath(); c.fill();
+      break;
+  }
+}
+
+function drawAvatarPattern(ctx, cx, cy, r, patternIndex, colors) {
+  const pattern = PATTERNS[patternIndex];
+  if (!pattern.draw) return;
+  
+  ctx.save();
+  ctx.globalAlpha = 0.3;
+  
+  switch (pattern.draw) {
+    case 'spots':
+      ctx.fillStyle = colors.secondary;
+      ctx.beginPath(); ctx.arc(cx - r * 0.2, cy - r * 0.3, r * 0.12, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + r * 0.25, cy - r * 0.1, r * 0.1, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx - r * 0.1, cy + r * 0.2, r * 0.08, 0, Math.PI * 2); ctx.fill();
+      break;
+    case 'stripes':
+      ctx.strokeStyle = colors.secondary;
+      ctx.lineWidth = 4;
+      for (let i = -2; i <= 2; i++) {
+        ctx.beginPath();
+        ctx.moveTo(cx + i * r * 0.25 - r * 0.3, cy - r * 0.5);
+        ctx.lineTo(cx + i * r * 0.25 + r * 0.3, cy + r * 0.5);
+        ctx.stroke();
+      }
+      break;
+    case 'heart':
+      ctx.fillStyle = '#ff6b6b';
+      ctx.font = `${r * 0.5}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('❤️', cx, cy - r * 0.1);
+      break;
+    case 'star':
+      ctx.fillStyle = '#ffd93d';
+      ctx.font = `${r * 0.5}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('⭐', cx, cy - r * 0.1);
+      break;
+    case 'gradient':
+      const gradOverlay = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
+      gradOverlay.addColorStop(0, 'rgba(255,255,255,0.4)');
+      gradOverlay.addColorStop(0.5, 'rgba(255,255,255,0)');
+      gradOverlay.addColorStop(1, 'rgba(0,0,0,0.2)');
+      ctx.fillStyle = gradOverlay;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r - 1, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+  }
+  
+  ctx.restore();
+}
+
+function drawAvatarEyes(ctx, cx, cy, r, eyeStyle) {
+  const eyeY = cy - r * 0.15;
+  const eyeSpread = r * 0.35;
+  const eyeSize = r * 0.12;
+  
+  switch (EYE_STYLES[eyeStyle]) {
+    case 'round':
+      // White
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(cx - eyeSpread, eyeY, eyeSize * 1.4, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeSpread, eyeY, eyeSize * 1.4, 0, Math.PI * 2); ctx.fill();
+      // Pupil
+      ctx.fillStyle = '#2d3436';
+      ctx.beginPath(); ctx.arc(cx - eyeSpread, eyeY + 2, eyeSize * 0.8, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeSpread, eyeY + 2, eyeSize * 0.8, 0, Math.PI * 2); ctx.fill();
+      // Highlight
+      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      ctx.beginPath(); ctx.arc(cx - eyeSpread - 2, eyeY - 2, eyeSize * 0.3, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeSpread - 2, eyeY - 2, eyeSize * 0.3, 0, Math.PI * 2); ctx.fill();
+      break;
+    case 'sleepy':
+      ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(cx - eyeSpread - eyeSize, eyeY); ctx.lineTo(cx - eyeSpread + eyeSize, eyeY); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx + eyeSpread - eyeSize, eyeY); ctx.lineTo(cx + eyeSpread + eyeSize, eyeY); ctx.stroke();
+      break;
+    case 'sparkle':
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(cx - eyeSpread, eyeY, eyeSize * 1.5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeSpread, eyeY, eyeSize * 1.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#2d3436';
+      ctx.beginPath(); ctx.arc(cx - eyeSpread, eyeY + 1, eyeSize * 0.9, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeSpread, eyeY + 1, eyeSize * 0.9, 0, Math.PI * 2); ctx.fill();
+      // Sparkle highlights
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(cx - eyeSpread - 3, eyeY - 3, eyeSize * 0.4, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx - eyeSpread + 3, eyeY + 2, eyeSize * 0.2, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeSpread - 3, eyeY - 3, eyeSize * 0.4, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeSpread + 3, eyeY + 2, eyeSize * 0.2, 0, Math.PI * 2); ctx.fill();
+      break;
+    case 'cat':
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(cx - eyeSpread, eyeY, eyeSize * 1.3, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeSpread, eyeY, eyeSize * 1.3, 0, Math.PI * 2); ctx.fill();
+      // Vertical slit pupils
+      ctx.fillStyle = '#2d3436';
+      ctx.beginPath(); ctx.ellipse(cx - eyeSpread, eyeY, eyeSize * 0.25, eyeSize * 0.8, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx + eyeSpread, eyeY, eyeSize * 0.25, eyeSize * 0.8, 0, 0, Math.PI * 2); ctx.fill();
+      break;
+    case 'dot':
+      ctx.fillStyle = '#2d3436';
+      ctx.beginPath(); ctx.arc(cx - eyeSpread, eyeY, eyeSize * 0.6, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeSpread, eyeY, eyeSize * 0.6, 0, Math.PI * 2); ctx.fill();
+      break;
+    case 'anime':
+      // Large anime-style eyes
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.ellipse(cx - eyeSpread, eyeY, eyeSize * 1.8, eyeSize * 2, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx + eyeSpread, eyeY, eyeSize * 1.8, eyeSize * 2, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#6c5ce7';
+      ctx.beginPath(); ctx.ellipse(cx - eyeSpread, eyeY + 2, eyeSize * 1.2, eyeSize * 1.4, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx + eyeSpread, eyeY + 2, eyeSize * 1.2, eyeSize * 1.4, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#2d3436';
+      ctx.beginPath(); ctx.arc(cx - eyeSpread, eyeY + 3, eyeSize * 0.5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeSpread, eyeY + 3, eyeSize * 0.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(cx - eyeSpread - 4, eyeY - 3, eyeSize * 0.5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + eyeSpread - 4, eyeY - 3, eyeSize * 0.5, 0, Math.PI * 2); ctx.fill();
+      break;
+  }
+}
+
+function confirmAvatarCreation() {
+  const nameInput = document.getElementById('pet-name-input');
+  tempAvatar.name = nameInput.value.trim() || 'Pet';
+
+  state.avatar = { ...tempAvatar };
+  state.customized = true;
+  save();
+  closeAvatarCreator();
+  notify('🎉 Welcome, ' + state.avatar.name + '!');
+  sfxConfirm();
+}
+
+function getAvatarMouth() {
+  if (!state || !state.avatar || !state.customized) return 0;
+  return state.avatar.mouth || 0;
+}
+function getAvatarBodyShape() {
+  if (!state || !state.avatar || !state.customized) return 0;
+  return state.avatar.bodyShape || 0;
+}
+function getAvatarEarType() {
+  if (!state || !state.avatar || !state.customized) return 0;
+  return state.avatar.earType || 0;
+}
+function getAvatarTailType() {
+  if (!state || !state.avatar || !state.customized) return 0;
+  return state.avatar.tailType || 0;
+}
+
+function selectMouth(index) {
+  tempAvatar.mouth = index;
+  document.querySelectorAll('#mouth-picker .eye-option').forEach((el, i) => {
+    el.classList.toggle('selected', i === index);
+  });
+  updateAvatarPreview();
+}
+
+function selectBodyShape(index) {
+  tempAvatar.bodyShape = index;
+  document.querySelectorAll('#shape-picker .eye-option').forEach((el, i) => {
+    el.classList.toggle('selected', i === index);
+  });
+  updateAvatarPreview();
+}
+
+function selectEarType(index) {
+  tempAvatar.earType = index;
+  document.querySelectorAll('#ear-picker .eye-option').forEach((el, i) => {
+    el.classList.toggle('selected', i === index);
+  });
+  updateAvatarPreview();
+}
+
+function selectTailType(index) {
+  tempAvatar.tailType = index;
+  document.querySelectorAll('#tail-picker .eye-option').forEach((el, i) => {
+    el.classList.toggle('selected', i === index);
+  });
+  updateAvatarPreview();
+}
+
+// Make avatar creator functions globally accessible
+window.selectAvatarColor = selectAvatarColor;
+window.selectEyeStyle = selectEyeStyle;
+window.selectPattern = selectPattern;
+window.selectMouth = selectMouth;
+window.selectBodyShape = selectBodyShape;
+window.selectEarType = selectEarType;
+window.selectTailType = selectTailType;
+
+// ============================================================
+// SKILL SYSTEM
+// ============================================================
+function addSkillXP(skill, amount) {
+  if (!state || !state.skills || !state.skills[skill]) return;
+  
+  const s = state.skills[skill];
+  s.xp += amount;
+  
+  while (s.level < 10 && s.xp >= SKILL_XP_PER_LEVEL[s.level]) {
+    s.xp -= SKILL_XP_PER_LEVEL[s.level];
+    s.level++;
+    onSkillLevelUp(skill, s.level);
+  }
+  
+  // Cap XP at max level
+  if (s.level >= 10) s.xp = 0;
+  
+  // Also add to global experience pool
+  addGlobalXP(amount);
+  
+  updateSkillsPanel();
+  save();
+}
+
+// ============================================================
+// GLOBAL EXPERIENCE SYSTEM
+// ============================================================
+// Level-up flash state
+let levelUpFlash = 0; // 0 = no flash, >0 = flash timer in ms
+
+function addGlobalXP(amount) {
+  if (!state || !state.experience) return;
+
+  state.experience.totalXP += amount;
+
+  // Track for daily tasks
+  trackTask('xpEarned', amount);
+
+  // Show floating XP text
+  spawnXPText(petX() + (Math.random() - 0.5) * 40, petY() - petSize() * 0.5, amount);
+
+  // Pulse the XP bar
+  const expFill = document.getElementById('exp-bar-fill');
+  if (expFill) {
+    expFill.style.transition = 'none';
+    expFill.style.boxShadow = '0 0 20px rgba(255,217,61,0.8)';
+    setTimeout(() => {
+      expFill.style.transition = 'width 0.5s ease, box-shadow 0.5s ease';
+      expFill.style.boxShadow = '0 0 10px rgba(255,217,61,0.4)';
+    }, 200);
+  }
+
+  // Check for level ups
+  while (state.experience.level < 50 && state.experience.totalXP >= state.experience.xpToNext) {
+    state.experience.totalXP -= state.experience.xpToNext;
+    state.experience.level++;
+
+    // Calculate XP needed for next level
+    if (state.experience.level < 50) {
+      state.experience.xpToNext = PET_LEVEL_XP[state.experience.level] - PET_LEVEL_XP[state.experience.level - 1];
+    } else {
+      state.experience.xpToNext = 0;
+    }
+
+    // Award skill point on level up
+    state.skillPoints++;
+
+    // Trigger level-up gold flash
+    levelUpFlash = 1500; // 1.5 seconds
+
+    onPetLevelUp(state.experience.level);
+  }
+
+  // Cap at max level
+  if (state.experience.level >= 50) {
+    state.experience.totalXP = 0;
+  }
+
+  updateExpBar();
+}
+
+function onPetLevelUp(newLevel) {
+  notify('🎉 Level Up! Now Lv.' + newLevel + '!');
+  sfxEvolve();
+  
+  // Spawn celebration particles
+  for (let i = 0; i < 10; i++) {
+    setTimeout(() => {
+      spawnParticle(petX() + (Math.random() - 0.5) * 100, petY() - petSize() * 0.3, '⭐');
+    }, i * 100);
+  }
+  
+  // Mark that player needs to choose a stat boost
+  state.pendingStatBoost = true;
+  
+  // Show skill point badge
+  updateSkillPointsBadge();
+  
+  // Auto-open stat boost modal for new level
+  setTimeout(() => {
+    openStatBoostModal(newLevel);
+  }, 1500);
+}
+
+// ============================================================
+// STAT BOOST SYSTEM
+// ============================================================
+const STAT_BOOST_OPTIONS = [
+  { id: 'maxHealth', name: 'Max Health', icon: '❤️', desc: '+5 max health', perPoint: 5 },
+  { id: 'maxEnergy', name: 'Max Energy', icon: '⚡', desc: '+5 max energy', perPoint: 5 },
+  { id: 'foodEfficiency', name: 'Food Power', icon: '🍎', desc: '+10% food effect', perPoint: 10 },
+  { id: 'poopReduction', name: 'Less Poop', icon: '💨', desc: '-10% poop rate', perPoint: 10 },
+  { id: 'happinessBoost', name: 'Joy Boost', icon: '😊', desc: '+5% happiness gain', perPoint: 5 },
+  { id: 'hygieneBoost', name: 'Stay Clean', icon: '✨', desc: '-5% hygiene decay', perPoint: 5 }
+];
+
+function openStatBoostModal(newLevel) {
+  if (!state) return;
+  
+  const modal = document.getElementById('stat-boost-modal');
+  const levelDisplay = document.getElementById('new-level-display');
+  const grid = document.getElementById('stat-boost-grid');
+  
+  if (!modal || !grid) return;
+  
+  levelDisplay.textContent = 'Lv.' + newLevel;
+  
+  grid.innerHTML = STAT_BOOST_OPTIONS.map(boost => {
+    const currentValue = state.statBoosts[boost.id] || 0;
+    const currentBonus = currentValue * boost.perPoint;
+    const currentText = currentValue > 0 ? `Current: +${currentBonus}${boost.id.includes('Reduction') || boost.id.includes('Boost') || boost.id.includes('Efficiency') ? '%' : ''}` : '';
+    
+    return `
+      <div class="stat-boost-card" onclick="selectStatBoost('${boost.id}')">
+        <div class="boost-icon">${boost.icon}</div>
+        <div class="boost-name">${boost.name}</div>
+        <div class="boost-desc">${boost.desc}</div>
+        ${currentText ? `<div class="boost-current">${currentText}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+  
+  modal.classList.add('open');
+}
+
+function selectStatBoost(boostId) {
+  if (!state || !state.statBoosts) return;
+  
+  // Apply the stat boost
+  state.statBoosts[boostId] = (state.statBoosts[boostId] || 0) + 1;
+  state.pendingStatBoost = false;
+  
+  // Find boost info for notification
+  const boost = STAT_BOOST_OPTIONS.find(b => b.id === boostId);
+  if (boost) {
+    notify(boost.icon + ' ' + boost.name + ' increased!');
+  }
+  
+  sfxConfirm();
+  
+  // Spawn celebration particles
+  for (let i = 0; i < 5; i++) {
+    spawnParticle(vw() / 2 + (Math.random() - 0.5) * 80, vh() / 2, '⭐');
+  }
+  
+  // Close stat boost modal
+  document.getElementById('stat-boost-modal').classList.remove('open');
+  
+  // Apply immediate effects (like health/energy boost)
+  applyStatBoostEffects();
+  
+  save();
+  
+  // Now open skill point allocation if there are points to spend
+  if (state.skillPoints > 0) {
+    setTimeout(() => {
+      openSkillAllocation();
+    }, 500);
+  }
+}
+
+function applyStatBoostEffects() {
+  if (!state || !state.statBoosts) return;
+  
+  // Apply max health boost (heal to new max if current is at max)
+  const maxHealthBonus = getStatBoost('maxHealth');
+  const effectiveMaxHealth = 100 + maxHealthBonus;
+  if (state.health >= 100) {
+    state.health = effectiveMaxHealth;
+  }
+  
+  // Apply max energy boost
+  const maxEnergyBonus = getStatBoost('maxEnergy');
+  const effectiveMaxEnergy = 100 + maxEnergyBonus;
+  if (state.energy >= 100) {
+    state.energy = effectiveMaxEnergy;
+  }
+  
+  updateHUD();
+}
+
+function getStatBoost(boostId) {
+  if (!state || !state.statBoosts) return 0;
+  const boost = STAT_BOOST_OPTIONS.find(b => b.id === boostId);
+  if (!boost) return 0;
+  return (state.statBoosts[boostId] || 0) * boost.perPoint;
+}
+
+function getMaxHealth() {
+  return 100 + getStatBoost('maxHealth');
+}
+
+function getMaxEnergy() {
+  return 100 + getStatBoost('maxEnergy');
+}
+
+function getFoodEfficiencyMultiplier() {
+  return 1 + (getStatBoost('foodEfficiency') / 100);
+}
+
+function getPoopReductionMultiplier() {
+  return Math.max(0.1, 1 - (getStatBoost('poopReduction') / 100));
+}
+
+function getHappinessBoostMultiplier() {
+  return 1 + (getStatBoost('happinessBoost') / 100);
+}
+
+function getHygieneDecayMultiplier() {
+  return Math.max(0.1, 1 - (getStatBoost('hygieneBoost') / 100));
+}
+
+// Make functions globally accessible
+window.selectStatBoost = selectStatBoost;
+
+function updateExpBar() {
+  if (!state || !state.experience) return;
+  
+  const levelBadge = document.getElementById('exp-level-badge');
+  const expFill = document.getElementById('exp-bar-fill');
+  const expText = document.getElementById('exp-bar-text');
+  
+  if (levelBadge) levelBadge.textContent = 'Lv.' + state.experience.level;
+  
+  if (expFill) {
+    const percent = state.experience.level >= 50 ? 100 : 
+      (state.experience.totalXP / state.experience.xpToNext) * 100;
+    expFill.style.width = percent + '%';
+  }
+  
+  if (expText) {
+    if (state.experience.level >= 50) {
+      expText.textContent = 'MAX';
+    } else {
+      expText.textContent = state.experience.totalXP + '/' + state.experience.xpToNext + ' XP';
+    }
+  }
+  
+  updateSkillPointsBadge();
+}
+
+function updateSkillPointsBadge() {
+  const badge = document.getElementById('skill-points-badge');
+  if (!badge || !state) return;
+  
+  if (state.skillPoints > 0) {
+    badge.classList.remove('hidden');
+    badge.textContent = '+' + state.skillPoints + ' Point' + (state.skillPoints > 1 ? 's' : '');
+  } else {
+    badge.classList.add('hidden');
+  }
+}
+
+// ============================================================
+// SKILL POINT ALLOCATION
+// ============================================================
+function openSkillAllocation() {
+  if (!state || state.skillPoints <= 0) return;
+  
+  buildSkillAllocationUI();
+  document.getElementById('skill-alloc-modal').classList.add('open');
+}
+
+function closeSkillAllocation() {
+  document.getElementById('skill-alloc-modal').classList.remove('open');
+  save();
+}
+
+function buildSkillAllocationUI() {
+  const grid = document.getElementById('skill-alloc-grid');
+  const pointsDisplay = document.getElementById('points-available');
+  
+  if (!grid || !state) return;
+  
+  pointsDisplay.textContent = state.skillPoints + ' Point' + (state.skillPoints > 1 ? 's' : '');
+  
+  const skillData = [
+    { id: 'gardening', name: 'Gardening', icon: '🌱', desc: '+15% plant growth per point' },
+    { id: 'foraging', name: 'Foraging', icon: '🍂', desc: '+15% seed find chance per point' },
+    { id: 'social', name: 'Social', icon: '💬', desc: '+15% happiness boost per point' },
+    { id: 'athletics', name: 'Athletics', icon: '🏃', desc: '+15% game score per point' },
+    { id: 'creativity', name: 'Creativity', icon: '🎨', desc: '+15% decoration bonus per point' },
+    { id: 'health', name: 'Health', icon: '❤️', desc: '+15% healing & decay resist per point' }
+  ];
+  
+  grid.innerHTML = skillData.map(skill => {
+    const allocated = state.allocatedPoints[skill.id] || 0;
+    return `
+      <div class="skill-alloc-row">
+        <span class="skill-icon">${skill.icon}</span>
+        <div class="skill-info">
+          <div class="skill-name">${skill.name}</div>
+          <div class="skill-bonus">${skill.desc}</div>
+        </div>
+        <span class="skill-points-display">+${allocated}</span>
+        <button class="alloc-btn add" onclick="allocateSkillPoint('${skill.id}')" ${state.skillPoints <= 0 ? 'disabled' : ''}>+</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function allocateSkillPoint(skillId) {
+  if (!state || state.skillPoints <= 0) return;
+  
+  state.skillPoints--;
+  state.allocatedPoints[skillId] = (state.allocatedPoints[skillId] || 0) + 1;
+  
+  // Play confirmation sound
+  sfxConfirm();
+  
+  // Spawn particle
+  spawnParticle(vw() / 2, vh() / 2, '⭐');
+  
+  // Rebuild UI
+  buildSkillAllocationUI();
+  updateSkillPointsBadge();
+  updateSkillsPanel();
+  save();
+}
+
+// Make functions globally accessible
+window.openSkillAllocation = openSkillAllocation;
+window.closeSkillAllocation = closeSkillAllocation;
+window.allocateSkillPoint = allocateSkillPoint;
+
+// ============================================================
+// INVENTORY SYSTEM
+// ============================================================
+function getItem(itemId) {
+  return ITEMS.find(i => i.id === itemId);
+}
+
+function addToInventory(itemId, qty = 1) {
+  if (!state || !state.inventory) return false;
+  state.inventory[itemId] = (state.inventory[itemId] || 0) + qty;
+  save();
+  return true;
+}
+
+function removeFromInventory(itemId, qty = 1) {
+  if (!state || !state.inventory) return false;
+  if ((state.inventory[itemId] || 0) < qty) return false;
+  state.inventory[itemId] -= qty;
+  if (state.inventory[itemId] <= 0) delete state.inventory[itemId];
+  save();
+  return true;
+}
+
+function getInventoryCount(itemId) {
+  if (!state || !state.inventory) return 0;
+  return state.inventory[itemId] || 0;
+}
+
+function getTotalInventoryItems() {
+  if (!state || !state.inventory) return 0;
+  return Object.values(state.inventory).reduce((a, b) => a + b, 0);
+}
+
+function openInventory() {
+  const panel = document.getElementById('inventory-panel');
+  if (!panel) return;
+  
+  buildInventoryTabs();
+  buildInventoryGrid('all');
+  panel.classList.add('open');
+}
+
+function closeInventory() {
+  const panel = document.getElementById('inventory-panel');
+  if (panel) panel.classList.remove('open');
+}
+
+function buildInventoryTabs() {
+  const tabs = document.getElementById('inventory-tabs');
+  if (!tabs) return;
+  
+  const categories = [{ id: 'all', name: 'All', icon: '📦' }, ...Object.entries(ITEM_CATEGORIES).map(([id, c]) => ({ id, ...c }))];
+  
+  tabs.innerHTML = categories.map(cat => 
+    `<button class="inventory-tab${cat.id === 'all' ? ' active' : ''}" onclick="filterInventory('${cat.id}')">${cat.icon} ${cat.name}</button>`
+  ).join('');
+}
+
+function filterInventory(category) {
+  // Update active tab
+  document.querySelectorAll('.inventory-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  buildInventoryGrid(category);
+}
+
+function buildInventoryGrid(category) {
+  const grid = document.getElementById('inventory-grid');
+  if (!grid || !state) return;
+  
+  const items = Object.entries(state.inventory || {})
+    .filter(([id, qty]) => qty > 0)
+    .map(([id, qty]) => ({ ...getItem(id), qty }))
+    .filter(item => item && (category === 'all' || item.category === category));
+  
+  if (items.length === 0) {
+    grid.innerHTML = `<div class="inventory-empty"><div class="empty-icon">📦</div><div>No items yet!</div><div style="font-size:12px;margin-top:8px;">Explore the world to find items</div></div>`;
+    return;
+  }
+  
+  grid.innerHTML = items.map(item => `
+    <div class="inventory-item rarity-${item.rarity}" onclick="useInventoryItem('${item.id}')">
+      <div class="item-emoji">${item.emoji}</div>
+      <div class="item-name">${item.name}</div>
+      <div class="item-qty">x${item.qty}</div>
+      ${item.sellPrice ? `<div class="item-price">🪙 ${item.sellPrice}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function useInventoryItem(itemId) {
+  const item = getItem(itemId);
+  if (!item || getInventoryCount(itemId) < 1) return;
+  
+  // Food items can be used to feed pet
+  if (item.category === 'food' && item.effect) {
+    if (!state || !state.alive || state.stage === 'EGG') {
+      notify('❌ Cannot use this now');
+      return;
+    }
+    
+    removeFromInventory(itemId, 1);
+    
+    const maxHealth = getMaxHealth();
+    const maxEnergy = getMaxEnergy();
+    const happinessBoost = getHappinessBoostMultiplier();
+    
+    if (item.effect.hunger) state.hunger = Math.min(100, state.hunger + item.effect.hunger);
+    if (item.effect.happiness) state.happiness = Math.min(100, state.happiness + Math.round(item.effect.happiness * happinessBoost));
+    if (item.effect.health) state.health = Math.min(maxHealth, state.health + item.effect.health);
+    if (item.effect.energy) state.energy = Math.min(maxEnergy, state.energy + item.effect.energy);
+    
+    notify(item.emoji + ' Used ' + item.name + '!');
+    sfxConfirm();
+    for (let i = 0; i < 3; i++) spawnParticle(petX() + (Math.random() - 0.5) * 60, petY() - 20, item.emoji);
+    
+    addSkillXP('health', 2);
+    save();
+    updateHUD();
+    buildInventoryGrid('all');
+    return;
+  }
+  
+  // Toy items give happiness
+  if (item.category === 'toy' && item.effect) {
+    if (!state || !state.alive || state.stage === 'EGG') {
+      notify('❌ Cannot use this now');
+      return;
+    }
+    
+    removeFromInventory(itemId, 1);
+    
+    const happinessBoost = getHappinessBoostMultiplier();
+    if (item.effect.happiness) state.happiness = Math.min(100, state.happiness + Math.round(item.effect.happiness * happinessBoost));
+    if (item.effect.energy) state.energy = Math.max(0, state.energy + item.effect.energy);
+    
+    notify(item.emoji + ' Played with ' + item.name + '!');
+    sfxConfirm();
+    for (let i = 0; i < 5; i++) spawnParticle(petX() + (Math.random() - 0.5) * 80, petY() - 30, '🎉');
+    
+    addSkillXP('social', 3);
+    save();
+    updateHUD();
+    buildInventoryGrid('all');
+    return;
+  }
+  
+  // Other items: show sell option
+  notify('💡 Sell this at the Market!');
+}
+
+// Make inventory functions global
+window.openInventory = openInventory;
+window.closeInventory = closeInventory;
+window.filterInventory = filterInventory;
+window.useInventoryItem = useInventoryItem;
+
+// ============================================================
+// CURRENCY & MARKET SYSTEM
+// ============================================================
+function addCoins(amount) {
+  if (!state) return;
+  state.coins = (state.coins || 0) + amount;
+  updateCoinsDisplay();
+  save();
+  
+  // Coin particle effect
+  if (amount > 0) {
+    for (let i = 0; i < Math.min(5, amount / 5); i++) {
+      spawnParticle(vw() - 60 + (Math.random() - 0.5) * 30, 30, '🪙');
+    }
+  }
+}
+
+function removeCoins(amount) {
+  if (!state || state.coins < amount) return false;
+  state.coins -= amount;
+  updateCoinsDisplay();
+  save();
+  return true;
+}
+
+function updateCoinsDisplay() {
+  const el = document.getElementById('coin-amount');
+  const marketEl = document.getElementById('market-coins');
+  if (el && state) el.textContent = state.coins || 0;
+  if (marketEl && state) marketEl.textContent = state.coins || 0;
+}
+
+function openMarket() {
+  const panel = document.getElementById('market-panel');
+  if (!panel) return;
+  
+  updateCoinsDisplay();
+  buildMarketBuyGrid();
+  buildMarketSellGrid();
+  panel.classList.add('open');
+}
+
+function closeMarket() {
+  const panel = document.getElementById('market-panel');
+  if (panel) panel.classList.remove('open');
+}
+
+function buildMarketBuyGrid() {
+  const grid = document.getElementById('market-buy-grid');
+  if (!grid) return;
+
+  const buyableItems = ITEMS.filter(item => item.buyPrice !== null);
+
+  // Also add seeds that are unlocked
+  const seedItems = SEED_TYPES.filter(s => state && state.unlockedSeeds && state.unlockedSeeds.includes(s.id)).map(s => {
+    const price = SEED_MARKET_PRICES[s.rarity] || 10;
+    return {
+      id: 'seed_' + s.id,
+      emoji: s.emoji,
+      name: s.name + ' Seed',
+      rarity: s.rarity,
+      buyPrice: price,
+      isSeed: true,
+      seedId: s.id,
+      effect: null,
+      desc: s.rarity.charAt(0).toUpperCase() + s.rarity.slice(1) + ' seed'
+    };
+  });
+
+  const allBuyable = [...buyableItems, ...seedItems];
+
+  grid.innerHTML = allBuyable.map(item => {
+    const canAfford = state && state.coins >= item.buyPrice;
+    const effectText = item.effect ? Object.entries(item.effect).map(([k, v]) => `${v > 0 ? '+' : ''}${v} ${k}`).join(', ') : '';
+    const bonusText = item.bonus ? 'Permanent bonus!' : '';
+    const descText = item.isSeed ? item.desc : (effectText || bonusText);
+    const rarityClass = item.rarity || 'common';
+    const epicStyle = rarityClass === 'epic' ? 'box-shadow:0 0 10px rgba(168,85,247,0.4);' : '';
+
+    return `
+      <div class="market-item rarity-${rarityClass}${canAfford ? '' : ' disabled'}" onclick="${item.isSeed ? 'buySeed(\'' + item.seedId + '\')' : 'buyItem(\'' + item.id + '\')'}" style="${epicStyle}">
+        <div class="item-emoji">${item.emoji}</div>
+        <div class="item-name">${item.name}</div>
+        <div class="item-desc">${descText}</div>
+        <div class="item-price">🪙 ${item.buyPrice}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function buildMarketSellGrid() {
+  const grid = document.getElementById('market-sell-grid');
+  if (!grid || !state) return;
+  
+  const sellableItems = Object.entries(state.inventory || {})
+    .filter(([id, qty]) => qty > 0)
+    .map(([id, qty]) => ({ ...getItem(id), qty }))
+    .filter(item => item && item.sellPrice);
+  
+  if (sellableItems.length === 0) {
+    grid.innerHTML = '<div class="inventory-empty" style="grid-column:1/-1;padding:20px;"><div>No items to sell</div></div>';
+    return;
+  }
+  
+  grid.innerHTML = sellableItems.map(item => `
+    <div class="market-item rarity-${item.rarity}" onclick="sellItem('${item.id}')">
+      <div class="item-emoji">${item.emoji}</div>
+      <div class="item-name">${item.name} (x${item.qty})</div>
+      <div class="item-desc">Sell for:</div>
+      <div class="item-price">🪙 ${item.sellPrice}</div>
+    </div>
+  `).join('');
+}
+
+function buyItem(itemId) {
+  const item = getItem(itemId);
+  if (!item || !state) return;
+  
+  if (state.coins < item.buyPrice) {
+    notify('❌ Not enough coins!');
+    sfxError();
+    return;
+  }
+  
+  removeCoins(item.buyPrice);
+  addToInventory(itemId, 1);
+  
+  notify(item.emoji + ' Bought ' + item.name + '!');
+  sfxConfirm();
+  
+  // Track for tasks
+  trackTask('buyCount', 1);
+  
+  buildMarketBuyGrid();
+  buildMarketSellGrid();
+}
+
+function sellItem(itemId) {
+  const item = getItem(itemId);
+  if (!item || !state || getInventoryCount(itemId) < 1) return;
+  
+  removeFromInventory(itemId, 1);
+  addCoins(item.sellPrice);
+  
+  notify('💰 Sold ' + item.name + ' for ' + item.sellPrice + ' coins!');
+  sfxConfirm();
+  
+  // Track for tasks
+  trackTask('soldValue', item.sellPrice);
+  
+  buildMarketSellGrid();
+}
+
+function buySeed(seedId) {
+  const seedData = SEED_TYPES.find(s => s.id === seedId);
+  if (!seedData || !state) return;
+  const price = SEED_MARKET_PRICES[seedData.rarity] || 10;
+  if (state.coins < price) {
+    notify('❌ Not enough coins!');
+    sfxDeny();
+    return;
+  }
+  removeCoins(price);
+  addSeed(seedId, 1);
+  notify(seedData.emoji + ' Bought ' + seedData.name + ' seed!');
+  sfxConfirm();
+  trackTask('buyCount', 1);
+  buildMarketBuyGrid();
+}
+
+// Make market functions global
+window.openMarket = openMarket;
+window.closeMarket = closeMarket;
+window.buyItem = buyItem;
+window.sellItem = sellItem;
+window.buySeed = buySeed;
+
+// ============================================================
+// WORLD COLLECTIBLES SYSTEM
+// ============================================================
+function spawnWorldItem() {
+  if (!state || !state.alive || state.stage === 'EGG') return;
+  
+  // Max 5 items in world at once
+  if (state.worldItems.length >= 5) return;
+  
+  // Pick a random item based on rarity weights
+  const totalWeight = Object.values(WORLD_SPAWN_WEIGHTS).reduce((a, b) => a + b, 0);
+  let roll = Math.random() * totalWeight;
+  let selectedRarity = 'common';
+  
+  for (const [rarity, weight] of Object.entries(WORLD_SPAWN_WEIGHTS)) {
+    roll -= weight;
+    if (roll <= 0) {
+      selectedRarity = rarity;
+      break;
+    }
+  }
+  
+  // Apply foraging skill bonus to rare item chance
+  const foragingBonus = getSkillBonus('foraging', 'rareSeedChancePerLevel');
+  if (selectedRarity === 'common' && Math.random() < foragingBonus) {
+    selectedRarity = 'uncommon';
+  }
+  if (selectedRarity === 'uncommon' && Math.random() < foragingBonus * 0.5) {
+    selectedRarity = 'rare';
+  }
+  
+  const possibleItems = ITEMS.filter(i => i.rarity === selectedRarity && i.category !== 'decoration');
+  if (possibleItems.length === 0) return;
+  
+  const item = possibleItems[Math.floor(Math.random() * possibleItems.length)];
+  
+  // Random position (avoid center where pet is)
+  let x, y;
+  const attempts = 10;
+  for (let i = 0; i < attempts; i++) {
+    x = 50 + Math.random() * (vw() - 100);
+    y = 150 + Math.random() * (vh() - 350);
+    
+    // Avoid pet area
+    const distToPet = Math.hypot(x - petX(), y - petY());
+    if (distToPet > 120) break;
+  }
+  
+  state.worldItems.push({
+    id: item.id,
+    x: x,
+    y: y,
+    spawnTime: Date.now()
+  });
+  
+  state.lastWorldItemSpawn = Date.now();
+  renderWorldItems();
+  save();
+}
+
+function renderWorldItems() {
+  const container = document.getElementById('world-items-container');
+  if (!container || !state) return;
+  
+  container.innerHTML = (state.worldItems || []).map((wi, idx) => {
+    const item = getItem(wi.id);
+    if (!item) return '';
+    
+    const color = RARITY_COLORS[item.rarity] || '#fff';
+    
+    return `
+      <div class="world-item" style="left:${wi.x}px;top:${wi.y}px;font-size:32px;" onclick="collectWorldItem(${idx})">
+        <div class="item-glow" style="background:${color};"></div>
+        ${item.emoji}
+      </div>
+    `;
+  }).join('');
+}
+
+function collectWorldItem(index) {
+  if (!state || !state.worldItems || index >= state.worldItems.length) return;
+  
+  const wi = state.worldItems[index];
+  const item = getItem(wi.id);
+  if (!item) return;
+  
+  // Remove from world
+  state.worldItems.splice(index, 1);
+  
+  // Add to inventory
+  addToInventory(wi.id, 1);
+  
+  // Notification and effects
+  const rarityText = item.rarity !== 'common' ? ` (${item.rarity})` : '';
+  notify(item.emoji + ' Found ' + item.name + rarityText + '!');
+  sfxConfirm();
+  
+  // Particles
+  for (let i = 0; i < 5; i++) {
+    spawnParticle(wi.x + (Math.random() - 0.5) * 40, wi.y, '✨');
+  }
+  
+  // Award foraging XP
+  const xpAmount = { common: 3, uncommon: 5, rare: 10, legendary: 25 }[item.rarity] || 3;
+  addSkillXP('foraging', xpAmount);
+  
+  // Track for tasks
+  trackTask('collectCount', 1);
+  
+  renderWorldItems();
+  save();
+}
+
+// Make world item functions global
+window.collectWorldItem = collectWorldItem;
+
+// ============================================================
+// DAILY TASKS SYSTEM
+// ============================================================
+function initDailyTasks() {
+  if (!state) return;
+  
+  const now = Date.now();
+  const resetHour = 0; // Reset at midnight
+  const lastReset = state.lastTaskReset || 0;
+  
+  // Calculate next reset time
+  const today = new Date();
+  today.setHours(resetHour, 0, 0, 0);
+  if (now < today.getTime()) today.setDate(today.getDate() - 1);
+  const nextReset = today.getTime() + 24 * 60 * 60 * 1000;
+  
+  // Check if tasks need to be reset
+  if (lastReset < today.getTime() || !state.dailyTasks || state.dailyTasks.length === 0) {
+    // Generate new daily tasks (pick 4 random tasks)
+    const shuffled = [...TASK_TEMPLATES].sort(() => Math.random() - 0.5);
+    state.dailyTasks = shuffled.slice(0, 4).map(t => ({
+      ...t,
+      progress: 0,
+      claimed: false
+    }));
+    state.lastTaskReset = now;
+    
+    // Reset daily tracking counters
+    state.dailyTracking = {
+      feedCount: 0,
+      playCount: 0,
+      chatCount: 0,
+      collectCount: 0,
+      cleanCount: 0,
+      waterCount: 0,
+      harvestCount: 0,
+      xpEarned: 0,
+      patCount: 0,
+      soldValue: 0,
+      buyCount: 0
+    };
+    
+    save();
+  }
+}
+
+function trackTask(trackKey, amount = 1) {
+  if (!state || !state.dailyTracking) return;
+  
+  state.dailyTracking[trackKey] = (state.dailyTracking[trackKey] || 0) + amount;
+  
+  // Update task progress
+  if (state.dailyTasks) {
+    state.dailyTasks.forEach(task => {
+      if (task.trackKey === trackKey && !task.claimed) {
+        task.progress = Math.min(task.target, state.dailyTracking[trackKey] || 0);
+      }
+    });
+  }
+  
+  save();
+}
+
+function openTasks() {
+  const panel = document.getElementById('tasks-panel');
+  if (!panel) return;
+  
+  initDailyTasks();
+  buildTasksList();
+  updateTasksResetTimer();
+  panel.classList.add('open');
+}
+
+function closeTasks() {
+  const panel = document.getElementById('tasks-panel');
+  if (panel) panel.classList.remove('open');
+}
+
+function buildTasksList() {
+  const list = document.getElementById('tasks-list');
+  if (!list || !state || !state.dailyTasks) return;
+  
+  list.innerHTML = state.dailyTasks.map((task, idx) => {
+    const progress = Math.min(task.progress || 0, task.target);
+    const percent = (progress / task.target) * 100;
+    const isComplete = progress >= task.target;
+    const isClaimed = task.claimed;
+    
+    return `
+      <div class="task-item${isComplete ? ' completed' : ''}">
+        <div class="task-top">
+          <div class="task-desc">${task.desc}</div>
+          <div class="task-reward">🪙 ${task.reward}</div>
+        </div>
+        <div class="task-progress">
+          <div class="task-progress-fill" style="width:${percent}%"></div>
+        </div>
+        <div class="task-status">${progress}/${task.target}${isClaimed ? ' ✓ Claimed' : ''}</div>
+        ${isComplete && !isClaimed ? `<button class="claim-btn" onclick="claimTaskReward(${idx})">Claim Reward!</button>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function claimTaskReward(taskIndex) {
+  if (!state || !state.dailyTasks || taskIndex >= state.dailyTasks.length) return;
+  
+  const task = state.dailyTasks[taskIndex];
+  if (task.claimed || task.progress < task.target) return;
+  
+  task.claimed = true;
+  addCoins(task.reward);
+  
+  notify('🎉 Task complete! +' + task.reward + ' coins!');
+  sfxConfirm();
+  
+  for (let i = 0; i < 8; i++) {
+    spawnParticle(vw() / 2 + (Math.random() - 0.5) * 100, vh() / 2, '🪙');
+  }
+  
+  save();
+  buildTasksList();
+}
+
+function updateTasksResetTimer() {
+  const el = document.getElementById('tasks-reset-timer');
+  if (!el) return;
+  
+  const now = Date.now();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const nextReset = today.getTime() + 24 * 60 * 60 * 1000;
+  
+  const remaining = Math.max(0, nextReset - now);
+  const hours = Math.floor(remaining / (60 * 60 * 1000));
+  const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
+  
+  el.textContent = `Resets in: ${hours}h ${minutes}m`;
+}
+
+// Make task functions global
+window.openTasks = openTasks;
+window.closeTasks = closeTasks;
+window.claimTaskReward = claimTaskReward;
+
+function onSkillLevelUp(skill, newLevel) {
+  notify('⬆️ ' + skill.charAt(0).toUpperCase() + skill.slice(1) + ' leveled up to ' + newLevel + '!');
+  sfxConfirm();
+  
+  // Check for seed unlocks on gardening level up
+  if (skill === 'gardening') {
+    checkSeedUnlocks();
+  }
+  
+  // Spawn celebration particles
+  for (let i = 0; i < 5; i++) {
+    spawnParticle(petX() + (Math.random() - 0.5) * 80, petY() - petSize() * 0.3, '⭐');
+  }
+}
+
+function getSkillBonus(skill, effectType) {
+  if (!state || !state.skills || !state.skills[skill]) return 0;
+  
+  const level = state.skills[skill].level;
+  const effects = SKILL_EFFECTS[skill];
+  
+  if (!effects || !effects[effectType]) return 0;
+  
+  // Base bonus from skill level
+  let bonus = effects[effectType] * (level - 1);
+  
+  // Add bonus from allocated skill points
+  const allocatedPoints = state.allocatedPoints ? (state.allocatedPoints[skill] || 0) : 0;
+  bonus += allocatedPoints * SKILL_POINT_BOOST * effects[effectType] * 10; // Each point gives 15% of the base effect
+  
+  return bonus;
+}
+
+function getSkillLevel(skill) {
+  if (!state || !state.skills || !state.skills[skill]) return 1;
+  return state.skills[skill].level;
+}
+
+function getAllocatedPoints(skill) {
+  if (!state || !state.allocatedPoints) return 0;
+  return state.allocatedPoints[skill] || 0;
+}
+
+// ============================================================
+// SEED & INVENTORY SYSTEM
+// ============================================================
+function addSeed(seedType, count = 1) {
+  if (!state || !state.seeds) return;
+  
+  const existing = state.seeds.find(s => s.type === seedType);
+  if (existing) {
+    existing.count += count;
+  } else {
+    state.seeds.push({ type: seedType, count });
+  }
+  save();
+}
+
+function removeSeed(seedType, count = 1) {
+  if (!state || !state.seeds) return false;
+  
+  const existing = state.seeds.find(s => s.type === seedType);
+  if (!existing || existing.count < count) return false;
+  
+  existing.count -= count;
+  if (existing.count <= 0) {
+    state.seeds = state.seeds.filter(s => s.type !== seedType);
+  }
+  save();
+  return true;
+}
+
+function getSeedCount(seedType) {
+  if (!state || !state.seeds) return 0;
+  const seed = state.seeds.find(s => s.type === seedType);
+  return seed ? seed.count : 0;
+}
+
+function checkSeedUnlocks() {
+  if (!state) return;
+  
+  const gardeningLevel = getSkillLevel('gardening');
+  
+  SEED_TYPES.forEach(seed => {
+    if (seed.requiredLevel <= gardeningLevel && !state.unlockedSeeds.includes(seed.id)) {
+      if (!seed.unlockMethod || seed.unlockMethod !== 'foraging') {
+        state.unlockedSeeds.push(seed.id);
+        notify('🌱 New seed unlocked: ' + seed.name + '!');
+        // Give a few free seeds
+        addSeed(seed.id, 2);
+      }
+    }
+  });
+  
+  save();
+}
+
+function tryFindSeedFromForaging() {
+  if (!state) return;
+
+  const foragingLevel = getSkillLevel('foraging');
+  const findChance = 0.05 + getSkillBonus('foraging', 'findSeedChancePerLevel');
+
+  if (Math.random() < findChance) {
+    // Weighted random selection influenced by foraging skill
+    const foragingBonus = foragingLevel * 0.02; // Higher level = better drops
+    const weights = {
+      common: SEED_RARITY_WEIGHTS.common,
+      uncommon: SEED_RARITY_WEIGHTS.uncommon + foragingLevel * 2,
+      rare: SEED_RARITY_WEIGHTS.rare + foragingLevel * 1.5,
+      epic: SEED_RARITY_WEIGHTS.epic + (foragingLevel >= 5 ? foragingLevel * 0.5 : 0),
+      legendary: SEED_RARITY_WEIGHTS.legendary + (foragingLevel >= 8 ? foragingLevel * 0.3 : 0)
+    };
+    const totalWeight = Object.values(weights).reduce((a, b) => a + b, 0);
+    let roll = Math.random() * totalWeight;
+    let selectedRarity = 'common';
+    for (const [rarity, weight] of Object.entries(weights)) {
+      roll -= weight;
+      if (roll <= 0) { selectedRarity = rarity; break; }
+    }
+
+    // Filter seeds by selected rarity that are available
+    const availableSeeds = SEED_TYPES.filter(s =>
+      s.rarity === selectedRarity && (
+        s.unlockMethod === 'foraging' || (s.requiredLevel <= foragingLevel && state.unlockedSeeds.includes(s.id))
+      )
+    );
+
+    // Fallback to any common seed if none found
+    const pool = availableSeeds.length > 0 ? availableSeeds :
+      SEED_TYPES.filter(s => s.rarity === 'common' && s.requiredLevel <= foragingLevel);
+    if (pool.length === 0) return;
+
+    const seed = pool[Math.floor(Math.random() * pool.length)];
+    addSeed(seed.id, 1);
+
+    // Unlock if foraging seed
+    if (seed.unlockMethod === 'foraging' && !state.unlockedSeeds.includes(seed.id)) {
+      state.unlockedSeeds.push(seed.id);
+    }
+
+    const rarityColor = SEED_RARITY_COLORS[seed.rarity] || '#fff';
+    const rarityLabel = seed.rarity !== 'common' ? ' (' + seed.rarity + ')' : '';
+    notify('🌱 Found a ' + seed.name + ' seed' + rarityLabel + '!');
+    const xpByRarity = { common: 10, uncommon: 15, rare: 25, epic: 40, legendary: 60 };
+    addSkillXP('foraging', xpByRarity[seed.rarity] || 15);
+    save();
+  }
+}
+
+// ============================================================
+// SKILLS UI PANEL
+// ============================================================
+function updateSkillsPanel() {
+  const panel = document.getElementById('skills-panel');
+  const grid = document.getElementById('skills-grid');
+  if (!grid || !state || !state.skills) return;
+  
+  const skillNames = ['gardening', 'foraging', 'social', 'athletics', 'creativity', 'health'];
+  const skillEmojis = ['🌱', '🍂', '💬', '🏃', '🎨', '❤️'];
+  
+  grid.innerHTML = skillNames.map((skill, i) => {
+    const s = state.skills[skill];
+    const xpNeeded = s.level < 10 ? SKILL_XP_PER_LEVEL[s.level] : 1;
+    const xpPercent = s.level >= 10 ? 100 : (s.xp / xpNeeded) * 100;
+    const stars = '★'.repeat(Math.min(5, Math.floor(s.level / 2))) + '☆'.repeat(5 - Math.min(5, Math.floor(s.level / 2)));
+    const allocated = getAllocatedPoints(skill);
+    const allocatedText = allocated > 0 ? `<div class="skill-allocated">+${allocated} bonus points</div>` : '';
+    
+    return `
+      <div class="skill-item">
+        <div class="skill-header">
+          <span class="skill-name">${skillEmojis[i]} ${skill}</span>
+          <span class="skill-level">Lv.${s.level}</span>
+        </div>
+        <div class="skill-stars">${stars}</div>
+        <div class="skill-xp-bar">
+          <div class="skill-xp-fill" style="width:${xpPercent}%"></div>
+        </div>
+        ${allocatedText}
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleSkillsPanel() {
+  const panel = document.getElementById('skills-panel');
+  if (panel.classList.contains('visible')) {
+    panel.classList.remove('visible');
+  } else {
+    updateSkillsPanel();
+    panel.classList.add('visible');
+  }
+}
+
+// ============================================================
 // INIT
 // ============================================================
 function init(){
   if(!load()) state=newState();
   else applyOfflineDecay();
+  
+  // Show avatar creator for new/uncustomized pets
+  if (!state.customized) {
+    openAvatarCreator();
+  }
+  
   updateHUD();
   updateChatUI();
   buildFeedPanel();
   buildDressPanel();
   initTTS();
+  updateSkillsPanel();
+  updateExpBar();
+  updateSkillPointsBadge();
+  updateCoinsDisplay();
+  initDailyTasks();
+  renderWorldItems();
 
   document.addEventListener('visibilitychange',()=>{if(document.hidden) save();});
   window.addEventListener('beforeunload',save);
