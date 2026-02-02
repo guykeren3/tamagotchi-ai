@@ -3542,57 +3542,92 @@ function adjustBrightness(hex, percent) {
 
 function drawIsometricGarden(t) {
   if (!state || !state.gardenGrid) return;
-  
+
   const w = vw(), h = vh();
-  
-  // Center the garden on screen
+
+  // Position garden horizontally on the ground at far right
+  // The isometric grid extends left-up from the origin, so place origin
+  // so the garden sits on the ground plane at the right side of the screen
+  const gardenWidth = (ISO_GRID_COLS + ISO_GRID_ROWS) * ISO_TILE_W / 2;
   isoGardenOrigin = {
-    x: w * 0.5,
-    y: h * 0.45
+    x: w - gardenWidth * 0.35,
+    y: h * 0.68
   };
-  
-  // Get garden bed theme colors
+
+  // Get garden bed theme colors matching current landscape
   const landscapeId = state.landscape || 0;
   const theme = GARDEN_BED_THEMES[landscapeId] || GARDEN_BED_THEMES[0];
-  
+
+  // Draw a themed ground patch beneath the garden
+  const centerX = isoGardenOrigin.x;
+  const centerY = isoGardenOrigin.y + (ISO_GRID_ROWS * ISO_TILE_H) / 2;
+  ctx.globalAlpha = 0.25;
+  ctx.fillStyle = theme.glowColor || 'rgba(0,0,0,0.1)';
+  ctx.beginPath();
+  ctx.ellipse(centerX, centerY + 10, gardenWidth * 0.45, ISO_GRID_ROWS * ISO_TILE_H * 0.6, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // Small fence/border behind the garden using landscape theme
+  const fenceY = isoGardenOrigin.y - ISO_TILE_H * 0.5 - 6;
+  const fenceLeft = isoGardenOrigin.x - ISO_GRID_ROWS * ISO_TILE_W / 2 - 10;
+  const fenceRight = isoGardenOrigin.x + ISO_GRID_COLS * ISO_TILE_W / 2 + 10;
+  const fenceW = fenceRight - fenceLeft;
+  const postCount = 5;
+  for (let i = 0; i < postCount; i++) {
+    const px = fenceLeft + (fenceW / (postCount - 1)) * i;
+    ctx.fillStyle = theme.fenceColor || '#8B6914';
+    ctx.fillRect(px - 2, fenceY - 14, 4, 16);
+    ctx.fillStyle = theme.fenceTop || '#a88932';
+    ctx.beginPath();
+    ctx.arc(px, fenceY - 14, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.fillStyle = theme.fenceColor || '#8B6914';
+  ctx.fillRect(fenceLeft, fenceY - 10, fenceW, 3);
+  ctx.fillRect(fenceLeft, fenceY - 4, fenceW, 2);
+
   // Draw grid from back to front (for proper overlap)
   for (let row = 0; row < ISO_GRID_ROWS; row++) {
     for (let col = 0; col < ISO_GRID_COLS; col++) {
       const cell = state.gardenGrid[row][col];
       const isSelected = selectedGardenTile && selectedGardenTile.row === row && selectedGardenTile.col === col;
-      
-      // Soil tile color
+
+      // Soil tile color from landscape theme
       let tileColor = theme.soilColor || '#5D4037';
-      let borderColor = isSelected ? '#FFD700' : 'rgba(0,0,0,0.2)';
+      let borderColor = isSelected ? '#FFD700' : (theme.bedBorder ? theme.bedBorder + '44' : 'rgba(0,0,0,0.2)');
       let tileHeight = 3;
-      
-      // If planted, adjust appearance
+
+      // If planted, darken the soil slightly
       if (cell) {
-        tileColor = '#3E2723'; // Darker soil for planted
+        tileColor = adjustBrightness(tileColor, -15);
       }
-      
+
       // Hover/selection highlight
       if (isSelected) {
         tileColor = adjustBrightness(tileColor, 20);
         tileHeight = 5;
+        borderColor = '#FFD700';
       }
-      
+
       // Draw the tile
       drawIsoTile(col, row, tileColor, borderColor, tileHeight);
-      
+
       // Draw plant if exists
       if (cell) {
         drawIsoPlant(col, row, cell, t);
       }
     }
   }
-  
-  // Draw garden label
+
+  // Draw garden label with landscape accent color
   ctx.font = '11px sans-serif';
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillStyle = theme.accent || 'rgba(255,255,255,0.5)';
+  ctx.globalAlpha = 0.6;
   ctx.textAlign = 'center';
-  ctx.fillText('Garden', isoGardenOrigin.x, isoGardenOrigin.y + ISO_GRID_ROWS * ISO_TILE_H + 25);
+  ctx.fillText('Garden', isoGardenOrigin.x, isoGardenOrigin.y + ISO_GRID_ROWS * ISO_TILE_H + 20);
   ctx.textAlign = 'start';
+  ctx.globalAlpha = 1;
 }
 
 function drawIsoPlant(gridX, gridY, plant, t) {
