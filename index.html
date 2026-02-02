@@ -809,8 +809,8 @@ const SEED_RARITY_COLORS = {
 const SEED_MARKET_PRICES = { common: 10, uncommon: 30, rare: 80, epic: 250, legendary: 500 };
 
 // Isometric garden constants
-const ISO_TILE_W = 60;
-const ISO_TILE_H = 30;
+const ISO_TILE_W = 40;
+const ISO_TILE_H = 20;
 const ISO_GRID_COLS = 6;
 const ISO_GRID_ROWS = 5;
 
@@ -1113,8 +1113,8 @@ function drawBackground(t, mood) {
   // Stars
   if (theme.stars) drawStars(t);
 
-  // Ground (lowered to give more landscape room)
-  const gy = h * 0.78;
+  // Ground level
+  const gy = h * 0.76;
   ctx.fillStyle = theme.ground;
   ctx.beginPath();
   ctx.moveTo(0, gy);
@@ -1176,7 +1176,7 @@ function updatePetWander(t) {
 }
 
 const petX = () => vw() / 2 + gardenPetOffsetX;
-const petY = () => vh() * 0.68 + gardenPetOffsetY;
+const petY = () => vh() * 0.65 + gardenPetOffsetY;
 
 function drawPet(t, mood, stage, variant, sleeping, accessory) {
   if (!stage) return;
@@ -3092,26 +3092,27 @@ function drawGardenBed(t, landscapeId) {
   const w = vw(), h = vh();
   const theme = GARDEN_BED_THEMES[landscapeId] || GARDEN_BED_THEMES[0];
   
-  // Garden bed dimensions - positioned on the right side
-  const bedX = w * 0.55;
+  // Garden bed dimensions - small bed in the far right background
+  const bedX = w * 0.75;
   const bedY = h * 0.72;
-  const bedW = w * 0.38;
-  const bedH = h * 0.18;
+  const bedW = w * 0.18;
+  const bedH = h * 0.1;
   
   // Draw garden path leading to bed
+  ctx.save();
   ctx.fillStyle = theme.pathColor;
-  ctx.globalAlpha = 0.6;
+  ctx.globalAlpha = 0.4;
   ctx.beginPath();
-  ctx.moveTo(w * 0.5, h * 0.82);
-  ctx.quadraticCurveTo(w * 0.6, h * 0.80, bedX + bedW * 0.3, bedY + bedH);
-  ctx.lineTo(bedX + bedW * 0.5, bedY + bedH);
-  ctx.quadraticCurveTo(w * 0.58, h * 0.80, w * 0.5, h * 0.85);
+  ctx.moveTo(bedX, bedY + bedH);
+  ctx.quadraticCurveTo(bedX - bedW * 0.2, bedY + bedH + 10, bedX - bedW * 0.1, bedY + bedH + 15);
+  ctx.lineTo(bedX + bedW * 0.1, bedY + bedH + 15);
+  ctx.quadraticCurveTo(bedX + bedW * 0.1, bedY + bedH + 8, bedX + bedW * 0.3, bedY + bedH);
   ctx.fill();
-  ctx.globalAlpha = 1;
+  ctx.restore();
   
   // Draw fence posts behind the garden bed
   const fenceY = bedY - 8;
-  const postCount = 7;
+  const postCount = 5;
   const postSpacing = bedW / (postCount - 1);
   
   for (let i = 0; i < postCount; i++) {
@@ -3172,13 +3173,14 @@ function drawGardenBed(t, landscapeId) {
   }
   
   // Ambient glow effect
+  ctx.save();
   const glowPulse = 0.5 + 0.3 * Math.sin(t * 0.002);
   ctx.globalAlpha = glowPulse * 0.4;
   ctx.fillStyle = theme.glowColor;
   ctx.beginPath();
   ctx.ellipse(bedX + bedW/2, bedY + bedH/2, bedW/2, bedH/2, 0, 0, Math.PI * 2);
   ctx.fill();
-  ctx.globalAlpha = 1;
+  ctx.restore();
   
   return { x: bedX, y: bedY, w: bedW, h: bedH };
 }
@@ -3188,11 +3190,11 @@ function drawSecondaryGarden(t, landscapeId) {
   const w = vw(), h = vh();
   const theme = GARDEN_BED_THEMES[landscapeId] || GARDEN_BED_THEMES[0];
   
-  // Smaller garden on the left
-  const bedX = w * 0.05;
-  const bedY = h * 0.75;
-  const bedW = w * 0.25;
-  const bedH = h * 0.12;
+  // Small decorative garden on the left
+  const bedX = w * 0.03;
+  const bedY = h * 0.78;
+  const bedW = w * 0.12;
+  const bedH = h * 0.08;
   
   // Small decorative pots/planters
   const potCount = 3;
@@ -3233,12 +3235,13 @@ function drawSecondaryGarden(t, landscapeId) {
   }
   
   // Small garden patch
+  ctx.save();
   ctx.fillStyle = theme.soilColor;
   ctx.globalAlpha = 0.7;
   ctx.beginPath();
   ctx.ellipse(bedX + bedW * 0.5, bedY + bedH, bedW * 0.4, bedH * 0.3, 0, 0, Math.PI * 2);
   ctx.fill();
-  ctx.globalAlpha = 1;
+  ctx.restore();
   
   // Decorative stones/border
   ctx.fillStyle = theme.fenceColor;
@@ -3262,7 +3265,7 @@ function drawGarden(t, landscapeId) {
   const mainBed = drawGardenBed(t, landscapeId);
 
   // Now draw the garden elements on top (drawn, no emojis)
-  const gy = h * 0.78;
+  const gy = h * 0.76;
   const elements = GARDEN_ELEMENTS[landscapeId] || GARDEN_ELEMENTS[0];
   const plantSize = Math.round(Math.min(w, h) * 0.045);
 
@@ -3274,13 +3277,14 @@ function drawGarden(t, landscapeId) {
 
     // Glow effect for bioluminescent/moonlit items
     if (el.glow) {
+      ctx.save();
       const pulse = 0.4 + 0.3 * Math.sin(t * 0.003 + i * 1.5);
       ctx.globalAlpha = pulse;
       ctx.fillStyle = el.glow;
       ctx.beginPath();
       ctx.arc(ex, ey - plantSize * 0.2, plantSize * 0.8, 0, Math.PI * 2);
       ctx.fill();
-      ctx.globalAlpha = 1;
+      ctx.restore();
     }
 
     // Small soil/pot base for items not in main bed
@@ -3662,6 +3666,7 @@ function drawPlantTop(x, y, size, seedId, stage, t, seed) {
 
 // Draw a decorative drawn bush/plant for garden elements (replaces emojis)
 function drawDecoPlant(x, y, size, type, color, t, i) {
+  ctx.save();
   const sway = Math.sin(t * 0.002 + i * 2) * 2;
   switch (type) {
     case 'flower':
@@ -3736,6 +3741,7 @@ function drawDecoPlant(x, y, size, type, color, t, i) {
       ctx.fillStyle = color;
       ctx.beginPath(); ctx.ellipse(x, y - size * 0.25, size * 0.2, size * 0.15, 0, 0, Math.PI * 2); ctx.fill();
   }
+  ctx.restore();
 }
 
 function drawIsometricGarden(t) {
@@ -3744,11 +3750,10 @@ function drawIsometricGarden(t) {
   const w = vw(), h = vh();
 
   // Position garden in the background on the right, sitting on the ground
-  // Placed higher up (further back in perspective) so it doesn't overlap the pet
   const gardenWidth = (ISO_GRID_COLS + ISO_GRID_ROWS) * ISO_TILE_W / 2;
   isoGardenOrigin = {
     x: w * 0.82,
-    y: h * 0.52
+    y: h * 0.62
   };
 
   // Get garden bed theme colors matching current landscape
@@ -3756,6 +3761,7 @@ function drawIsometricGarden(t) {
   const theme = GARDEN_BED_THEMES[landscapeId] || GARDEN_BED_THEMES[0];
 
   // Draw a themed ground patch beneath the garden
+  ctx.save();
   const centerX = isoGardenOrigin.x;
   const centerY = isoGardenOrigin.y + (ISO_GRID_ROWS * ISO_TILE_H) / 2;
   ctx.globalAlpha = 0.25;
@@ -3763,7 +3769,7 @@ function drawIsometricGarden(t) {
   ctx.beginPath();
   ctx.ellipse(centerX, centerY + 10, gardenWidth * 0.45, ISO_GRID_ROWS * ISO_TILE_H * 0.6, 0, 0, Math.PI * 2);
   ctx.fill();
-  ctx.globalAlpha = 1;
+  ctx.restore();
 
   // Small fence/border behind the garden using landscape theme
   const fenceY = isoGardenOrigin.y - ISO_TILE_H * 0.5 - 6;
@@ -3818,13 +3824,13 @@ function drawIsometricGarden(t) {
   }
 
   // Draw garden label with landscape accent color
+  ctx.save();
   ctx.font = '11px sans-serif';
   ctx.fillStyle = theme.accent || 'rgba(255,255,255,0.5)';
   ctx.globalAlpha = 0.6;
   ctx.textAlign = 'center';
   ctx.fillText('Garden', isoGardenOrigin.x, isoGardenOrigin.y + ISO_GRID_ROWS * ISO_TILE_H + 20);
-  ctx.textAlign = 'start';
-  ctx.globalAlpha = 1;
+  ctx.restore();
 }
 
 function drawIsoPlant(gridX, gridY, plant, t) {
@@ -3917,6 +3923,7 @@ function drawIsoPlant(gridX, gridY, plant, t) {
 
       // Rarity glow ring (uncommon+)
       if (rarity !== 'common') {
+        ctx.save();
         const glowColor = SEED_RARITY_COLORS[rarity] || '#fff';
         const glowPulse = 0.2 + Math.sin(t * 0.003 + gridX * 2 + gridY) * 0.15;
         const glowSize = headSize * 0.7 + (rarity === 'legendary' ? 8 : rarity === 'epic' ? 6 : 3);
@@ -3926,16 +3933,17 @@ function drawIsoPlant(gridX, gridY, plant, t) {
         ctx.beginPath(); ctx.arc(topX, topY, glowSize, 0, Math.PI * 2); ctx.stroke();
         ctx.fillStyle = glowColor; ctx.globalAlpha = glowPulse * 0.25;
         ctx.beginPath(); ctx.arc(topX, topY, glowSize * 0.6, 0, Math.PI * 2); ctx.fill();
-        ctx.globalAlpha = 1;
+        ctx.restore();
       }
 
       // Harvestable glow (stage 4)
       if (stage >= 4) {
+        ctx.save();
         const harvestGlow = rarity === 'legendary' ? '#FFD700' : rarity === 'epic' ? '#a855f7' : '#FFD700';
         ctx.globalAlpha = 0.35 + Math.sin(t * 0.004) * 0.2;
         ctx.fillStyle = harvestGlow;
         ctx.beginPath(); ctx.arc(topX, topY, headSize * 0.7, 0, Math.PI * 2); ctx.fill();
-        ctx.globalAlpha = 1;
+        ctx.restore();
       }
 
       // Draw the plant top as shapes
@@ -4271,7 +4279,7 @@ function drawGardenPlants(t) {
   if (!state || !state.gardenPlants || state.gardenPlants.length === 0) return;
 
   const w = vw(), h = vh();
-  const groundY = h * 0.78;
+  const groundY = h * 0.76;
   const baseSize = Math.round(Math.min(w, h) * 0.035);
 
   for (let i = 0; i < state.gardenPlants.length; i++) {
@@ -4317,12 +4325,13 @@ function drawGardenPlants(t) {
 
     // Glow for fully grown
     if (stg >= 3) {
+      ctx.save();
       ctx.globalAlpha = 0.3 + Math.sin(t * 0.003 + i) * 0.15;
       ctx.fillStyle = '#FFD700';
       ctx.beginPath();
       ctx.arc(px + sway * 0.3, stemTop, baseSize * 0.5, 0, Math.PI * 2);
       ctx.fill();
-      ctx.globalAlpha = 1;
+      ctx.restore();
     }
 
     // Drawn plant top (no emoji)
