@@ -292,13 +292,13 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
 .task-item .claim-btn:hover{transform:scale(1.05);box-shadow:0 0 15px rgba(255,215,0,0.4);}
 
 /* Garden Panel */
-#garden-panel{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;background:rgba(10,10,26,0.95);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity 0.3s;overflow:hidden;}
+#garden-panel{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(10,20,30,0.97) 0%,rgba(15,30,20,0.97) 50%,rgba(10,10,26,0.97) 100%);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity 0.3s;overflow:hidden;}
 #garden-panel.open{opacity:1;pointer-events:auto;}
 .garden-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
 .garden-header h2{font-size:20px;color:#fff;margin:0;}
 .garden-canvas-container{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
 .garden-canvas-container canvas{width:100%;height:100%;}
-.garden-info{padding:12px 20px;border-top:1px solid rgba(255,255,255,0.1);display:flex;flex-wrap:wrap;gap:10px;align-items:center;max-height:120px;overflow-y:auto;}
+.garden-info{padding:12px 20px;border-top:1px solid rgba(255,255,255,0.1);display:flex;flex-wrap:wrap;gap:8px;align-items:center;max-height:140px;overflow-y:auto;background:rgba(0,0,0,0.2);}
 .garden-info-item{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:6px 12px;font-size:12px;color:rgba(255,255,255,0.8);display:flex;align-items:center;gap:5px;}
 .garden-info-item .seed-count{color:#4ade80;font-weight:600;}
 .garden-info-level{background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:10px;padding:6px 12px;font-size:12px;color:#a78bfa;font-weight:600;}
@@ -4173,9 +4173,12 @@ function drawIsometricGarden(t, overrideOrigin) {
   ctx.fillRect(fenceLeft, fenceY - 4, fenceW, 2);
 
   // Draw grid from back to front (for proper overlap)
+  let emptyCount = 0;
+  let plantedCount = 0;
+  let harvestableCount = 0;
   for (let row = 0; row < ISO_GRID_ROWS; row++) {
     for (let col = 0; col < ISO_GRID_COLS; col++) {
-      const cell = state.gardenGrid[row][col];
+      const cell = (state.gardenGrid[row] && state.gardenGrid[row][col]) ? state.gardenGrid[row][col] : null;
       const isSelected = selectedGardenTile && selectedGardenTile.row === row && selectedGardenTile.col === col;
 
       // Soil tile color from landscape theme
@@ -4186,6 +4189,10 @@ function drawIsometricGarden(t, overrideOrigin) {
       // If planted, darken the soil slightly
       if (cell) {
         tileColor = adjustBrightness(tileColor, -15);
+        plantedCount++;
+        if (cell.stage >= 4) harvestableCount++;
+      } else {
+        emptyCount++;
       }
 
       // Hover/selection highlight
@@ -4198,6 +4205,23 @@ function drawIsometricGarden(t, overrideOrigin) {
       // Draw the tile
       drawIsoTile(col, row, tileColor, borderColor, tileHeight);
 
+      // Empty tile: subtle "+" marker to indicate clickable
+      if (!cell) {
+        const epos = isoToScreen(col, row);
+        const pulse = 0.15 + Math.sin(t * 0.002 + col * 0.7 + row * 1.3) * 0.08;
+        ctx.save();
+        ctx.globalAlpha = pulse;
+        ctx.strokeStyle = theme.accent || 'rgba(255,255,255,0.4)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(epos.x - 4, epos.y - 2);
+        ctx.lineTo(epos.x + 4, epos.y - 2);
+        ctx.moveTo(epos.x, epos.y - 6);
+        ctx.lineTo(epos.x, epos.y + 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
       // Draw plant if exists
       if (cell) {
         drawIsoPlant(col, row, cell, t);
@@ -4205,14 +4229,34 @@ function drawIsometricGarden(t, overrideOrigin) {
     }
   }
 
-  // Draw garden label with landscape accent color
-  ctx.save();
-  ctx.font = '11px sans-serif';
-  ctx.fillStyle = theme.accent || 'rgba(255,255,255,0.5)';
-  ctx.globalAlpha = 0.6;
-  ctx.textAlign = 'center';
-  ctx.fillText('Garden', isoGardenOrigin.x, isoGardenOrigin.y + ISO_GRID_ROWS * ISO_TILE_H + 20);
-  ctx.restore();
+  // "Tap to plant" instruction when there are empty plots and panel is open
+  if (emptyCount > 0 && overrideOrigin) {
+    ctx.save();
+    const instructY = isoGardenOrigin.y + ISO_GRID_ROWS * ISO_TILE_H + 18;
+    const bobble = Math.sin(t * 0.003) * 2;
+    ctx.globalAlpha = 0.55 + Math.sin(t * 0.002) * 0.15;
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#ffeaa7';
+    if (plantedCount === 0) {
+      ctx.fillText('Tap a plot to plant a seed!', isoGardenOrigin.x, instructY + bobble);
+    } else if (harvestableCount > 0) {
+      ctx.fillStyle = '#55efc4';
+      ctx.fillText('Tap glowing plants to harvest!', isoGardenOrigin.x, instructY + bobble);
+    } else {
+      ctx.fillText('Tap empty plots to plant more seeds', isoGardenOrigin.x, instructY + bobble);
+    }
+    ctx.restore();
+  } else if (harvestableCount > 0 && overrideOrigin) {
+    ctx.save();
+    const instructY = isoGardenOrigin.y + ISO_GRID_ROWS * ISO_TILE_H + 18;
+    ctx.globalAlpha = 0.6 + Math.sin(t * 0.003) * 0.15;
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#55efc4';
+    ctx.fillText('Tap glowing plants to harvest!', isoGardenOrigin.x, instructY);
+    ctx.restore();
+  }
 }
 
 function drawIsoPlant(gridX, gridY, plant, t) {
@@ -4389,7 +4433,7 @@ function handleGardenClick(x, y) {
   const gridPos = screenToIso(x, y);
   
   // Check if click is within garden bounds
-  if (gridPos.x >= 0 && gridPos.x < ISO_GRID_COLS && gridPos.y >= 0 && gridPos.y < ISO_GRID_ROWS) {
+  if (gridPos.x >= 0 && gridPos.x < ISO_GRID_COLS && gridPos.y >= 0 && gridPos.y < ISO_GRID_ROWS && state.gardenGrid[gridPos.y]) {
     const cell = state.gardenGrid[gridPos.y][gridPos.x];
     
     if (cell) {
@@ -4410,13 +4454,14 @@ function handleGardenClick(x, y) {
 
 function plantSeed(row, col, seedType) {
   if (!state || !state.gardenGrid) return false;
-  
+  if (!state.gardenGrid[row] || col >= state.gardenGrid[row].length) return false;
+
   // Check if we have the seed
   if (getSeedCount(seedType) <= 0) {
     notify('No ' + seedType + ' seeds!');
     return false;
   }
-  
+
   // Check if plot is empty
   if (state.gardenGrid[row][col] !== null) {
     notify('Plot is occupied!');
@@ -4449,7 +4494,7 @@ function plantSeed(row, col, seedType) {
 }
 
 function waterPlant(row, col) {
-  if (!state || !state.gardenGrid || !state.gardenGrid[row][col]) return;
+  if (!state || !state.gardenGrid || !state.gardenGrid[row] || !state.gardenGrid[row][col]) return;
   
   const plant = state.gardenGrid[row][col];
   const now = Date.now();
@@ -4480,7 +4525,7 @@ function waterPlant(row, col) {
 }
 
 function harvestPlant(row, col) {
-  if (!state || !state.gardenGrid || !state.gardenGrid[row][col]) return;
+  if (!state || !state.gardenGrid || !state.gardenGrid[row] || !state.gardenGrid[row][col]) return;
 
   const plant = state.gardenGrid[row][col];
   const seedData = SEED_TYPES.find(s => s.id === plant.seedType);
@@ -5447,15 +5492,16 @@ function newState() {
     },
     
     // Seed inventory and unlocks
-    seeds: [{ type: 'basic_flower', count: 3 }], // Start with 3 basic flower seeds
-    unlockedSeeds: ['basic_flower'],
+    seeds: [{ type: 'basic_flower', count: 5 }, { type: 'carrot', count: 3 }, { type: 'daisy', count: 3 }],
+    unlockedSeeds: ['basic_flower', 'carrot', 'daisy'],
     
-    // Isometric garden (3x4 = 12 plots)
+    // Isometric garden (6x5 = 30 plots)
     gardenGrid: [
-      [null, null, null],
-      [null, null, null],
-      [null, null, null],
-      [null, null, null]
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null]
     ], // Each cell: null or { seedType, plantedAt, wateredAt, stage }
     
     lastUpdate:Date.now(), created:Date.now()
@@ -5636,14 +5682,12 @@ function load() {
       // Isometric garden grid migration
       // ============================================
       if (!state.gardenGrid) {
-        // Initialize empty grid
-        state.gardenGrid = [
-          [null, null, null],
-          [null, null, null],
-          [null, null, null],
-          [null, null, null]
-        ];
-        
+        // Initialize empty 5x6 grid
+        state.gardenGrid = [];
+        for (let r = 0; r < ISO_GRID_ROWS; r++) {
+          state.gardenGrid.push(new Array(ISO_GRID_COLS).fill(null));
+        }
+
         // Try to convert old gardenPlants to new grid format
         if (Array.isArray(state.gardenPlants) && state.gardenPlants.length > 0) {
           const now = Date.now();
@@ -5651,13 +5695,13 @@ function load() {
             if (plant && plant.plantedAt) {
               const row = Math.floor(index / 3);
               const col = index % 3;
-              if (row < 4 && col < 3) {
-                const seedType = plant.type === 'flower' ? 'basic_flower' : 
+              if (row < ISO_GRID_ROWS && col < ISO_GRID_COLS) {
+                const seedType = plant.type === 'flower' ? 'basic_flower' :
                                  plant.type === 'veggie' ? 'carrot' : 'basic_flower';
                 const age = now - plant.plantedAt;
                 const growTime = SEED_TYPES.find(s => s.id === seedType)?.growTime || 180000;
                 const stage = Math.min(4, Math.floor((age / growTime) * 5));
-                
+
                 state.gardenGrid[row][col] = {
                   seedType: seedType,
                   plantedAt: plant.plantedAt,
@@ -5668,6 +5712,34 @@ function load() {
             }
           });
         }
+      }
+
+      // Expand undersized gardenGrid to match ISO_GRID_ROWS x ISO_GRID_COLS
+      if (state.gardenGrid) {
+        while (state.gardenGrid.length < ISO_GRID_ROWS) {
+          state.gardenGrid.push(new Array(ISO_GRID_COLS).fill(null));
+        }
+        for (let r = 0; r < state.gardenGrid.length; r++) {
+          if (!Array.isArray(state.gardenGrid[r])) {
+            state.gardenGrid[r] = new Array(ISO_GRID_COLS).fill(null);
+          }
+          while (state.gardenGrid[r].length < ISO_GRID_COLS) {
+            state.gardenGrid[r].push(null);
+          }
+        }
+      }
+
+      // Ensure player has starter seeds if they have none
+      if (!state.seeds || state.seeds.length === 0 || state.seeds.every(s => s.count <= 0)) {
+        state.seeds = [
+          { type: 'basic_flower', count: 5 },
+          { type: 'carrot', count: 3 },
+          { type: 'daisy', count: 3 }
+        ];
+        if (!state.unlockedSeeds) state.unlockedSeeds = [];
+        if (!state.unlockedSeeds.includes('basic_flower')) state.unlockedSeeds.push('basic_flower');
+        if (!state.unlockedSeeds.includes('carrot')) state.unlockedSeeds.push('carrot');
+        if (!state.unlockedSeeds.includes('daisy')) state.unlockedSeeds.push('daisy');
       }
       
       // Validate gardenPlants array structure (legacy support)
@@ -9358,6 +9430,8 @@ let gardenPanelOpen = false;
 let gardenPanelRAF = null;
 let gardenCanvas = null;
 let gardenCtx = null;
+let gardenRipples = []; // {x, y, t, maxR, color}
+let gardenFloatingEmojis = []; // ambient floating particles
 
 function openGarden() {
   const panel = document.getElementById('garden-panel');
@@ -9405,20 +9479,37 @@ function buildGardenInfo() {
   const level = state.skills ? state.skills.gardening.level : 1;
   html += '<div class="garden-info-level">Gardening Lv.' + level + '</div>';
 
-  // Seed counts
-  if (state.seeds) {
-    state.seeds.forEach(s => {
-      if (s.count > 0) {
-        const seedData = SEED_TYPES.find(st => st.id === s.type);
-        if (seedData) {
-          html += '<div class="garden-info-item">' + seedData.emoji + ' ' + seedData.name + ' <span class="seed-count">x' + s.count + '</span></div>';
-        }
+  // Garden stats summary
+  if (state.gardenGrid) {
+    let planted = 0, harvestable = 0, empty = 0;
+    for (let r = 0; r < state.gardenGrid.length; r++) {
+      for (let c = 0; c < (state.gardenGrid[r] ? state.gardenGrid[r].length : 0); c++) {
+        const cell = state.gardenGrid[r][c];
+        if (cell) { planted++; if (cell.stage >= 4) harvestable++; }
+        else empty++;
       }
-    });
+    }
+    if (harvestable > 0) {
+      html += '<div class="garden-info-item" style="border-color:#55efc4;color:#55efc4;">Ready: ' + harvestable + '</div>';
+    }
+    html += '<div class="garden-info-item" style="color:rgba(255,255,255,0.5);">Planted: ' + planted + ' | Empty: ' + empty + '</div>';
   }
 
-  if (!state.seeds || state.seeds.filter(s => s.count > 0).length === 0) {
-    html += '<div class="garden-info-item" style="color:rgba(255,255,255,0.4);">No seeds - find some by foraging!</div>';
+  // Seed counts
+  if (state.seeds) {
+    const avail = state.seeds.filter(s => s.count > 0);
+    avail.forEach(s => {
+      const seedData = SEED_TYPES.find(st => st.id === s.type);
+      if (seedData) {
+        const borderColor = SEED_RARITY_COLORS[seedData.rarity] || '#555';
+        html += '<div class="garden-info-item" style="border-color:' + borderColor + ';">' + seedData.emoji + ' ' + seedData.name + ' <span class="seed-count">x' + s.count + '</span></div>';
+      }
+    });
+    if (avail.length === 0) {
+      html += '<div class="garden-info-item" style="color:rgba(255,255,255,0.4);">No seeds - forage to find some!</div>';
+    }
+  } else {
+    html += '<div class="garden-info-item" style="color:rgba(255,255,255,0.4);">No seeds - forage to find some!</div>';
   }
 
   info.innerHTML = html;
@@ -9463,6 +9554,48 @@ function gardenPanelLoop(t) {
 
   // Draw the isometric garden with centered origin
   drawIsometricGarden(t, panelOrigin);
+
+  // Draw click ripples (in scaled space)
+  for (let i = gardenRipples.length - 1; i >= 0; i--) {
+    const rip = gardenRipples[i];
+    rip.t += 0.03;
+    if (rip.t >= 1) { gardenRipples.splice(i, 1); continue; }
+    const r = rip.maxR * rip.t;
+    ctx.save();
+    ctx.globalAlpha = (1 - rip.t) * 0.4;
+    ctx.strokeStyle = rip.color || '#ffeaa7';
+    ctx.lineWidth = 2 * (1 - rip.t);
+    ctx.beginPath();
+    ctx.ellipse(rip.x, rip.y, r, r * 0.5, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Ambient floating particles (butterflies, sparkles)
+  if (Math.random() < 0.02 && gardenFloatingEmojis.length < 6) {
+    const emojis = ['🦋','✨','🌟','💫','🍃'];
+    gardenFloatingEmojis.push({
+      x: panelOrigin.x + (Math.random() - 0.5) * 200,
+      y: panelOrigin.y + (Math.random() - 0.5) * 100,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: -0.2 - Math.random() * 0.3,
+      emoji: emojis[Math.floor(Math.random() * emojis.length)],
+      life: 1
+    });
+  }
+  for (let i = gardenFloatingEmojis.length - 1; i >= 0; i--) {
+    const p = gardenFloatingEmojis[i];
+    p.x += p.vx + Math.sin(t * 0.003 + i) * 0.3;
+    p.y += p.vy;
+    p.life -= 0.004;
+    if (p.life <= 0) { gardenFloatingEmojis.splice(i, 1); continue; }
+    ctx.save();
+    ctx.globalAlpha = Math.min(1, p.life * 2) * 0.6;
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(p.emoji, p.x, p.y);
+    ctx.restore();
+  }
 
   ctx.restore();
 
@@ -9511,8 +9644,18 @@ function initGardenCanvasListeners() {
     const gridY = Math.floor(((dy / (ISO_TILE_H / 2)) - (dx / (ISO_TILE_W / 2))) / 2);
 
     if (gridX >= 0 && gridX < ISO_GRID_COLS && gridY >= 0 && gridY < ISO_GRID_ROWS) {
+      // Safety: ensure row and column exist in the grid
+      if (!state.gardenGrid[gridY] || state.gardenGrid[gridY].length <= gridX) return;
       const cell = state.gardenGrid[gridY][gridX];
       selectedGardenTile = { row: gridY, col: gridX };
+
+      // Spawn click ripple at tile position (in scaled space)
+      const tilePos = {
+        x: originX + (gridX - gridY) * ISO_TILE_W / 2,
+        y: originY + (gridX + gridY) * ISO_TILE_H / 2
+      };
+      const ripColor = cell ? (cell.stage >= 4 ? '#55efc4' : '#74b9ff') : '#ffeaa7';
+      gardenRipples.push({ x: tilePos.x, y: tilePos.y, t: 0, maxR: 25, color: ripColor });
 
       if (cell) {
         if (cell.stage >= 4) {
