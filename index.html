@@ -7016,12 +7016,6 @@ function gameLoop(now){
     return;
   }
 
-  // Draw garden elements (after background, before pet)
-  if (state && state.alive && state.stage !== 'EGG') {
-    drawGarden(now, (state && state.landscape) || 0);
-    // Garden plants and isometric grid now render in garden panel
-  }
-
   // Draw floating balloon (behind pet)
   if (state && state.alive && gardenMode) {
     drawBalloon(now);
@@ -7899,7 +7893,17 @@ function confirmAvatarCreation() {
   const nameInput = document.getElementById('pet-name-input');
   tempAvatar.name = nameInput.value.trim() || 'Pet';
 
-  state.avatar = { ...tempAvatar };
+  // Deep-copy each property to ensure state.avatar is fully independent
+  state.avatar = {
+    bodyColor: tempAvatar.bodyColor,
+    eyeStyle: tempAvatar.eyeStyle,
+    pattern: tempAvatar.pattern,
+    mouth: tempAvatar.mouth,
+    bodyShape: tempAvatar.bodyShape,
+    earType: tempAvatar.earType,
+    tailType: tempAvatar.tailType,
+    name: tempAvatar.name
+  };
   state.customized = true;
   // Reset egg timer so the user sees the full egg → hatch sequence
   // (stageTime was accumulating while the avatar creator was open)
@@ -7914,6 +7918,7 @@ function confirmAvatarCreation() {
   setTimeout(() => {
     closeAvatarCreator();
     if (panel) panel.classList.remove('fade-out');
+    save(); // Save again after closing to ensure persistence
     notify('🎉 Welcome, ' + state.avatar.name + '!');
   }, 600);
 }
