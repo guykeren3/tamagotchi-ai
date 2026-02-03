@@ -141,33 +141,31 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
 #math-modal .modal-close:hover{background:rgba(255,255,255,0.2);}
 
 /* Avatar Creator Panel */
-#avatar-creator{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);opacity:0;pointer-events:none;transition:opacity 0.4s;overflow-y:auto;padding:20px;}
+#avatar-creator{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;background:transparent;opacity:0;pointer-events:none;transition:opacity 0.4s;}
 #avatar-creator.open{opacity:1;pointer-events:auto;}
-#avatar-creator .creator-content{display:flex;flex-direction:column;align-items:center;gap:20px;max-width:480px;width:100%;}
-#avatar-creator .creator-title{font-size:24px;font-weight:700;color:#fff;text-align:center;margin-bottom:10px;text-shadow:0 2px 20px rgba(162,155,254,0.5);}
-#avatar-creator .creator-subtitle{font-size:14px;color:rgba(255,255,255,0.6);text-align:center;margin-top:-15px;}
-#avatar-creator .preview-area{width:280px;height:280px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);border-radius:24px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-#avatar-creator .preview-canvas{width:260px;height:260px;}
-#avatar-creator .option-section{width:100%;background:rgba(255,255,255,0.05);border-radius:16px;padding:16px;}
-#avatar-creator .option-label{font-size:12px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
-#avatar-creator .color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-#avatar-creator .color-swatch{width:42px;height:42px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.2s;position:relative;}
+#avatar-creator .creator-title{position:absolute;top:max(20px,env(safe-area-inset-top));left:0;right:0;font-size:22px;font-weight:700;color:#fff;text-align:center;text-shadow:0 2px 20px rgba(162,155,254,0.5),0 1px 4px rgba(0,0,0,0.5);pointer-events:none;z-index:2;}
+#avatar-creator .creator-subtitle{position:absolute;top:calc(max(20px,env(safe-area-inset-top)) + 30px);left:0;right:0;font-size:13px;color:rgba(255,255,255,0.7);text-align:center;text-shadow:0 1px 4px rgba(0,0,0,0.5);pointer-events:none;z-index:2;}
+.creator-bottom-panel{position:absolute;bottom:0;left:0;right:0;max-height:45vh;background:linear-gradient(to top,rgba(10,10,26,0.95) 0%,rgba(10,10,26,0.85) 70%,rgba(10,10,26,0) 100%);padding:60px 16px max(12px,env(safe-area-inset-bottom));overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:12px;z-index:3;transition:opacity 0.5s,transform 0.5s;scrollbar-width:none;-ms-overflow-style:none;}
+.creator-bottom-panel::-webkit-scrollbar{display:none;}
+.creator-bottom-panel.fade-out{opacity:0;transform:translateY(30px);}
+.category-tabs{display:flex;gap:6px;overflow-x:auto;width:100%;max-width:480px;padding:4px 0;scrollbar-width:none;-ms-overflow-style:none;flex-shrink:0;}
+.category-tabs::-webkit-scrollbar{display:none;}
+.category-tab{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:6px 14px;color:rgba(255,255,255,0.6);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.2s;flex-shrink:0;}
+.category-tab:hover{background:rgba(255,255,255,0.18);}
+.category-tab.active{background:rgba(162,155,254,0.3);border-color:rgba(162,155,254,0.5);color:#fff;}
+.option-strip{display:flex;gap:8px;overflow-x:auto;width:100%;max-width:480px;padding:8px 0;scrollbar-width:none;-ms-overflow-style:none;min-height:70px;align-items:center;flex-shrink:0;}
+.option-strip::-webkit-scrollbar{display:none;}
+.option-mini-preview{width:64px;height:64px;border-radius:14px;cursor:pointer;border:2px solid transparent;transition:all 0.2s;flex-shrink:0;background:rgba(255,255,255,0.06);}
+.option-mini-preview:hover{transform:scale(1.08);background:rgba(255,255,255,0.12);}
+.option-mini-preview.selected{border-color:#a29bfe;box-shadow:0 0 12px rgba(162,155,254,0.4);}
+.option-mini-preview canvas{width:100%;height:100%;display:block;border-radius:12px;}
+#avatar-creator .color-swatch{width:48px;height:48px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.2s;flex-shrink:0;}
 #avatar-creator .color-swatch:hover{transform:scale(1.1);}
 #avatar-creator .color-swatch.selected{border-color:#fff;box-shadow:0 0 15px rgba(255,255,255,0.4);}
-#avatar-creator .eye-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-#avatar-creator .eye-option{background:rgba(255,255,255,0.08);border:2px solid transparent;border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s;font-size:24px;}
-#avatar-creator .eye-option:hover{background:rgba(255,255,255,0.15);}
-#avatar-creator .eye-option.selected{border-color:#a29bfe;background:rgba(162,155,254,0.2);}
-#avatar-creator .eye-option span{display:block;font-size:10px;color:rgba(255,255,255,0.5);margin-top:4px;}
-#avatar-creator .pattern-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-#avatar-creator .pattern-option{background:rgba(255,255,255,0.08);border:2px solid transparent;border-radius:12px;padding:12px 8px;cursor:pointer;text-align:center;transition:all 0.2s;}
-#avatar-creator .pattern-option:hover{background:rgba(255,255,255,0.15);}
-#avatar-creator .pattern-option.selected{border-color:#a29bfe;background:rgba(162,155,254,0.2);}
-#avatar-creator .pattern-option span{display:block;font-size:11px;color:rgba(255,255,255,0.7);}
-#avatar-creator .name-input{width:100%;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px 18px;color:#fff;font-size:18px;text-align:center;outline:none;transition:all 0.2s;}
+#avatar-creator .name-input{width:100%;max-width:480px;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px 18px;color:#fff;font-size:18px;text-align:center;outline:none;transition:all 0.2s;}
 #avatar-creator .name-input::placeholder{color:rgba(255,255,255,0.3);}
 #avatar-creator .name-input:focus{border-color:#a29bfe;background:rgba(162,155,254,0.1);}
-#avatar-creator .start-btn{width:100%;background:linear-gradient(135deg,#a29bfe,#6c5ce7);border:none;border-radius:16px;padding:16px;color:#fff;font-size:18px;font-weight:700;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 20px rgba(108,92,231,0.4);}
+#avatar-creator .start-btn{width:100%;max-width:480px;background:linear-gradient(135deg,#a29bfe,#6c5ce7);border:none;border-radius:16px;padding:16px;color:#fff;font-size:18px;font-weight:700;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 20px rgba(108,92,231,0.4);}
 #avatar-creator .start-btn:hover{transform:translateY(-2px);box-shadow:0 6px 25px rgba(108,92,231,0.5);}
 #avatar-creator .start-btn:active{transform:scale(0.98);}
 
@@ -292,6 +290,18 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
 .task-item .task-status{font-size:11px;color:rgba(255,255,255,0.5);margin-top:6px;}
 .task-item .claim-btn{background:linear-gradient(135deg,#ffd700,#ffaa00);border:none;border-radius:8px;padding:8px 16px;color:#000;font-weight:700;font-size:12px;cursor:pointer;margin-top:8px;transition:all 0.2s;}
 .task-item .claim-btn:hover{transform:scale(1.05);box-shadow:0 0 15px rgba(255,215,0,0.4);}
+
+/* Garden Panel */
+#garden-panel{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;background:rgba(10,10,26,0.95);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity 0.3s;overflow:hidden;}
+#garden-panel.open{opacity:1;pointer-events:auto;}
+.garden-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.garden-header h2{font-size:20px;color:#fff;margin:0;}
+.garden-canvas-container{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.garden-canvas-container canvas{width:100%;height:100%;}
+.garden-info{padding:12px 20px;border-top:1px solid rgba(255,255,255,0.1);display:flex;flex-wrap:wrap;gap:10px;align-items:center;max-height:120px;overflow-y:auto;}
+.garden-info-item{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:6px 12px;font-size:12px;color:rgba(255,255,255,0.8);display:flex;align-items:center;gap:5px;}
+.garden-info-item .seed-count{color:#4ade80;font-weight:600;}
+.garden-info-level{background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:10px;padding:6px 12px;font-size:12px;color:#a78bfa;font-weight:600;}
 
 /* World Collectible */
 .world-item{position:absolute;cursor:pointer;transition:all 0.2s;animation:float 2s ease-in-out infinite;}
@@ -435,6 +445,7 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
   <button class="nav-btn" onclick="openInventory()" title="Inventory">📦<span class="nav-label">Bag</span></button>
   <button class="nav-btn" onclick="openMarket()" title="Market">🏪<span class="nav-label">Shop</span></button>
   <button class="nav-btn" onclick="openTasks()" title="Tasks">📋<span class="nav-label">Tasks</span></button>
+  <button class="nav-btn" onclick="openGarden()" title="Garden">🌱<span class="nav-label">Garden</span></button>
 </div>
 
 <!-- Inventory Panel -->
@@ -472,6 +483,18 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
     <button class="panel-close" onclick="closeTasks()">✕</button>
   </div>
   <div class="tasks-list" id="tasks-list"></div>
+</div>
+
+<!-- Garden Panel -->
+<div id="garden-panel">
+  <div class="garden-header">
+    <h2>🌱 Garden</h2>
+    <button class="panel-close" onclick="closeGarden()">✕</button>
+  </div>
+  <div class="garden-canvas-container">
+    <canvas id="garden-canvas"></canvas>
+  </div>
+  <div class="garden-info" id="garden-info"></div>
 </div>
 
 <!-- World Items Container -->
@@ -592,54 +615,12 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
 
 <!-- AVATAR CREATOR OVERLAY -->
 <div id="avatar-creator">
-  <div class="creator-content">
-    <div class="creator-title">Create Your Pet!</div>
-    <div class="creator-subtitle">Customize your new companion</div>
-    
-    <div class="preview-area">
-      <canvas id="avatar-preview" class="preview-canvas" width="260" height="260"></canvas>
-    </div>
-    
-    <div class="option-section">
-      <div class="option-label">Choose Color</div>
-      <div class="color-grid" id="color-picker"></div>
-    </div>
-    
-    <div class="option-section">
-      <div class="option-label">Eye Style</div>
-      <div class="eye-grid" id="eye-picker"></div>
-    </div>
-    
-    <div class="option-section">
-      <div class="option-label">Pattern</div>
-      <div class="pattern-grid" id="pattern-picker"></div>
-    </div>
-
-    <div class="option-section">
-      <div class="option-label">Mouth Style</div>
-      <div class="eye-grid" id="mouth-picker"></div>
-    </div>
-
-    <div class="option-section">
-      <div class="option-label">Body Shape</div>
-      <div class="eye-grid" id="shape-picker"></div>
-    </div>
-
-    <div class="option-section">
-      <div class="option-label">Ear Type</div>
-      <div class="eye-grid" id="ear-picker"></div>
-    </div>
-
-    <div class="option-section">
-      <div class="option-label">Tail Type</div>
-      <div class="eye-grid" id="tail-picker"></div>
-    </div>
-
-    <div class="option-section">
-      <div class="option-label">Name Your Pet</div>
-      <input type="text" class="name-input" id="pet-name-input" placeholder="Enter a name..." maxlength="12">
-    </div>
-
+  <div class="creator-title">Create Your Pet!</div>
+  <div class="creator-subtitle">Customize your new companion</div>
+  <div class="creator-bottom-panel" id="creator-bottom-panel">
+    <div class="category-tabs" id="creator-tabs"></div>
+    <div class="option-strip" id="creator-option-strip"></div>
+    <input type="text" class="name-input" id="pet-name-input" placeholder="Enter a name..." maxlength="12" style="display:none;">
     <button class="start-btn" id="start-adventure-btn">Start Adventure!</button>
   </div>
 </div>
@@ -1012,7 +993,7 @@ const THEMES = {
 // CANVAS
 // ============================================================
 const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
+let ctx = canvas.getContext('2d');
 let cw, ch;
 
 function resize() {
@@ -1227,6 +1208,400 @@ function drawPet(t, mood, stage, variant, sleeping, accessory) {
     ctx.globalAlpha = 1;
   }
 
+  ctx.restore();
+}
+
+// ============================================================
+// LIFE ACTIVITY SCENE DRAWING
+// ============================================================
+function drawActivityScene(t, activity) {
+  if (!LIFE_ACTIVITY_CONFIG[activity]) return;
+  const px = petX(), py = petY(), sz = petSize();
+  switch (activity) {
+    case 'reading': drawReadingScene(t, px, py, sz); break;
+    case 'painting': drawPaintingScene(t, px, py, sz); break;
+    case 'cooking': drawCookingScene(t, px, py, sz); break;
+    case 'exercising': drawExercisingScene(t, px, py, sz); break;
+    case 'stargazing': drawStargazingScene(t, px, py, sz); break;
+    case 'music': drawMusicScene(t, px, py, sz); break;
+    case 'napping': drawNappingScene(t, px, py, sz); break;
+    case 'exploring': drawExploringScene(t, px, py, sz); break;
+  }
+}
+
+function drawReadingScene(t, px, py, sz) {
+  ctx.save();
+  const bx = px, by = py + sz * 0.45;
+  const bw = sz * 0.5, bh = sz * 0.35;
+  // Open book
+  ctx.fillStyle = '#f5e6ca';
+  ctx.beginPath();
+  ctx.moveTo(bx - bw / 2, by - bh / 2);
+  ctx.lineTo(bx, by - bh / 2 + 4);
+  ctx.lineTo(bx + bw / 2, by - bh / 2);
+  ctx.lineTo(bx + bw / 2, by + bh / 2);
+  ctx.lineTo(bx, by + bh / 2 - 2);
+  ctx.lineTo(bx - bw / 2, by + bh / 2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = '#c9a96e';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  // Center spine
+  ctx.beginPath();
+  ctx.moveTo(bx, by - bh / 2 + 4);
+  ctx.lineTo(bx, by + bh / 2 - 2);
+  ctx.stroke();
+  // Text lines on pages
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  for (let i = 0; i < 3; i++) {
+    const ly = by - bh * 0.15 + i * (bh * 0.18);
+    ctx.fillRect(bx - bw * 0.4, ly, bw * 0.3, 2);
+    ctx.fillRect(bx + bw * 0.05, ly, bw * 0.35, 2);
+  }
+  // Page turning animation
+  const turnPhase = (t * 0.0003) % 1;
+  if (turnPhase < 0.15) {
+    ctx.fillStyle = 'rgba(245,230,202,0.7)';
+    const curl = Math.sin(turnPhase / 0.15 * Math.PI) * bw * 0.2;
+    ctx.fillRect(bx - curl * 0.5, by - bh * 0.4, curl, bh * 0.7);
+  }
+  // Thought bubble
+  const bubbleY = py - sz * 0.7 - Math.sin(t * 0.002) * 4;
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.beginPath(); ctx.arc(px + sz * 0.3, bubbleY, sz * 0.12, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(px + sz * 0.2, bubbleY + sz * 0.15, sz * 0.04, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(px + sz * 0.15, bubbleY + sz * 0.22, sz * 0.025, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+
+function drawPaintingScene(t, px, py, sz) {
+  ctx.save();
+  // Easel
+  const ex = px + sz * 0.65, ey = py - sz * 0.1;
+  const cw = sz * 0.4, ch = sz * 0.35;
+  // Easel legs
+  ctx.strokeStyle = '#8B6914';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(ex - cw * 0.4, ey + ch * 0.5);
+  ctx.lineTo(ex - cw * 0.2, ey + ch * 1.2);
+  ctx.moveTo(ex + cw * 0.4, ey + ch * 0.5);
+  ctx.lineTo(ex + cw * 0.2, ey + ch * 1.2);
+  ctx.moveTo(ex, ey + ch * 0.5);
+  ctx.lineTo(ex + cw * 0.1, ey + ch * 1.3);
+  ctx.stroke();
+  // Canvas on easel
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(ex - cw / 2, ey - ch / 2, cw, ch);
+  ctx.strokeStyle = '#ccc';
+  ctx.strokeRect(ex - cw / 2, ey - ch / 2, cw, ch);
+  // Paint strokes accumulating over time
+  const strokes = Math.min(5, Math.floor(lifeActivityPhase * 6));
+  const strokeColors = ['#ff6b6b', '#48dbfb', '#ffd93d', '#55efc4', '#a29bfe'];
+  for (let i = 0; i < strokes; i++) {
+    ctx.fillStyle = strokeColors[i % strokeColors.length];
+    const sx = ex - cw * 0.3 + (i * cw * 0.12);
+    const sy = ey - ch * 0.3 + Math.sin(i * 2.5) * ch * 0.15;
+    ctx.beginPath();
+    ctx.ellipse(sx, sy, cw * 0.08, ch * 0.12, i * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  // Palette near pet
+  ctx.fillStyle = '#D2691E';
+  ctx.beginPath(); ctx.ellipse(px - sz * 0.15, py + sz * 0.5, sz * 0.12, sz * 0.08, 0, 0, Math.PI * 2); ctx.fill();
+  const palColors = ['#ff0000', '#ffff00', '#0000ff', '#00ff00', '#ff00ff'];
+  palColors.forEach((c, i) => {
+    ctx.fillStyle = c;
+    const angle = (i / palColors.length) * Math.PI * 1.5 - 0.5;
+    ctx.beginPath();
+    ctx.arc(px - sz * 0.15 + Math.cos(angle) * sz * 0.07, py + sz * 0.5 + Math.sin(angle) * sz * 0.04, sz * 0.02, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.restore();
+}
+
+function drawCookingScene(t, px, py, sz) {
+  ctx.save();
+  // Pot
+  const potY = py + sz * 0.55;
+  ctx.fillStyle = '#555';
+  ctx.beginPath();
+  ctx.ellipse(px, potY, sz * 0.22, sz * 0.12, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#666';
+  ctx.fillRect(px - sz * 0.22, potY - sz * 0.08, sz * 0.44, sz * 0.08);
+  // Handles
+  ctx.strokeStyle = '#777';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(px - sz * 0.26, potY - sz * 0.04, sz * 0.04, -Math.PI * 0.5, Math.PI * 0.5); ctx.stroke();
+  ctx.beginPath(); ctx.arc(px + sz * 0.26, potY - sz * 0.04, sz * 0.04, Math.PI * 0.5, -Math.PI * 0.5); ctx.stroke();
+  // Flame underneath
+  const flicker = Math.sin(t * 0.01) * 2;
+  ctx.fillStyle = 'rgba(255,100,0,0.7)';
+  ctx.beginPath();
+  ctx.moveTo(px - sz * 0.08, potY + sz * 0.12);
+  ctx.quadraticCurveTo(px - sz * 0.04, potY + sz * 0.04 + flicker, px, potY + sz * 0.12);
+  ctx.quadraticCurveTo(px + sz * 0.04, potY + sz * 0.04 - flicker, px + sz * 0.08, potY + sz * 0.12);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(255,200,0,0.6)';
+  ctx.beginPath();
+  ctx.moveTo(px - sz * 0.04, potY + sz * 0.12);
+  ctx.quadraticCurveTo(px, potY + sz * 0.06 + flicker * 0.5, px + sz * 0.04, potY + sz * 0.12);
+  ctx.fill();
+  // Steam (circles floating up and fading)
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  for (let i = 0; i < 3; i++) {
+    const st = ((t * 0.001 + i * 1.5) % 3);
+    const steamY = potY - sz * 0.12 - st * sz * 0.15;
+    const steamX = px + Math.sin(t * 0.003 + i * 2) * sz * 0.06;
+    const steamR = sz * 0.03 + st * sz * 0.015;
+    ctx.globalAlpha = Math.max(0, 0.3 - st * 0.1);
+    ctx.beginPath(); ctx.arc(steamX, steamY, steamR, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+}
+
+function drawExercisingScene(t, px, py, sz) {
+  ctx.save();
+  // Dumbbells beside pet
+  const dbSize = sz * 0.06;
+  ctx.fillStyle = '#888';
+  // Left dumbbell
+  const dlx = px - sz * 0.5, dly = py + sz * 0.4;
+  ctx.fillRect(dlx - dbSize * 2, dly - dbSize * 0.4, dbSize * 4, dbSize * 0.8);
+  ctx.fillStyle = '#555';
+  ctx.beginPath(); ctx.arc(dlx - dbSize * 2, dly, dbSize, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(dlx + dbSize * 2, dly, dbSize, 0, Math.PI * 2); ctx.fill();
+  // Right dumbbell
+  ctx.fillStyle = '#888';
+  const drx = px + sz * 0.5;
+  ctx.fillRect(drx - dbSize * 2, dly - dbSize * 0.4, dbSize * 4, dbSize * 0.8);
+  ctx.fillStyle = '#555';
+  ctx.beginPath(); ctx.arc(drx - dbSize * 2, dly, dbSize, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(drx + dbSize * 2, dly, dbSize, 0, Math.PI * 2); ctx.fill();
+  // Sweat droplets
+  const sweatPhase = (t * 0.002) % 2;
+  ctx.fillStyle = 'rgba(100,200,255,0.5)';
+  if (sweatPhase < 1) {
+    const dropY = py - sz * 0.3 + sweatPhase * sz * 0.4;
+    ctx.beginPath();
+    ctx.moveTo(px + sz * 0.35, dropY);
+    ctx.quadraticCurveTo(px + sz * 0.38, dropY + sz * 0.04, px + sz * 0.35, dropY + sz * 0.06);
+    ctx.quadraticCurveTo(px + sz * 0.32, dropY + sz * 0.04, px + sz * 0.35, dropY);
+    ctx.fill();
+  }
+  // Rep counter
+  const reps = Math.floor(lifeActivityPhase * 10);
+  ctx.font = `bold ${Math.round(sz * 0.12)}px sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.textAlign = 'center';
+  ctx.fillText(`x${reps}`, px + sz * 0.5, py - sz * 0.5);
+  ctx.textAlign = 'start';
+  ctx.restore();
+}
+
+function drawStargazingScene(t, px, py, sz) {
+  ctx.save();
+  // Telescope
+  const tx = px + sz * 0.55, ty = py + sz * 0.1;
+  // Tripod legs
+  ctx.strokeStyle = '#888';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(tx, ty + sz * 0.05);
+  ctx.lineTo(tx - sz * 0.12, ty + sz * 0.5);
+  ctx.moveTo(tx, ty + sz * 0.05);
+  ctx.lineTo(tx + sz * 0.12, ty + sz * 0.5);
+  ctx.moveTo(tx, ty + sz * 0.05);
+  ctx.lineTo(tx + sz * 0.04, ty + sz * 0.48);
+  ctx.stroke();
+  // Telescope tube
+  ctx.strokeStyle = '#aaa';
+  ctx.lineWidth = sz * 0.04;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(tx - sz * 0.15, ty + sz * 0.1);
+  ctx.lineTo(tx + sz * 0.08, ty - sz * 0.15);
+  ctx.stroke();
+  // Lens
+  ctx.fillStyle = 'rgba(100,200,255,0.4)';
+  ctx.beginPath(); ctx.arc(tx + sz * 0.08, ty - sz * 0.15, sz * 0.035, 0, Math.PI * 2); ctx.fill();
+  // Extra twinkling stars above
+  ctx.fillStyle = '#fff';
+  for (let i = 0; i < 8; i++) {
+    const sx = px - sz * 0.8 + (i * sz * 0.25);
+    const sy = py - sz * 0.8 - Math.sin(i * 1.7) * sz * 0.3;
+    const twinkle = 0.3 + Math.sin(t * 0.005 + i * 1.3) * 0.3;
+    ctx.globalAlpha = twinkle;
+    const starSz = sz * 0.015 + Math.sin(t * 0.003 + i) * sz * 0.005;
+    ctx.beginPath(); ctx.arc(sx, sy, starSz, 0, Math.PI * 2); ctx.fill();
+    // Cross shape for twinkle
+    ctx.strokeStyle = 'rgba(255,255,255,' + (twinkle * 0.5) + ')';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(sx - starSz * 2, sy); ctx.lineTo(sx + starSz * 2, sy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(sx, sy - starSz * 2); ctx.lineTo(sx, sy + starSz * 2); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+}
+
+function drawMusicScene(t, px, py, sz) {
+  ctx.save();
+  // Small instrument (guitar-like shape) near pet
+  const ix = px - sz * 0.45, iy = py + sz * 0.15;
+  ctx.fillStyle = '#C67B30';
+  // Guitar body
+  ctx.beginPath();
+  ctx.ellipse(ix, iy + sz * 0.06, sz * 0.06, sz * 0.08, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(ix, iy - sz * 0.04, sz * 0.04, sz * 0.06, 0, 0, Math.PI * 2); ctx.fill();
+  // Neck
+  ctx.fillStyle = '#A0522D';
+  ctx.fillRect(ix - sz * 0.01, iy - sz * 0.16, sz * 0.02, sz * 0.12);
+  // Sound hole
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.beginPath(); ctx.arc(ix, iy + sz * 0.06, sz * 0.02, 0, Math.PI * 2); ctx.fill();
+
+  // Musical notes floating up in sine wave paths
+  ctx.font = `${Math.round(sz * 0.12)}px sans-serif`;
+  const notes = ['♪', '♫', '♩'];
+  for (let i = 0; i < 3; i++) {
+    const nt = ((t * 0.001 + i * 1.2) % 3);
+    const noteX = px - sz * 0.2 + Math.sin(t * 0.004 + i * 2.5) * sz * 0.2;
+    const noteY = py - sz * 0.4 - nt * sz * 0.2;
+    ctx.globalAlpha = Math.max(0, 0.6 - nt * 0.2);
+    ctx.fillStyle = `hsl(${(i * 120 + t * 0.05) % 360}, 70%, 70%)`;
+    ctx.fillText(notes[i % notes.length], noteX, noteY);
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+}
+
+function drawNappingScene(t, px, py, sz) {
+  ctx.save();
+  // Pillow/cloud under pet
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.beginPath();
+  ctx.ellipse(px, py + sz * 0.5, sz * 0.35, sz * 0.08, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(px - sz * 0.15, py + sz * 0.47, sz * 0.15, sz * 0.06, -0.2, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(px + sz * 0.15, py + sz * 0.47, sz * 0.15, sz * 0.06, 0.2, 0, Math.PI * 2); ctx.fill();
+
+  // Cozy blanket shape draped
+  ctx.fillStyle = 'rgba(162,155,254,0.15)';
+  ctx.beginPath();
+  ctx.moveTo(px - sz * 0.35, py + sz * 0.15);
+  ctx.quadraticCurveTo(px - sz * 0.4, py + sz * 0.5, px - sz * 0.3, py + sz * 0.55);
+  ctx.lineTo(px + sz * 0.3, py + sz * 0.55);
+  ctx.quadraticCurveTo(px + sz * 0.4, py + sz * 0.5, px + sz * 0.35, py + sz * 0.15);
+  ctx.quadraticCurveTo(px, py + sz * 0.25, px - sz * 0.35, py + sz * 0.15);
+  ctx.fill();
+
+  // Zzz floating up (reuse sleep style)
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  const zt = (t * 0.0015) % 3;
+  ctx.font = `${Math.round(sz * 0.18)}px sans-serif`;
+  ctx.globalAlpha = 0.5;
+  ctx.fillText('z', px + sz * 0.25, py - sz * 0.35 - zt * 12);
+  ctx.font = `${Math.round(sz * 0.14)}px sans-serif`;
+  ctx.globalAlpha = 0.35;
+  ctx.fillText('z', px + sz * 0.32, py - sz * 0.5 - zt * 8);
+  ctx.font = `${Math.round(sz * 0.1)}px sans-serif`;
+  ctx.globalAlpha = 0.2;
+  ctx.fillText('z', px + sz * 0.38, py - sz * 0.6 - zt * 5);
+  ctx.globalAlpha = 1;
+  ctx.restore();
+}
+
+function drawExploringScene(t, px, py, sz) {
+  ctx.save();
+  // Magnifying glass near pet
+  const mx = px + sz * 0.4, my = py + sz * 0.1;
+  ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+  ctx.lineWidth = sz * 0.025;
+  ctx.beginPath(); ctx.arc(mx, my, sz * 0.08, 0, Math.PI * 2); ctx.stroke();
+  // Glass shine
+  ctx.fillStyle = 'rgba(200,230,255,0.15)';
+  ctx.beginPath(); ctx.arc(mx, my, sz * 0.07, 0, Math.PI * 2); ctx.fill();
+  // Handle
+  ctx.strokeStyle = '#A0522D';
+  ctx.lineWidth = sz * 0.03;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(mx + sz * 0.055, my + sz * 0.055);
+  ctx.lineTo(mx + sz * 0.12, my + sz * 0.12);
+  ctx.stroke();
+
+  // Mystery object on ground (cycles based on time)
+  const objectCycle = Math.floor(t / 8000) % 3;
+  const objEmojis = ['💎', '🐚', '🍃'];
+  ctx.font = `${Math.round(sz * 0.15)}px sans-serif`;
+  ctx.fillText(objEmojis[objectCycle], px - sz * 0.35, py + sz * 0.55);
+
+  // Sparkle on discovery
+  if (lifeActivityPhase > 0.7) {
+    ctx.globalAlpha = (lifeActivityPhase - 0.7) / 0.3;
+    ctx.strokeStyle = '#ffd93d';
+    ctx.lineWidth = 1.5;
+    const sparkleT = t * 0.005;
+    for (let i = 0; i < 4; i++) {
+      const angle = sparkleT + i * Math.PI * 0.5;
+      const sr = sz * 0.05;
+      const sx = px - sz * 0.35 + Math.cos(angle) * sz * 0.12;
+      const sy = py + sz * 0.5 + Math.sin(angle) * sz * 0.08;
+      ctx.beginPath();
+      for (let j = 0; j < 4; j++) {
+        const a2 = j * Math.PI * 0.5;
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(sx + Math.cos(a2) * sr, sy + Math.sin(a2) * sr);
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  ctx.restore();
+}
+
+function drawActivityLabel(t) {
+  if (!gardenMode || gardenActivity === 'walking' || gardenActivity === 'idle') return;
+  const config = LIFE_ACTIVITY_CONFIG[gardenActivity];
+  if (!config) return;
+
+  const px = petX(), py = petY(), sz = petSize();
+  const labelY = py - sz * 0.85 + Math.sin(t * 0.003) * 3;
+  const label = config.emoji + ' ' + gardenActivity;
+
+  ctx.save();
+  ctx.font = `bold ${Math.round(sz * 0.11)}px sans-serif`;
+  const metrics = ctx.measureText(label);
+  const padX = 10, padY = 5;
+  const lw = metrics.width + padX * 2;
+  const lh = sz * 0.14 + padY * 2;
+  const lx = px - lw / 2;
+  const ly = labelY - lh / 2;
+
+  // Pill background
+  ctx.fillStyle = 'rgba(0,0,0,0.35)';
+  ctx.beginPath();
+  const radius = lh / 2;
+  ctx.moveTo(lx + radius, ly);
+  ctx.lineTo(lx + lw - radius, ly);
+  ctx.arc(lx + lw - radius, ly + radius, radius, -Math.PI / 2, Math.PI / 2);
+  ctx.lineTo(lx + radius, ly + lh);
+  ctx.arc(lx + radius, ly + radius, radius, Math.PI / 2, -Math.PI / 2);
+  ctx.closePath();
+  ctx.fill();
+
+  // Text
+  ctx.fillStyle = 'rgba(255,255,255,0.8)';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, px, labelY);
+  ctx.textAlign = 'start';
+  ctx.textBaseline = 'alphabetic';
   ctx.restore();
 }
 
@@ -3744,17 +4119,21 @@ function drawDecoPlant(x, y, size, type, color, t, i) {
   ctx.restore();
 }
 
-function drawIsometricGarden(t) {
+function drawIsometricGarden(t, overrideOrigin) {
   if (!state || !state.gardenGrid) return;
 
   const w = vw(), h = vh();
 
-  // Position garden in the background on the right, sitting on the ground
+  // Position garden - use override if provided (garden panel), else default position
   const gardenWidth = (ISO_GRID_COLS + ISO_GRID_ROWS) * ISO_TILE_W / 2;
-  isoGardenOrigin = {
-    x: w * 0.82,
-    y: h * 0.62
-  };
+  if (overrideOrigin) {
+    isoGardenOrigin = overrideOrigin;
+  } else {
+    isoGardenOrigin = {
+      x: w * 0.82,
+      y: h * 0.62
+    };
+  }
 
   // Get garden bed theme colors matching current landscape
   const landscapeId = state.landscape || 0;
@@ -4499,6 +4878,31 @@ const GARDEN_ACTIVITIES_WEIGHTED = [
   { activity: 'chasingBalloon', weight: 0, triggeredByBalloon: true }
 ];
 
+// Life activities (non-garden autonomous behaviors)
+const LIFE_ACTIVITIES_WEIGHTED = [
+  { activity: 'reading',     weight: 2 },
+  { activity: 'painting',    weight: 2 },
+  { activity: 'cooking',     weight: 1 },
+  { activity: 'exercising',  weight: 2 },
+  { activity: 'stargazing',  weight: 1 },
+  { activity: 'music',       weight: 2 },
+  { activity: 'napping',     weight: 1 },
+  { activity: 'exploring',   weight: 2 }
+];
+
+const LIFE_ACTIVITY_CONFIG = {
+  reading:     { skill: 'creativity', xp: 3, duration: 5000, emoji: '📖' },
+  painting:    { skill: 'creativity', xp: 4, duration: 6000, emoji: '🎨' },
+  cooking:     { skill: 'health',     xp: 3, duration: 5000, emoji: '🍳' },
+  exercising:  { skill: 'athletics',  xp: 4, duration: 4000, emoji: '💪' },
+  stargazing:  { skill: 'creativity', xp: 2, duration: 7000, emoji: '🔭' },
+  music:       { skill: 'social',     xp: 3, duration: 5000, emoji: '🎵' },
+  napping:     { skill: 'health',     xp: 1, duration: 4000, emoji: '💤' },
+  exploring:   { skill: 'foraging',   xp: 3, duration: 4000, emoji: '🔍' }
+};
+
+let lifeActivityPhase = 0;
+
 // Balloon state
 let gardenBalloon = { x: 0, y: 0, vx: 0, vy: 0, active: false, color: '#ff6b6b', baseY: 0, time: 0 };
 
@@ -4689,23 +5093,29 @@ function updateCompanion(dt) {
 // ---- WEIGHTED ACTIVITY SELECTION ----
 function pickWeightedActivity() {
   const hasCompanion = state && state.companion;
-  
+
+  // Merge garden and life activities
+  const allActivities = [
+    ...GARDEN_ACTIVITIES_WEIGHTED,
+    ...LIFE_ACTIVITIES_WEIGHTED
+  ];
+
   // Filter activities by requirements
-  const available = GARDEN_ACTIVITIES_WEIGHTED.filter(a => {
+  const available = allActivities.filter(a => {
     if (a.requiresCompanion && !hasCompanion) return false;
     if (a.triggeredByBalloon) return false; // Balloon chasing is triggered separately
     return true;
   });
-  
+
   // Calculate total weight
   const totalWeight = available.reduce((sum, a) => sum + a.weight, 0);
   let random = Math.random() * totalWeight;
-  
+
   for (const a of available) {
     random -= a.weight;
     if (random <= 0) return a.activity;
   }
-  
+
   return 'sniffing'; // Fallback
 }
 
@@ -4751,7 +5161,9 @@ function updateGarden(dt) {
       } else {
         // Pick weighted activity
         gardenActivity = pickWeightedActivity();
-        gardenActivityTimer = GARDEN_ACTIVITY_DURATION;
+        const lifeConfig = LIFE_ACTIVITY_CONFIG[gardenActivity];
+        gardenActivityTimer = lifeConfig ? lifeConfig.duration : GARDEN_ACTIVITY_DURATION;
+        if (lifeConfig) lifeActivityPhase = 0;
       }
     } else {
       gardenPetOffsetX += Math.sign(diff) * Math.min(Math.abs(diff), GARDEN_WALK_SPEED * dt);
@@ -4853,23 +5265,45 @@ function updateGarden(dt) {
       }
       pickGardenTarget();
     }
+  } else if (LIFE_ACTIVITY_CONFIG[gardenActivity]) {
+    // Life activities (reading, painting, cooking, etc.)
+    const config = LIFE_ACTIVITY_CONFIG[gardenActivity];
+    gardenActivityTimer -= dt;
+    lifeActivityPhase = 1 - Math.max(0, gardenActivityTimer / config.duration);
+
+    // Spawn activity-specific emoji particles
+    if (Math.random() < dt * 0.003) {
+      spawnParticle(petX() + (Math.random() - 0.5) * 30, petY() - petSize() * 0.5, config.emoji);
+    }
+
+    if (gardenActivityTimer <= 0) {
+      // Award skill XP
+      addSkillXP(config.skill, config.xp);
+      lifeActivityPhase = 0;
+
+      // Chance to spawn balloon after activity
+      if (Math.random() < BALLOON_SPAWN_CHANCE && !gardenBalloon.active) {
+        spawnBalloon();
+      }
+      pickGardenTarget();
+    }
   } else if (gardenActivity !== 'idle') {
     // Other activities (watering, digging, sniffing)
     gardenActivityTimer -= dt;
-    
+
     // Spawn activity particles occasionally
     if (Math.random() < dt * 0.003) {
       const emoji = GARDEN_ACTIVITY_EMOJIS[gardenActivity] || '✨';
       spawnParticle(petX() + (Math.random() - 0.5) * 30, petY() - petSize() * 0.5, emoji);
     }
-    
+
     if (gardenActivityTimer <= 0) {
       // Award gardening XP for garden activities
       addSkillXP('gardening', 1);
-      
+
       // Award athletics XP for walking in garden
       addSkillXP('athletics', 1);
-      
+
       // Chance to spawn balloon after activity
       if (Math.random() < BALLOON_SPAWN_CHANCE && !gardenBalloon.active) {
         spawnBalloon();
@@ -6106,10 +6540,7 @@ canvas.addEventListener('click', e=>{
   const dx=cx-petX(), dy=cy-petY();
   const dist=Math.sqrt(dx*dx+dy*dy);
   
-  // Check isometric garden click first
-  if (state.stage !== 'EGG' && handleGardenClick(cx, cy)) {
-    return;
-  }
+  // Garden click handling moved to garden panel
 
   // Tap poop to clean
   if(state.poopCount>0){
@@ -6577,11 +7008,18 @@ function gameLoop(now){
     drawBackground(now, mood);
   }
 
+  // Avatar creator mode: draw preview pet on main canvas
+  if (avatarCreatorOpen) {
+    drawCreatorPreviewPet(now);
+    drawParticles();
+    requestAnimationFrame(gameLoop);
+    return;
+  }
+
   // Draw garden elements (after background, before pet)
   if (state && state.alive && state.stage !== 'EGG') {
     drawGarden(now, (state && state.landscape) || 0);
-    drawGardenPlants(now); // Draw planted garden plants (legacy)
-    drawIsometricGarden(now); // Draw new isometric garden
+    // Garden plants and isometric grid now render in garden panel
   }
 
   // Draw floating balloon (behind pet)
@@ -6599,6 +7037,11 @@ function gameLoop(now){
       drawCompanion(now);
     }
     drawPet(now, mood, state.stage, state.variant, state.sleeping, state.accessory);
+    // Draw activity scene and label when in autonomous mode
+    if (gardenMode && gardenActivity !== 'walking' && gardenActivity !== 'idle') {
+      drawActivityScene(now, gardenActivity);
+      drawActivityLabel(now);
+    }
     if (visitor) drawVisitorPet(now);
     drawPoops(now);
   } else if(state){
@@ -6902,13 +7345,123 @@ function clearChatOnEvolve() {
 // ============================================================
 let avatarCreatorOpen = false;
 let tempAvatar = { bodyColor: 0, eyeStyle: 0, pattern: 0, mouth: 0, bodyShape: 0, earType: 0, tailType: 0, name: 'Pet' };
+let creatorReactionScale = 1.0;
+let creatorReactionTimer = 0;
+let creatorActiveTab = 'color';
+let creatorBlinkTimer = 0;
+let creatorBlinkState = false;
+
+function creatorReaction() {
+  creatorReactionScale = 1.15;
+  creatorReactionTimer = 300;
+  const w = vw(), h = vh();
+  const px = w / 2, py = h * 0.4;
+  for (let i = 0; i < 5; i++) {
+    spawnParticle(px + (Math.random() - 0.5) * 80, py + (Math.random() - 0.5) * 80, '✨');
+  }
+}
+
+function drawCreatorPreviewPet(t) {
+  const w = vw(), h = vh();
+  const r = Math.min(w, h) * 0.15;
+  const cx = w / 2;
+  const cy = h * 0.4;
+  const bounce = Math.sin(t * 0.003) * r * 0.05;
+  const breathe = 1 + Math.sin(t * 0.002) * 0.02;
+
+  // Blink logic
+  creatorBlinkTimer -= 16;
+  if (creatorBlinkTimer <= 0) {
+    if (creatorBlinkState) {
+      creatorBlinkState = false;
+      creatorBlinkTimer = 3000 + Math.random() * 2000;
+    } else {
+      creatorBlinkState = true;
+      creatorBlinkTimer = 150;
+    }
+  }
+
+  // Decay reaction scale
+  if (creatorReactionScale > 1.0) {
+    creatorReactionScale += (1.0 - creatorReactionScale) * 0.08;
+    if (creatorReactionScale < 1.005) creatorReactionScale = 1.0;
+  }
+
+  const scale = breathe * creatorReactionScale;
+  const colors = AVATAR_COLORS[tempAvatar.bodyColor] || AVATAR_COLORS[0];
+
+  ctx.save();
+  ctx.translate(cx, cy + bounce);
+  ctx.scale(scale, scale);
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  ctx.beginPath();
+  ctx.ellipse(0, r * 0.95, r * 0.6, r * 0.12, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Tail behind body
+  drawAvatarTail(ctx, 0, 0, r, tempAvatar.tailType, colors);
+  // Ears behind body
+  drawAvatarEars(ctx, 0, 0, r, tempAvatar.earType, colors);
+
+  // Body
+  const grad = ctx.createRadialGradient(-r * 0.2, -r * 0.3, r * 0.1, 0, 0, r);
+  grad.addColorStop(0, colors.primary);
+  grad.addColorStop(1, colors.secondary);
+  ctx.fillStyle = grad;
+  drawBodyShape(ctx, 0, 0, r, tempAvatar.bodyShape);
+
+  // Pattern
+  drawAvatarPattern(ctx, 0, 0, r, tempAvatar.pattern, colors);
+
+  // Cheeks
+  ctx.fillStyle = 'rgba(255,150,150,0.3)';
+  ctx.beginPath(); ctx.arc(-r * 0.45, r * 0.15, r * 0.15, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(r * 0.45, r * 0.15, r * 0.15, 0, Math.PI * 2); ctx.fill();
+
+  // Eyes (with blinking)
+  if (creatorBlinkState) {
+    // Closed eyes - simple lines
+    ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    const eyeSpread = r * 0.22;
+    const eyeY = -r * 0.1;
+    ctx.beginPath(); ctx.moveTo(-eyeSpread - r * 0.08, eyeY); ctx.lineTo(-eyeSpread + r * 0.08, eyeY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(eyeSpread - r * 0.08, eyeY); ctx.lineTo(eyeSpread + r * 0.08, eyeY); ctx.stroke();
+  } else {
+    drawAvatarEyes(ctx, 0, 0, r, tempAvatar.eyeStyle);
+  }
+
+  // Mouth
+  drawAvatarMouth(ctx, 0, 0, r, tempAvatar.mouth);
+
+  // Feet
+  ctx.fillStyle = colors.secondary;
+  ctx.beginPath(); ctx.ellipse(-r * 0.3, r * 0.9, r * 0.2, r * 0.12, -0.1, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(r * 0.3, r * 0.9, r * 0.2, r * 0.12, 0.1, 0, Math.PI * 2); ctx.fill();
+
+  // Name label
+  if (tempAvatar.name && tempAvatar.name !== 'Pet') {
+    ctx.font = `bold ${Math.round(r * 0.22)}px sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    ctx.textAlign = 'center';
+    ctx.fillText(tempAvatar.name, 0, r * 1.25);
+    ctx.textAlign = 'start';
+  }
+
+  ctx.restore();
+}
 
 function openAvatarCreator() {
   avatarCreatorOpen = true;
   tempAvatar = { bodyColor: 0, eyeStyle: 0, pattern: 0, mouth: 0, bodyShape: 0, earType: 0, tailType: 0, name: 'Pet' };
+  creatorActiveTab = 'color';
   document.getElementById('avatar-creator').classList.add('open');
+  const panel = document.getElementById('creator-bottom-panel');
+  if (panel) panel.classList.remove('fade-out');
   buildAvatarCreatorUI();
-  updateAvatarPreview();
 }
 
 function closeAvatarCreator() {
@@ -6916,172 +7469,144 @@ function closeAvatarCreator() {
   document.getElementById('avatar-creator').classList.remove('open');
 }
 
+const CREATOR_TABS = [
+  { id: 'color', label: 'Color' },
+  { id: 'eyes', label: 'Eyes' },
+  { id: 'pattern', label: 'Pattern' },
+  { id: 'mouth', label: 'Mouth' },
+  { id: 'body', label: 'Body' },
+  { id: 'ears', label: 'Ears' },
+  { id: 'tail', label: 'Tail' },
+  { id: 'name', label: 'Name' }
+];
+
 function buildAvatarCreatorUI() {
-  // Build color picker
-  const colorPicker = document.getElementById('color-picker');
-  colorPicker.innerHTML = AVATAR_COLORS.map((c, i) => `
-    <div class="color-swatch ${i === tempAvatar.bodyColor ? 'selected' : ''}" 
-         style="background: linear-gradient(135deg, ${c.primary}, ${c.secondary})"
-         data-index="${i}" onclick="selectAvatarColor(${i})">
-    </div>
-  `).join('');
-  
-  // Build eye picker
-  const eyePicker = document.getElementById('eye-picker');
-  const eyeIcons = ['👁️', '😴', '✨', '😺', '⚫', '🌸'];
-  eyePicker.innerHTML = EYE_STYLES.map((e, i) => `
-    <div class="eye-option ${i === tempAvatar.eyeStyle ? 'selected' : ''}" 
-         data-index="${i}" onclick="selectEyeStyle(${i})">
-      ${eyeIcons[i]}<span>${e}</span>
-    </div>
-  `).join('');
-  
-  // Build pattern picker
-  const patternPicker = document.getElementById('pattern-picker');
-  const patternIcons = ['⬜', '⚪', '〰️', '❤️', '⭐', '🌈'];
-  patternPicker.innerHTML = PATTERNS.map((p, i) => `
-    <div class="pattern-option ${i === tempAvatar.pattern ? 'selected' : ''}"
-         data-index="${i}" onclick="selectPattern(${i})">
-      ${patternIcons[i]}<span>${p.name}</span>
-    </div>
+  // Build tab bar
+  const tabBar = document.getElementById('creator-tabs');
+  tabBar.innerHTML = CREATOR_TABS.map(tab => `
+    <div class="category-tab ${tab.id === creatorActiveTab ? 'active' : ''}" onclick="switchCreatorTab('${tab.id}')">${tab.label}</div>
   `).join('');
 
-  // Build mouth picker
-  const mouthPicker = document.getElementById('mouth-picker');
-  const mouthIcons = ['😊', '😁', '😺', '😮', '😋', '😐'];
-  mouthPicker.innerHTML = MOUTH_STYLES.map((m, i) => `
-    <div class="eye-option ${i === tempAvatar.mouth ? 'selected' : ''}"
-         data-index="${i}" onclick="selectMouth(${i})">
-      ${mouthIcons[i]}<span>${m}</span>
-    </div>
-  `).join('');
-
-  // Build body shape picker
-  const shapePicker = document.getElementById('shape-picker');
-  const shapeIcons = ['⭕', '🥚', '🫧', '📏', '⬜', '🫘'];
-  shapePicker.innerHTML = BODY_SHAPES.map((s, i) => `
-    <div class="eye-option ${i === tempAvatar.bodyShape ? 'selected' : ''}"
-         data-index="${i}" onclick="selectBodyShape(${i})">
-      ${shapeIcons[i]}<span>${s}</span>
-    </div>
-  `).join('');
-
-  // Build ear type picker
-  const earPicker = document.getElementById('ear-picker');
-  const earIcons = ['❌', '🔵', '🔺', '🐕', '🐰', '🐻'];
-  earPicker.innerHTML = EAR_TYPES.map((e, i) => `
-    <div class="eye-option ${i === tempAvatar.earType ? 'selected' : ''}"
-         data-index="${i}" onclick="selectEarType(${i})">
-      ${earIcons[i]}<span>${e}</span>
-    </div>
-  `).join('');
-
-  // Build tail type picker
-  const tailPicker = document.getElementById('tail-picker');
-  const tailIcons = ['❌', '⚫', '〰️', '☁️', '🌀', '🐟'];
-  tailPicker.innerHTML = TAIL_TYPES.map((t, i) => `
-    <div class="eye-option ${i === tempAvatar.tailType ? 'selected' : ''}"
-         data-index="${i}" onclick="selectTailType(${i})">
-      ${tailIcons[i]}<span>${t}</span>
-    </div>
-  `).join('');
+  // Populate current tab
+  switchCreatorTab(creatorActiveTab);
 
   // Set up name input
   const nameInput = document.getElementById('pet-name-input');
   nameInput.value = tempAvatar.name;
   nameInput.oninput = function() {
     tempAvatar.name = this.value.trim() || 'Pet';
-    updateAvatarPreview();
   };
 
   // Set up start button
   document.getElementById('start-adventure-btn').onclick = confirmAvatarCreation;
 }
 
+function renderMiniPreview(canvasEl, overrides) {
+  const c = canvasEl.getContext('2d');
+  const w = canvasEl.width, h = canvasEl.height;
+  const cx = w / 2, cy = h / 2 + 2;
+  const r = 18;
+  c.clearRect(0, 0, w, h);
+  const merged = { ...tempAvatar, ...overrides };
+  const colors = AVATAR_COLORS[merged.bodyColor] || AVATAR_COLORS[0];
+
+  drawAvatarTail(c, cx, cy, r, merged.tailType, colors);
+  drawAvatarEars(c, cx, cy, r, merged.earType, colors);
+  const grad = c.createRadialGradient(cx - r * 0.2, cy - r * 0.3, r * 0.1, cx, cy, r);
+  grad.addColorStop(0, colors.primary);
+  grad.addColorStop(1, colors.secondary);
+  c.fillStyle = grad;
+  drawBodyShape(c, cx, cy, r, merged.bodyShape);
+  drawAvatarPattern(c, cx, cy, r, merged.pattern, colors);
+  drawAvatarEyes(c, cx, cy, r, merged.eyeStyle);
+  drawAvatarMouth(c, cx, cy, r, merged.mouth);
+}
+
+function switchCreatorTab(tabName) {
+  creatorActiveTab = tabName;
+  const strip = document.getElementById('creator-option-strip');
+  const nameInput = document.getElementById('pet-name-input');
+
+  // Update tab highlight
+  document.querySelectorAll('#creator-tabs .category-tab').forEach(el => {
+    el.classList.toggle('active', el.textContent.toLowerCase() === tabName);
+  });
+
+  // Show/hide name input
+  nameInput.style.display = tabName === 'name' ? 'block' : 'none';
+
+  if (tabName === 'name') {
+    strip.innerHTML = '';
+    nameInput.focus();
+    return;
+  }
+
+  if (tabName === 'color') {
+    strip.innerHTML = AVATAR_COLORS.map((c, i) => `
+      <div class="color-swatch ${i === tempAvatar.bodyColor ? 'selected' : ''}"
+           style="background:linear-gradient(135deg,${c.primary},${c.secondary})"
+           onclick="selectAvatarColor(${i})"></div>
+    `).join('');
+    return;
+  }
+
+  // For all other tabs, render mini-preview canvases
+  let items, selectedIndex, propKey, selectFn;
+  switch (tabName) {
+    case 'eyes':
+      items = EYE_STYLES; selectedIndex = tempAvatar.eyeStyle; propKey = 'eyeStyle'; selectFn = 'selectEyeStyle'; break;
+    case 'pattern':
+      items = PATTERNS; selectedIndex = tempAvatar.pattern; propKey = 'pattern'; selectFn = 'selectPattern'; break;
+    case 'mouth':
+      items = MOUTH_STYLES; selectedIndex = tempAvatar.mouth; propKey = 'mouth'; selectFn = 'selectMouth'; break;
+    case 'body':
+      items = BODY_SHAPES; selectedIndex = tempAvatar.bodyShape; propKey = 'bodyShape'; selectFn = 'selectBodyShape'; break;
+    case 'ears':
+      items = EAR_TYPES; selectedIndex = tempAvatar.earType; propKey = 'earType'; selectFn = 'selectEarType'; break;
+    case 'tail':
+      items = TAIL_TYPES; selectedIndex = tempAvatar.tailType; propKey = 'tailType'; selectFn = 'selectTailType'; break;
+  }
+
+  strip.innerHTML = items.map((item, i) => {
+    const label = typeof item === 'object' ? item.name : item;
+    return `<div class="option-mini-preview ${i === selectedIndex ? 'selected' : ''}" onclick="${selectFn}(${i})" title="${label}">
+      <canvas width="48" height="48" id="mini-prev-${tabName}-${i}"></canvas>
+    </div>`;
+  }).join('');
+
+  // Render mini previews after DOM update
+  requestAnimationFrame(() => {
+    items.forEach((_, i) => {
+      const c = document.getElementById(`mini-prev-${tabName}-${i}`);
+      if (c) renderMiniPreview(c, { [propKey]: i });
+    });
+  });
+}
+window.switchCreatorTab = switchCreatorTab;
+
 function selectAvatarColor(index) {
   tempAvatar.bodyColor = index;
-  document.querySelectorAll('#color-picker .color-swatch').forEach((el, i) => {
+  document.querySelectorAll('#creator-option-strip .color-swatch').forEach((el, i) => {
     el.classList.toggle('selected', i === index);
   });
-  updateAvatarPreview();
+  creatorReaction();
 }
 
 function selectEyeStyle(index) {
   tempAvatar.eyeStyle = index;
-  document.querySelectorAll('#eye-picker .eye-option').forEach((el, i) => {
-    el.classList.toggle('selected', i === index);
-  });
-  updateAvatarPreview();
+  switchCreatorTab('eyes');
+  creatorReaction();
 }
 
 function selectPattern(index) {
   tempAvatar.pattern = index;
-  document.querySelectorAll('#pattern-picker .pattern-option').forEach((el, i) => {
-    el.classList.toggle('selected', i === index);
-  });
-  updateAvatarPreview();
+  switchCreatorTab('pattern');
+  creatorReaction();
 }
 
 function updateAvatarPreview() {
-  const canvas = document.getElementById('avatar-preview');
-  if (!canvas) return;
-  const pctx = canvas.getContext('2d');
-  const w = canvas.width;
-  const h = canvas.height;
-  const cx = w / 2;
-  const cy = h / 2 + 10;
-  const r = 65;
-
-  pctx.clearRect(0, 0, w, h);
-
-  const colors = AVATAR_COLORS[tempAvatar.bodyColor] || AVATAR_COLORS[0];
-
-  // Shadow under pet
-  pctx.fillStyle = 'rgba(0,0,0,0.15)';
-  pctx.beginPath();
-  pctx.ellipse(cx, cy + r * 0.95, r * 0.6, r * 0.12, 0, 0, Math.PI * 2);
-  pctx.fill();
-
-  // Draw tail behind body
-  drawAvatarTail(pctx, cx, cy, r, tempAvatar.tailType, colors);
-
-  // Draw ears behind body
-  drawAvatarEars(pctx, cx, cy, r, tempAvatar.earType, colors);
-
-  // Draw body based on shape
-  const grad = pctx.createRadialGradient(cx - r * 0.2, cy - r * 0.3, r * 0.1, cx, cy, r);
-  grad.addColorStop(0, colors.primary);
-  grad.addColorStop(1, colors.secondary);
-  pctx.fillStyle = grad;
-  drawBodyShape(pctx, cx, cy, r, tempAvatar.bodyShape);
-
-  // Draw pattern
-  drawAvatarPattern(pctx, cx, cy, r, tempAvatar.pattern, colors);
-
-  // Draw cheeks
-  pctx.fillStyle = 'rgba(255,150,150,0.3)';
-  pctx.beginPath(); pctx.arc(cx - r * 0.45, cy + r * 0.15, r * 0.15, 0, Math.PI * 2); pctx.fill();
-  pctx.beginPath(); pctx.arc(cx + r * 0.45, cy + r * 0.15, r * 0.15, 0, Math.PI * 2); pctx.fill();
-
-  // Draw eyes
-  drawAvatarEyes(pctx, cx, cy, r, tempAvatar.eyeStyle);
-
-  // Draw mouth based on style
-  drawAvatarMouth(pctx, cx, cy, r, tempAvatar.mouth);
-
-  // Draw feet
-  pctx.fillStyle = colors.secondary;
-  pctx.beginPath(); pctx.ellipse(cx - r * 0.3, cy + r * 0.9, r * 0.2, r * 0.12, -0.1, 0, Math.PI * 2); pctx.fill();
-  pctx.beginPath(); pctx.ellipse(cx + r * 0.3, cy + r * 0.9, r * 0.2, r * 0.12, 0.1, 0, Math.PI * 2); pctx.fill();
-
-  // Draw name label below pet
-  if (tempAvatar.name && tempAvatar.name !== 'Pet') {
-    pctx.font = 'bold 14px sans-serif';
-    pctx.fillStyle = 'rgba(255,255,255,0.7)';
-    pctx.textAlign = 'center';
-    pctx.fillText(tempAvatar.name, cx, cy + r * 1.15);
-    pctx.textAlign = 'start';
-  }
+  // Preview is now drawn on the main game canvas via drawCreatorPreviewPet()
+  // This function is kept for compatibility but no longer draws to a separate canvas
 }
 
 function drawBodyShape(c, cx, cy, r, shapeIndex) {
@@ -7380,9 +7905,17 @@ function confirmAvatarCreation() {
   // (stageTime was accumulating while the avatar creator was open)
   state.stageTime = 0;
   save();
-  closeAvatarCreator();
-  notify('🎉 Welcome, ' + state.avatar.name + '!');
+
+  // Smooth fade-out transition
+  const panel = document.getElementById('creator-bottom-panel');
+  if (panel) panel.classList.add('fade-out');
   sfxConfirm();
+
+  setTimeout(() => {
+    closeAvatarCreator();
+    if (panel) panel.classList.remove('fade-out');
+    notify('🎉 Welcome, ' + state.avatar.name + '!');
+  }, 600);
 }
 
 function getAvatarMouth() {
@@ -7404,34 +7937,26 @@ function getAvatarTailType() {
 
 function selectMouth(index) {
   tempAvatar.mouth = index;
-  document.querySelectorAll('#mouth-picker .eye-option').forEach((el, i) => {
-    el.classList.toggle('selected', i === index);
-  });
-  updateAvatarPreview();
+  switchCreatorTab('mouth');
+  creatorReaction();
 }
 
 function selectBodyShape(index) {
   tempAvatar.bodyShape = index;
-  document.querySelectorAll('#shape-picker .eye-option').forEach((el, i) => {
-    el.classList.toggle('selected', i === index);
-  });
-  updateAvatarPreview();
+  switchCreatorTab('body');
+  creatorReaction();
 }
 
 function selectEarType(index) {
   tempAvatar.earType = index;
-  document.querySelectorAll('#ear-picker .eye-option').forEach((el, i) => {
-    el.classList.toggle('selected', i === index);
-  });
-  updateAvatarPreview();
+  switchCreatorTab('ears');
+  creatorReaction();
 }
 
 function selectTailType(index) {
   tempAvatar.tailType = index;
-  document.querySelectorAll('#tail-picker .eye-option').forEach((el, i) => {
-    el.classList.toggle('selected', i === index);
-  });
-  updateAvatarPreview();
+  switchCreatorTab('tail');
+  creatorReaction();
 }
 
 // Make avatar creator functions globally accessible
@@ -8314,6 +8839,191 @@ function openTasks() {
 function closeTasks() {
   const panel = document.getElementById('tasks-panel');
   if (panel) panel.classList.remove('open');
+}
+
+// ============================================================
+// GARDEN PANEL
+// ============================================================
+let gardenPanelOpen = false;
+let gardenPanelRAF = null;
+let gardenCanvas = null;
+let gardenCtx = null;
+
+function openGarden() {
+  const panel = document.getElementById('garden-panel');
+  if (!panel) return;
+
+  gardenCanvas = document.getElementById('garden-canvas');
+  if (!gardenCanvas) return;
+  gardenCtx = gardenCanvas.getContext('2d');
+
+  panel.classList.add('open');
+  gardenPanelOpen = true;
+
+  // Size canvas to container (after panel is visible)
+  requestAnimationFrame(() => {
+    const container = gardenCanvas.parentElement;
+    const dpr = window.devicePixelRatio || 1;
+    gardenCanvas.width = container.clientWidth * dpr;
+    gardenCanvas.height = container.clientHeight * dpr;
+    gardenCanvas.style.width = container.clientWidth + 'px';
+    gardenCanvas.style.height = container.clientHeight + 'px';
+
+    buildGardenInfo();
+    gardenPanelLoop(performance.now());
+  });
+}
+
+function closeGarden() {
+  const panel = document.getElementById('garden-panel');
+  if (panel) panel.classList.remove('open');
+
+  gardenPanelOpen = false;
+  if (gardenPanelRAF) {
+    cancelAnimationFrame(gardenPanelRAF);
+    gardenPanelRAF = null;
+  }
+}
+
+function buildGardenInfo() {
+  const info = document.getElementById('garden-info');
+  if (!info || !state) return;
+
+  let html = '';
+
+  // Gardening skill level
+  const level = state.skills ? state.skills.gardening.level : 1;
+  html += '<div class="garden-info-level">Gardening Lv.' + level + '</div>';
+
+  // Seed counts
+  if (state.seeds) {
+    state.seeds.forEach(s => {
+      if (s.count > 0) {
+        const seedData = SEED_TYPES.find(st => st.id === s.type);
+        if (seedData) {
+          html += '<div class="garden-info-item">' + seedData.emoji + ' ' + seedData.name + ' <span class="seed-count">x' + s.count + '</span></div>';
+        }
+      }
+    });
+  }
+
+  if (!state.seeds || state.seeds.filter(s => s.count > 0).length === 0) {
+    html += '<div class="garden-info-item" style="color:rgba(255,255,255,0.4);">No seeds - find some by foraging!</div>';
+  }
+
+  info.innerHTML = html;
+}
+
+function gardenPanelLoop(t) {
+  if (!gardenPanelOpen) return;
+
+  // Re-size canvas if needed (e.g. rotation)
+  const container = gardenCanvas.parentElement;
+  const dpr = window.devicePixelRatio || 1;
+  const cw = container.clientWidth * dpr;
+  const ch = container.clientHeight * dpr;
+  if (gardenCanvas.width !== cw || gardenCanvas.height !== ch) {
+    gardenCanvas.width = cw;
+    gardenCanvas.height = ch;
+    gardenCanvas.style.width = container.clientWidth + 'px';
+    gardenCanvas.style.height = container.clientHeight + 'px';
+  }
+
+  // Clear
+  gardenCtx.clearRect(0, 0, gardenCanvas.width, gardenCanvas.height);
+
+  // Scale garden to fill canvas nicely
+  const scale = Math.min(gardenCanvas.width / 350, gardenCanvas.height / 300) * 0.85;
+
+  // Temporarily swap global ctx and set isoGardenOrigin for centered rendering
+  const savedCtx = ctx;
+  const savedOrigin = { ...isoGardenOrigin };
+  ctx = gardenCtx;
+
+  ctx.save();
+  ctx.scale(scale, scale);
+
+  // Center the garden in the scaled space
+  const scaledW = gardenCanvas.width / scale;
+  const scaledH = gardenCanvas.height / scale;
+  const panelOrigin = {
+    x: scaledW * 0.5,
+    y: scaledH * 0.35
+  };
+
+  // Draw the isometric garden with centered origin
+  drawIsometricGarden(t, panelOrigin);
+
+  ctx.restore();
+
+  // Restore global ctx and origin
+  ctx = savedCtx;
+  isoGardenOrigin = savedOrigin;
+
+  // Refresh info periodically (plant stages update)
+  if (Math.floor(t / 5000) !== Math.floor((t - 16) / 5000)) {
+    buildGardenInfo();
+  }
+
+  gardenPanelRAF = requestAnimationFrame(gardenPanelLoop);
+}
+
+// Garden canvas click handler
+function initGardenCanvasListeners() {
+  const gc = document.getElementById('garden-canvas');
+  if (!gc) return;
+
+  gc.addEventListener('click', function(e) {
+    if (!gardenPanelOpen || !state || !state.gardenGrid) return;
+
+    const rect = gc.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+
+    // Get click position in canvas pixel space
+    const canvasX = (e.clientX - rect.left) * dpr;
+    const canvasY = (e.clientY - rect.top) * dpr;
+
+    // Reverse the scale transform
+    const scale = Math.min(gc.width / 350, gc.height / 300) * 0.85;
+    const scaledX = canvasX / scale;
+    const scaledY = canvasY / scale;
+
+    // Compute origin in scaled space (must match gardenPanelLoop)
+    const scaledW = gc.width / scale;
+    const scaledH = gc.height / scale;
+    const originX = scaledW * 0.5;
+    const originY = scaledH * 0.35;
+
+    // Convert to iso grid
+    const dx = scaledX - originX;
+    const dy = scaledY - originY;
+    const gridX = Math.floor(((dx / (ISO_TILE_W / 2)) + (dy / (ISO_TILE_H / 2))) / 2);
+    const gridY = Math.floor(((dy / (ISO_TILE_H / 2)) - (dx / (ISO_TILE_W / 2))) / 2);
+
+    if (gridX >= 0 && gridX < ISO_GRID_COLS && gridY >= 0 && gridY < ISO_GRID_ROWS) {
+      const cell = state.gardenGrid[gridY][gridX];
+      selectedGardenTile = { row: gridY, col: gridX };
+
+      if (cell) {
+        if (cell.stage >= 4) {
+          harvestPlant(gridY, gridX);
+        } else {
+          waterPlant(gridY, gridX);
+        }
+      } else {
+        openSeedMenu(gridY, gridX);
+      }
+
+      buildGardenInfo();
+    }
+  });
+}
+
+// Initialize garden listeners once DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initGardenCanvasListeners);
+} else {
+  initGardenCanvasListeners();
 }
 
 function buildTasksList() {
