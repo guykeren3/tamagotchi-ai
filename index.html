@@ -553,6 +553,9 @@ canvas#game{position:fixed;top:0;left:0;width:100%;height:100%;display:block;}
     <div class="game-card" onclick="startGame('guess')"><span class="game-icon">🧭</span><div class="game-info"><div class="game-name">Guess Direction</div><div class="game-desc">Remember which way the arrow points</div></div></div>
     <div class="game-card" onclick="startGame('memory')"><span class="game-icon">🃏</span><div class="game-info"><div class="game-name">Memory Match</div><div class="game-desc">Find all matching pairs</div></div></div>
     <div class="game-card" onclick="startGame('dodge')"><span class="game-icon">💨</span><div class="game-info"><div class="game-name">Dodge</div><div class="game-desc">Avoid falling obstacles</div></div></div>
+    <div class="game-card" onclick="startGame('petcatch')"><span class="game-icon">🍎</span><div class="game-info"><div class="game-name">Pet Catch</div><div class="game-desc">Catch falling food with your pet!</div></div></div>
+    <div class="game-card" onclick="startGame('runner')"><span class="game-icon">🏃</span><div class="game-info"><div class="game-name">Pet Runner</div><div class="game-desc">Jump over obstacles!</div></div></div>
+    <div class="game-card" onclick="startGame('copycat')"><span class="game-icon">🧠</span><div class="game-info"><div class="game-name">Copy Cat</div><div class="game-desc">Repeat the color sequence!</div></div></div>
   </div>
 </div>
 
@@ -790,8 +793,8 @@ const SEED_RARITY_COLORS = {
 const SEED_MARKET_PRICES = { common: 10, uncommon: 30, rare: 80, epic: 250, legendary: 500 };
 
 // Isometric garden constants
-const ISO_TILE_W = 40;
-const ISO_TILE_H = 20;
+const ISO_TILE_W = 48;
+const ISO_TILE_H = 24;
 const ISO_GRID_COLS = 6;
 const ISO_GRID_ROWS = 5;
 
@@ -4236,9 +4239,9 @@ function drawIsoPlant(gridX, gridY, plant, t) {
   const baseY = pos.y - 4;
   const baseX = pos.x;
 
-  // Stem and plant height grows upward with stage (Farmville-style)
-  const maxStemH = 38;
-  const stemH = stage === 0 ? 4 : stage === 1 ? 12 : stage === 2 ? 22 : stage === 3 ? 32 : maxStemH;
+  // Stem and plant height grows upward with stage (Farmville / Stardew Valley style - tall vertical growth)
+  const maxStemH = 60;
+  const stemH = stage === 0 ? 6 : stage === 1 ? 20 : stage === 2 ? 35 : stage === 3 ? 50 : maxStemH;
   const stemTopY = baseY - stemH;
 
   // Stem color darkens as plant matures
@@ -4246,51 +4249,72 @@ function drawIsoPlant(gridX, gridY, plant, t) {
   const stemColor = stemColors[stage];
 
   // --- Draw dirt mound at base ---
-  ctx.fillStyle = 'rgba(80,50,20,0.6)';
+  ctx.fillStyle = 'rgba(80,50,20,0.7)';
   ctx.beginPath();
-  ctx.ellipse(baseX, baseY + 2, 10, 4, 0, 0, Math.PI * 2);
+  ctx.ellipse(baseX, baseY + 2, 12, 5, 0, 0, Math.PI * 2);
   ctx.fill();
+  // Tilled soil lines
+  ctx.strokeStyle = 'rgba(60,35,10,0.3)';
+  ctx.lineWidth = 0.5;
+  for (let li = -1; li <= 1; li++) {
+    ctx.beginPath(); ctx.moveTo(baseX - 8, baseY + 2 + li * 2); ctx.lineTo(baseX + 8, baseY + 2 + li * 2); ctx.stroke();
+  }
 
   // --- Draw stem growing upward ---
   if (stage >= 0) {
     ctx.save();
-    ctx.translate(sway * 0.3, 0); // subtle sway on stem
+    ctx.translate(sway * 0.3, 0);
 
-    // Main stem
-    const stemWidth = stage === 0 ? 1.5 : stage <= 2 ? 2 : 2.5;
+    // Main stem - thicker for taller plants
+    const stemWidth = stage === 0 ? 1.5 : stage === 1 ? 2 : stage === 2 ? 2.5 : 3;
     ctx.strokeStyle = stemColor;
     ctx.lineWidth = stemWidth;
     ctx.beginPath();
     ctx.moveTo(baseX, baseY);
-    // Slight curve to the stem
     const cpx = baseX + sway * 0.5;
     const cpy = baseY - stemH * 0.5;
     ctx.quadraticCurveTo(cpx, cpy, baseX + sway * 0.3, stemTopY);
     ctx.stroke();
 
-    // --- Draw leaves on stem (stage 1+) ---
+    // Secondary stem for stage 3+ (branching)
+    if (stage >= 3) {
+      ctx.lineWidth = stemWidth * 0.6;
+      ctx.beginPath();
+      ctx.moveTo(baseX + sway * 0.15, baseY - stemH * 0.4);
+      ctx.quadraticCurveTo(baseX + sway * 0.3 + 8, baseY - stemH * 0.6, baseX + sway * 0.3 + 6, baseY - stemH * 0.75);
+      ctx.stroke();
+    }
+
+    // --- Draw leaves on stem (stage 1+) - bigger, more prominent ---
     if (stage >= 1) {
-      const leafCount = stage === 1 ? 1 : stage === 2 ? 2 : stage === 3 ? 3 : 3;
+      const leafCount = stage === 1 ? 2 : stage === 2 ? 3 : stage === 3 ? 4 : 5;
       for (let i = 0; i < leafCount; i++) {
         const leafProgress = (i + 1) / (leafCount + 1);
         const leafY = baseY - stemH * leafProgress;
         const leafX = baseX + sway * 0.3 * leafProgress;
         const leafSide = (i % 2 === 0) ? 1 : -1;
-        const leafSize = 4 + stage * 1.5;
-        const leafSway = Math.sin(t * 0.003 + i * 1.5 + gridX) * 1.5;
+        const leafSize = 6 + stage * 2;
+        const leafSway = Math.sin(t * 0.003 + i * 1.5 + gridX) * 2;
 
+        // Leaf shadow
+        ctx.fillStyle = 'rgba(0,50,0,0.1)';
+        ctx.beginPath();
+        ctx.ellipse(leafX + leafSide * (leafSize * 0.7) + leafSway + 1, leafY + 1, leafSize, leafSize * 0.4, leafSide * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Leaf
         ctx.fillStyle = stage >= 3 ? '#3cb043' : '#5aad3c';
         ctx.beginPath();
-        // Leaf shape: oval angled away from stem
-        ctx.ellipse(
-          leafX + leafSide * (leafSize * 0.7) + leafSway,
-          leafY,
-          leafSize,
-          leafSize * 0.4,
-          leafSide * 0.5,
-          0, Math.PI * 2
-        );
+        ctx.ellipse(leafX + leafSide * (leafSize * 0.7) + leafSway, leafY, leafSize, leafSize * 0.4, leafSide * 0.5, 0, Math.PI * 2);
         ctx.fill();
+
+        // Leaf vein
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(leafX, leafY);
+        ctx.lineTo(leafX + leafSide * leafSize * 0.6 + leafSway, leafY);
+        ctx.stroke();
       }
     }
 
@@ -4298,14 +4322,14 @@ function drawIsoPlant(gridX, gridY, plant, t) {
     if (stage >= 2) {
       const topX = baseX + sway * 0.3;
       const topY = stemTopY;
-      const headSize = stage === 2 ? 14 : stage === 3 ? 18 : 24;
+      const headSize = stage === 2 ? 16 : stage === 3 ? 22 : 28;
 
       // Rarity glow ring (uncommon+)
       if (rarity !== 'common') {
         ctx.save();
         const glowColor = SEED_RARITY_COLORS[rarity] || '#fff';
         const glowPulse = 0.2 + Math.sin(t * 0.003 + gridX * 2 + gridY) * 0.15;
-        const glowSize = headSize * 0.7 + (rarity === 'legendary' ? 8 : rarity === 'epic' ? 6 : 3);
+        const glowSize = headSize * 0.7 + (rarity === 'legendary' ? 10 : rarity === 'epic' ? 7 : 4);
         ctx.globalAlpha = glowPulse;
         ctx.strokeStyle = glowColor;
         ctx.lineWidth = rarity === 'legendary' ? 3 : rarity === 'epic' ? 2.5 : 2;
@@ -4315,32 +4339,47 @@ function drawIsoPlant(gridX, gridY, plant, t) {
         ctx.restore();
       }
 
-      // Harvestable glow (stage 4)
+      // Harvestable glow (stage 4) - bigger sparkle
       if (stage >= 4) {
         ctx.save();
         const harvestGlow = rarity === 'legendary' ? '#FFD700' : rarity === 'epic' ? '#a855f7' : '#FFD700';
         ctx.globalAlpha = 0.35 + Math.sin(t * 0.004) * 0.2;
         ctx.fillStyle = harvestGlow;
-        ctx.beginPath(); ctx.arc(topX, topY, headSize * 0.7, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(topX, topY, headSize * 0.8, 0, Math.PI * 2); ctx.fill();
+        // Sparkle rays
+        ctx.strokeStyle = harvestGlow;
+        ctx.lineWidth = 1;
+        ctx.globalAlpha = 0.3 + Math.sin(t * 0.006) * 0.15;
+        for (let r = 0; r < 4; r++) {
+          const ra = t * 0.002 + r * Math.PI * 0.5;
+          ctx.beginPath();
+          ctx.moveTo(topX + Math.cos(ra) * headSize * 0.5, topY + Math.sin(ra) * headSize * 0.5);
+          ctx.lineTo(topX + Math.cos(ra) * headSize * 1.1, topY + Math.sin(ra) * headSize * 1.1);
+          ctx.stroke();
+        }
         ctx.restore();
       }
 
-      // Draw the plant top as shapes
       drawPlantTop(topX, topY, headSize, seedData.id, stage, t, gridX + gridY * 7);
+
+      // Extra fruit/flower on branch for stage 3+
+      if (stage >= 3) {
+        const branchTopX = baseX + sway * 0.3 + 6;
+        const branchTopY = baseY - stemH * 0.75;
+        drawPlantTop(branchTopX, branchTopY, headSize * 0.6, seedData.id, stage - 1, t, gridX + gridY * 7 + 3);
+      }
     } else if (stage === 1) {
-      // Small leaf cluster at top of sprout
-      drawLeafCluster(baseX + sway * 0.3, stemTopY, 10, t, gridX + gridY);
+      drawLeafCluster(baseX + sway * 0.3, stemTopY, 12, t, gridX + gridY);
     } else {
-      // Stage 0: tiny sprout
-      drawSprout(baseX, baseY, 10);
+      drawSprout(baseX, baseY, 12);
     }
 
     ctx.restore();
   }
 
-  // Water droplet indicator if recently watered (drawn, no emoji)
+  // Water droplet indicator if recently watered
   if (now - plant.wateredAt < 30000) {
-    drawWaterDrop(baseX + 12, stemTopY - 8, 10);
+    drawWaterDrop(baseX + 14, stemTopY - 10, 12);
   }
 }
 
@@ -6590,6 +6629,9 @@ function startGame(type){
   if(type==='guess') startGuessGame();
   else if(type==='memory') startMemoryGame();
   else if(type==='dodge') startDodgeGame();
+  else if(type==='petcatch') startPetCatchGame();
+  else if(type==='runner') startRunnerGame();
+  else if(type==='copycat') startCopyCatGame();
   document.getElementById('minigame-overlay').classList.add('open');
 }
 window.startGame=startGame;
@@ -6649,6 +6691,388 @@ function startDodgeGame(){
   miniGame={type:'dodge',px:MGW/2,obstacles:[],spawnTimer:0,score:0,timer:600,hit:false,phase:'play'};
 }
 
+// ============================================================
+// DRAW MINI PET (for minigame canvas)
+// ============================================================
+function drawMiniPet(c, cx, cy, r, t) {
+  const colors = getAvatarColors();
+  const c1 = colors.primary, c2 = colors.secondary;
+  c.save();
+  c.translate(cx, cy);
+
+  // Tail behind body
+  const tailType = getAvatarTailType();
+  c.save();
+  drawAvatarTail(c, 0, 0, r, tailType, colors);
+  c.restore();
+
+  // Ears behind body
+  const earType = getAvatarEarType();
+  c.save();
+  drawAvatarEars(c, 0, 0, r, earType, colors);
+  c.restore();
+
+  // Body
+  const grad = c.createRadialGradient(-r*0.2, -r*0.3, r*0.1, 0, 0, r);
+  grad.addColorStop(0, c1);
+  grad.addColorStop(1, c2);
+  c.fillStyle = grad;
+  drawBodyShape(c, 0, 0, r, getAvatarBodyShape());
+
+  // Pattern
+  const patIdx = (state && state.avatar) ? (state.avatar.pattern || 0) : 0;
+  drawAvatarPattern(c, 0, 0, r, patIdx, colors);
+
+  // Eyes
+  const eyeStyle = (state && state.avatar) ? (state.avatar.eyeStyle || 0) : 0;
+  drawAvatarEyes(c, 0, 0, r, eyeStyle);
+
+  // Mouth
+  const mouthIdx = getAvatarMouth();
+  drawAvatarMouth(c, 0, 0, r, mouthIdx);
+
+  c.restore();
+}
+
+// ============================================================
+// PET CATCH GAME
+// ============================================================
+const CATCH_FOODS = ['🍎','🍊','🍇','🍓','🍌','🍕','🧁','🍩'];
+const CATCH_BAD = ['💣','🪨','🌵'];
+
+function startPetCatchGame(){
+  miniGame={type:'petcatch',px:MGW/2,score:0,lives:3,items:[],spawnTimer:0,phase:'play',timer:0,speed:1.5,petBounce:0};
+}
+
+function updatePetCatch(){
+  const mg=miniGame;
+  if(mg.phase!=='play') return;
+  mg.timer++;
+  mg.petBounce=Math.sin(mg.timer*0.1)*2;
+  // Increase speed over time
+  mg.speed=1.5+mg.timer*0.003;
+  // Spawn items
+  mg.spawnTimer--;
+  if(mg.spawnTimer<=0){
+    const isBad=Math.random()<0.2;
+    const emoji=isBad?CATCH_BAD[Math.floor(Math.random()*CATCH_BAD.length)]:CATCH_FOODS[Math.floor(Math.random()*CATCH_FOODS.length)];
+    mg.items.push({x:15+Math.random()*(MGW-30),y:-15,emoji,bad:isBad,speed:mg.speed*(0.8+Math.random()*0.4)});
+    mg.spawnTimer=Math.max(10,30-mg.timer*0.02);
+  }
+  // Update items
+  const petR=18;
+  const petCX=mg.px, petCY=MGH-35;
+  for(let i=mg.items.length-1;i>=0;i--){
+    const it=mg.items[i];
+    it.y+=it.speed;
+    // Check catch
+    const dx=it.x-petCX, dy=it.y-petCY;
+    if(Math.sqrt(dx*dx+dy*dy)<petR+10){
+      if(it.bad){mg.lives--;mg.items.splice(i,1);if(mg.lives<=0){mg.phase='end';mg.timer=90;}}
+      else{mg.score++;mg.items.splice(i,1);}
+      continue;
+    }
+    // Off screen
+    if(it.y>MGH+10){
+      if(!it.bad){/* missed food, no penalty */}
+      mg.items.splice(i,1);
+    }
+  }
+}
+
+function drawPetCatch(){
+  const mg=miniGame;
+  mgCtx.textAlign='center';
+  mgCtx.fillStyle='#fff';
+  mgCtx.font='bold 14px sans-serif';
+  mgCtx.fillText('Pet Catch!',MGW/2,18);
+  // Lives
+  mgCtx.font='12px sans-serif';
+  mgCtx.fillStyle='#ff7675';
+  mgCtx.textAlign='left';
+  mgCtx.fillText('❤️'.repeat(mg.lives),8,18);
+  mgCtx.textAlign='center';
+
+  if(mg.phase==='play'){
+    // Draw items
+    mgCtx.font='18px sans-serif';
+    for(const it of mg.items){
+      mgCtx.fillText(it.emoji,it.x,it.y);
+    }
+    // Draw pet at bottom
+    drawMiniPet(mgCtx,mg.px,MGH-35+mg.petBounce,18,mg.timer);
+    // Ground line
+    mgCtx.strokeStyle='rgba(255,255,255,0.15)';
+    mgCtx.lineWidth=1;
+    mgCtx.beginPath();
+    mgCtx.moveTo(0,MGH-12);
+    mgCtx.lineTo(MGW,MGH-12);
+    mgCtx.stroke();
+  } else if(mg.phase==='end'){
+    mgCtx.fillStyle='rgba(0,0,0,0.6)';
+    mgCtx.fillRect(0,0,MGW,MGH);
+    mgCtx.fillStyle='#fff';
+    mgCtx.font='bold 20px sans-serif';
+    mgCtx.fillText('Game Over!',MGW/2,80);
+    mgCtx.font='16px sans-serif';
+    mgCtx.fillText('Caught: '+mg.score,MGW/2,110);
+    mg.timer--;
+    if(mg.timer<=0) endMiniGame(mg.score);
+  }
+  mgCtx.textAlign='start';
+}
+
+// ============================================================
+// PET RUNNER GAME
+// ============================================================
+function startRunnerGame(){
+  miniGame={type:'runner',petY:MGH-50,velY:0,jumping:false,obstacles:[],spawnTimer:30,score:0,phase:'play',timer:0,speed:2.5,groundY:MGH-25,petBounce:0,ducking:false};
+}
+
+function updateRunner(){
+  const mg=miniGame;
+  if(mg.phase!=='play') return;
+  mg.timer++;
+  mg.speed=2.5+mg.timer*0.004;
+  // Jump physics
+  if(mg.jumping){
+    mg.velY+=0.6; // gravity
+    mg.petY+=mg.velY;
+    if(mg.petY>=mg.groundY-25){
+      mg.petY=mg.groundY-25;
+      mg.velY=0;
+      mg.jumping=false;
+    }
+  } else {
+    mg.petBounce=Math.abs(Math.sin(mg.timer*0.15))*3;
+  }
+  // Spawn obstacles
+  mg.spawnTimer--;
+  if(mg.spawnTimer<=0){
+    const tall=Math.random()<0.3;
+    mg.obstacles.push({x:MGW+10,w:12+Math.random()*10,h:tall?30+Math.random()*15:14+Math.random()*10,passed:false});
+    mg.spawnTimer=Math.max(20,55-mg.timer*0.03)+Math.random()*20;
+  }
+  // Update obstacles
+  const petCX=50, petR=15;
+  const petBottom=mg.jumping?mg.petY+petR:mg.groundY-25+petR;
+  const petTop=mg.jumping?mg.petY-petR:mg.groundY-25-petR;
+  for(let i=mg.obstacles.length-1;i>=0;i--){
+    const ob=mg.obstacles[i];
+    ob.x-=mg.speed;
+    // Collision
+    if(ob.x<petCX+petR&&ob.x+ob.w>petCX-petR){
+      const obTop=mg.groundY-ob.h;
+      if(petBottom>obTop){
+        mg.phase='end';mg.timer=90;return;
+      }
+    }
+    // Passed
+    if(!ob.passed&&ob.x+ob.w<petCX-petR){
+      ob.passed=true;mg.score++;
+    }
+    // Off screen
+    if(ob.x+ob.w<-10) mg.obstacles.splice(i,1);
+  }
+}
+
+function drawRunner(){
+  const mg=miniGame;
+  mgCtx.textAlign='center';
+  mgCtx.fillStyle='#fff';
+  mgCtx.font='bold 14px sans-serif';
+  mgCtx.fillText('Pet Runner!',MGW/2,18);
+  mgCtx.textAlign='start';
+
+  if(mg.phase==='play'||mg.phase==='end'){
+    // Ground
+    mgCtx.fillStyle='rgba(255,255,255,0.08)';
+    mgCtx.fillRect(0,mg.groundY,MGW,MGH-mg.groundY);
+    mgCtx.strokeStyle='rgba(255,255,255,0.2)';
+    mgCtx.lineWidth=1;
+    mgCtx.beginPath();
+    mgCtx.moveTo(0,mg.groundY);
+    mgCtx.lineTo(MGW,mg.groundY);
+    mgCtx.stroke();
+    // Ground details - moving dashes
+    mgCtx.strokeStyle='rgba(255,255,255,0.06)';
+    for(let i=0;i<8;i++){
+      const gx=((i*35-mg.timer*mg.speed*0.5)%MGW+MGW)%MGW;
+      mgCtx.beginPath();mgCtx.moveTo(gx,mg.groundY+6);mgCtx.lineTo(gx+12,mg.groundY+6);mgCtx.stroke();
+    }
+    // Obstacles
+    mgCtx.fillStyle='#e17055';
+    for(const ob of mg.obstacles){
+      const obTop=mg.groundY-ob.h;
+      mgCtx.fillRect(Math.round(ob.x),obTop,Math.round(ob.w),ob.h);
+      // Spiky top
+      mgCtx.fillStyle='#d63031';
+      mgCtx.beginPath();
+      mgCtx.moveTo(ob.x,obTop);
+      mgCtx.lineTo(ob.x+ob.w/2,obTop-6);
+      mgCtx.lineTo(ob.x+ob.w,obTop);
+      mgCtx.closePath();
+      mgCtx.fill();
+      mgCtx.fillStyle='#e17055';
+    }
+    // Pet
+    const petDrawY=mg.jumping?mg.petY:mg.groundY-25-mg.petBounce;
+    drawMiniPet(mgCtx,50,petDrawY,15,mg.timer);
+    // Jump shadow
+    if(mg.jumping){
+      mgCtx.fillStyle='rgba(0,0,0,0.15)';
+      mgCtx.beginPath();
+      mgCtx.ellipse(50,mg.groundY-3,12,3,0,0,Math.PI*2);
+      mgCtx.fill();
+    }
+  }
+  if(mg.phase==='end'){
+    mgCtx.fillStyle='rgba(0,0,0,0.6)';
+    mgCtx.fillRect(0,0,MGW,MGH);
+    mgCtx.textAlign='center';
+    mgCtx.fillStyle='#fff';
+    mgCtx.font='bold 20px sans-serif';
+    mgCtx.fillText('Crash!',MGW/2,80);
+    mgCtx.font='16px sans-serif';
+    mgCtx.fillText('Score: '+mg.score,MGW/2,110);
+    mgCtx.textAlign='start';
+    mg.timer--;
+    if(mg.timer<=0) endMiniGame(mg.score);
+  }
+}
+
+// ============================================================
+// COPY CAT GAME (Simon Says)
+// ============================================================
+const CC_COLORS = [
+  {name:'Red',fill:'#ff7675',light:'#fab1a0'},
+  {name:'Blue',fill:'#74b9ff',light:'#a9d4ff'},
+  {name:'Green',fill:'#55efc4',light:'#81f5d8'},
+  {name:'Yellow',fill:'#ffeaa7',light:'#fff3cd'}
+];
+
+function startCopyCatGame(){
+  const seq=[Math.floor(Math.random()*4)];
+  miniGame={type:'copycat',sequence:seq,playerSeq:[],phase:'show',showIdx:0,showTimer:0,score:0,round:1,flashIdx:-1,flashTimer:0,petReact:0};
+}
+
+function updateCopyCat(){
+  const mg=miniGame;
+  if(mg.phase==='show'){
+    mg.showTimer++;
+    if(mg.showTimer>=25){
+      mg.showTimer=0;
+      mg.flashIdx=mg.sequence[mg.showIdx];
+      mg.showIdx++;
+      if(mg.showIdx>mg.sequence.length){
+        mg.flashIdx=-1;
+        mg.phase='input';
+        mg.playerSeq=[];
+      }
+    }
+    if(mg.flashTimer>0) mg.flashTimer--;
+  } else if(mg.phase==='input'){
+    if(mg.flashTimer>0) mg.flashTimer--;
+  } else if(mg.phase==='correct'){
+    mg.showTimer++;
+    if(mg.showTimer>=40){
+      mg.round++;
+      mg.score+=mg.round;
+      mg.sequence.push(Math.floor(Math.random()*4));
+      mg.phase='show';
+      mg.showIdx=0;
+      mg.showTimer=0;
+      mg.flashIdx=-1;
+    }
+  } else if(mg.phase==='wrong'){
+    mg.showTimer++;
+    if(mg.showTimer>=60) endMiniGame(mg.score);
+  }
+  if(mg.petReact>0) mg.petReact-=0.05;
+}
+
+function copyCatSelect(idx){
+  const mg=miniGame;
+  if(mg.phase!=='input') return;
+  mg.flashIdx=idx;
+  mg.flashTimer=10;
+  mg.petReact=1;
+  mg.playerSeq.push(idx);
+  const pos=mg.playerSeq.length-1;
+  if(mg.playerSeq[pos]!==mg.sequence[pos]){
+    mg.phase='wrong';mg.showTimer=0;return;
+  }
+  if(mg.playerSeq.length===mg.sequence.length){
+    mg.phase='correct';mg.showTimer=0;
+  }
+}
+
+function drawCopyCat(){
+  const mg=miniGame;
+  mgCtx.textAlign='center';
+  mgCtx.fillStyle='#fff';
+  mgCtx.font='bold 14px sans-serif';
+  mgCtx.fillText('Copy Cat!',MGW/2,18);
+  mgCtx.font='11px sans-serif';
+  mgCtx.fillStyle='rgba(255,255,255,0.5)';
+  mgCtx.fillText('Round '+mg.round,MGW/2,32);
+  mgCtx.textAlign='start';
+
+  // Draw pet in center
+  const petScale=1+(mg.petReact>0?mg.petReact*0.15:0);
+  mgCtx.save();
+  mgCtx.translate(MGW/2,90);
+  mgCtx.scale(petScale,petScale);
+  mgCtx.translate(-MGW/2,-90);
+  drawMiniPet(mgCtx,MGW/2,90,20,mg.showTimer);
+  mgCtx.restore();
+
+  // Draw 4 color buttons
+  const btnW=50, btnH=36, gap=8;
+  const totalW=btnW*4+gap*3;
+  const startX=(MGW-totalW)/2;
+  const btnY=145;
+  for(let i=0;i<4;i++){
+    const bx=startX+i*(btnW+gap);
+    const isLit=(mg.flashIdx===i&&(mg.phase==='show'||mg.flashTimer>0));
+    mgCtx.fillStyle=isLit?CC_COLORS[i].light:CC_COLORS[i].fill;
+    mgCtx.globalAlpha=isLit?1:0.6;
+    mgCtx.beginPath();
+    mgCtx.moveTo(bx+6,btnY);
+    mgCtx.lineTo(bx+btnW-6,btnY);
+    mgCtx.quadraticCurveTo(bx+btnW,btnY,bx+btnW,btnY+6);
+    mgCtx.lineTo(bx+btnW,btnY+btnH-6);
+    mgCtx.quadraticCurveTo(bx+btnW,btnY+btnH,bx+btnW-6,btnY+btnH);
+    mgCtx.lineTo(bx+6,btnY+btnH);
+    mgCtx.quadraticCurveTo(bx,btnY+btnH,bx,btnY+btnH-6);
+    mgCtx.lineTo(bx,btnY+6);
+    mgCtx.quadraticCurveTo(bx,btnY,bx+6,btnY);
+    mgCtx.closePath();
+    mgCtx.fill();
+    mgCtx.globalAlpha=1;
+  }
+
+  // Phase text
+  mgCtx.textAlign='center';
+  mgCtx.font='12px sans-serif';
+  if(mg.phase==='show'){
+    mgCtx.fillStyle='#ffeaa7';
+    mgCtx.fillText('Watch carefully...',MGW/2,135);
+  } else if(mg.phase==='input'){
+    mgCtx.fillStyle='#55efc4';
+    mgCtx.fillText('Your turn! Repeat the sequence',MGW/2,135);
+  } else if(mg.phase==='correct'){
+    mgCtx.fillStyle='#55efc4';
+    mgCtx.font='bold 14px sans-serif';
+    mgCtx.fillText('Correct! ✓',MGW/2,135);
+  } else if(mg.phase==='wrong'){
+    mgCtx.fillStyle='#ff7675';
+    mgCtx.font='bold 16px sans-serif';
+    mgCtx.fillText('Wrong! Score: '+mg.score,MGW/2,135);
+  }
+  mgCtx.textAlign='start';
+}
+
 // MG keyboard
 document.addEventListener('keydown',e=>{
   if(!miniGame) return;
@@ -6656,6 +7080,9 @@ document.addEventListener('keydown',e=>{
   if(miniGame.type==='guess') guessInput(e.key);
   else if(miniGame.type==='memory') memoryInput(e.key);
   else if(miniGame.type==='dodge') dodgeInput(e.key);
+  else if(miniGame.type==='petcatch') petCatchInput(e.key);
+  else if(miniGame.type==='runner') runnerInput(e.key);
+  else if(miniGame.type==='copycat') copyCatInput(e.key);
 });
 
 // MG canvas click for memory
@@ -6738,6 +7165,72 @@ function dodgeInput(key){
   if(key==='ArrowRight') miniGame.px=Math.min(MGW-20,miniGame.px+12);
 }
 
+function petCatchInput(key){
+  if(miniGame.phase!=='play') return;
+  if(key==='ArrowLeft') miniGame.px=Math.max(20,miniGame.px-14);
+  if(key==='ArrowRight') miniGame.px=Math.min(MGW-20,miniGame.px+14);
+}
+
+function runnerInput(key){
+  if(miniGame.phase!=='play') return;
+  if((key===' '||key==='ArrowUp')&&!miniGame.jumping){
+    miniGame.jumping=true;
+    miniGame.velY=-9;
+  }
+}
+
+function copyCatInput(key){
+  if(miniGame.phase!=='input'){return;}
+  if(key==='1'||key==='ArrowLeft') copyCatSelect(0);
+  else if(key==='2'||key==='ArrowUp') copyCatSelect(1);
+  else if(key==='3'||key==='ArrowDown') copyCatSelect(2);
+  else if(key==='4'||key==='ArrowRight') copyCatSelect(3);
+}
+
+// Pet Catch touch support
+mgCanvas.addEventListener('touchstart',e=>{
+  if(!miniGame||miniGame.type!=='petcatch') return;
+  dodgeTouchX=e.touches[0].clientX;
+},{passive:true});
+mgCanvas.addEventListener('touchmove',e=>{
+  if(!miniGame||miniGame.type!=='petcatch'||dodgeTouchX===null) return;
+  const dx=e.touches[0].clientX-dodgeTouchX;
+  dodgeTouchX=e.touches[0].clientX;
+  miniGame.px=Math.max(20,Math.min(MGW-20,miniGame.px+dx*1.5));
+},{passive:true});
+
+// Runner touch - tap to jump
+mgCanvas.addEventListener('touchstart',e=>{
+  if(!miniGame) return;
+  if(miniGame.type==='runner'&&miniGame.phase==='play'&&!miniGame.jumping){
+    miniGame.jumping=true;miniGame.velY=-9;
+  }
+},{passive:true});
+
+// Runner click - click to jump
+mgCanvas.addEventListener('click',e=>{
+  if(!miniGame||miniGame.type!=='runner'||miniGame.phase!=='play') return;
+  if(!miniGame.jumping){miniGame.jumping=true;miniGame.velY=-9;}
+});
+
+// Copy Cat click on color buttons
+mgCanvas.addEventListener('click',e=>{
+  if(!miniGame||miniGame.type!=='copycat'||miniGame.phase!=='input') return;
+  const rect=mgCanvas.getBoundingClientRect();
+  const sx=MGW/rect.width, sy=MGH/rect.height;
+  const mx=(e.clientX-rect.left)*sx, my=(e.clientY-rect.top)*sy;
+  const btnW=50,btnH=36,gap=8;
+  const totalW=btnW*4+gap*3;
+  const startX=(MGW-totalW)/2;
+  const btnY=145;
+  for(let i=0;i<4;i++){
+    const bx=startX+i*(btnW+gap);
+    if(mx>=bx&&mx<=bx+btnW&&my>=btnY&&my<=btnY+btnH){
+      copyCatSelect(i);break;
+    }
+  }
+});
+
 // MG update + draw
 function updateMiniGame(){
   if(!miniGame) return;
@@ -6777,6 +7270,12 @@ function updateMiniGame(){
       mg.timer--;
       if(mg.timer<=0) endMiniGame(mg.score);
     }
+  } else if(mg.type==='petcatch'){
+    updatePetCatch();
+  } else if(mg.type==='runner'){
+    updateRunner();
+  } else if(mg.type==='copycat'){
+    updateCopyCat();
   }
 
   document.getElementById('mg-score').textContent='Score: '+(mg.score||0);
@@ -6912,6 +7411,12 @@ function drawMiniGame(){
       mgCtx.fillText('Score: '+mg.score,MGW/2,115);
       mgCtx.textAlign='start';
     }
+  } else if(mg.type==='petcatch'){
+    drawPetCatch();
+  } else if(mg.type==='runner'){
+    drawRunner();
+  } else if(mg.type==='copycat'){
+    drawCopyCat();
   }
 }
 
@@ -9030,6 +9535,8 @@ if (document.readyState === 'loading') {
 } else {
   initGardenCanvasListeners();
 }
+window.openGarden = openGarden;
+window.closeGarden = closeGarden;
 
 function buildTasksList() {
   const list = document.getElementById('tasks-list');
